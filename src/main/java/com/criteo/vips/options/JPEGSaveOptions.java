@@ -157,6 +157,11 @@ public class JPEGSaveOptions {
 		}
 	}
 
+	public JPEGSaveOptions background(PixelPacket background) {
+		setBackground(background);
+		return this;
+	}
+
 	public int getPageHeight() {
 		return pageHeight;
 	}
