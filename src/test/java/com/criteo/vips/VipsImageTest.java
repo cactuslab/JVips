@@ -17,6 +17,8 @@
 package com.criteo.vips;
 
 import com.criteo.vips.enums.*;
+import com.criteo.vips.options.JPEGSaveOptions;
+import com.criteo.vips.options.PNGSaveOptions;
 import com.criteo.vips.options.ThumbnailOptions;
 
 import org.junit.Assert;
@@ -957,6 +959,81 @@ public class VipsImageTest {
             path = path.resolve(filename);
             File file = path.toAbsolutePath().toFile();
             img.writeToFile(file.getAbsolutePath());
+            assertTrue(file.exists());
+            assertTrue(file.isFile());
+            assertTrue(file.delete());
+        }
+    }
+
+    @Test
+    public void TestWriteToFilenameWithOptions() throws IOException, VipsException {
+        String filename = "in_vips.jpg";
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
+        Path path = Paths.get(System.getProperty("java.io.tmpdir"));
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            path = path.resolve(filename);
+            File file = path.toAbsolutePath().toFile();
+            img.writeToFile(file.getAbsolutePath(), true, WhitePixel, 100);
+            assertTrue(file.exists());
+            assertTrue(file.isFile());
+            assertTrue(file.delete());
+        }
+    }
+
+    @Test
+    public void TestWritePNGToFilename() throws IOException, VipsException {
+        String filename = "in_vips.jpg";
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
+        Path path = Paths.get(System.getProperty("java.io.tmpdir"));
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            path = path.resolve(filename);
+            File file = path.toAbsolutePath().toFile();
+            img.writePNGToFile(file.getAbsolutePath(), 6, false, 256, true);
+            assertTrue(file.exists());
+            assertTrue(file.isFile());
+            assertTrue(file.delete());
+        }
+    }
+
+    @Test
+    public void TestWritePNGToFilenameWithOptions() throws IOException, VipsException {
+        String filename = "in_vips.jpg";
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
+        Path path = Paths.get(System.getProperty("java.io.tmpdir"));
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            path = path.resolve(filename);
+            File file = path.toAbsolutePath().toFile();
+            img.writePNGToFile(file.getAbsolutePath(), new PNGSaveOptions().bitdepth(8).interlace(true).strip(true));
+            assertTrue(file.exists());
+            assertTrue(file.isFile());
+            assertTrue(file.delete());
+        }
+    }
+
+    @Test
+    public void TestWriteJPEGToFilename() throws IOException, VipsException {
+        String filename = "in_vips.jpg";
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
+        Path path = Paths.get(System.getProperty("java.io.tmpdir"));
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            path = path.resolve(filename);
+            File file = path.toAbsolutePath().toFile();
+            img.writeJPEGToFile(file.getAbsolutePath(), 75, true);
+            assertTrue(file.exists());
+            assertTrue(file.isFile());
+            assertTrue(file.delete());
+        }
+    }
+
+    @Test
+    public void TestWriteJPEGToFilenameWithOptions() throws IOException, VipsException {
+        String filename = "in_vips.jpg";
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
+        Path path = Paths.get(System.getProperty("java.io.tmpdir"));
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            path = path.resolve(filename);
+            File file = path.toAbsolutePath().toFile();
+            img.writeJPEGToFile(file.getAbsolutePath(), new JPEGSaveOptions().q(75).strip(true));
             assertTrue(file.exists());
             assertTrue(file.isFile());
             assertTrue(file.delete());

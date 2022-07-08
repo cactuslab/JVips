@@ -17,6 +17,8 @@
 package com.criteo.vips;
 
 import com.criteo.vips.enums.*;
+import com.criteo.vips.options.JPEGSaveOptions;
+import com.criteo.vips.options.PNGSaveOptions;
 import com.criteo.vips.options.ThumbnailOptions;
 
 import java.awt.*;
@@ -273,13 +275,41 @@ public class VipsImage extends Vips implements Image {
         return writePNGToArrayNative(compression, palette, colors, strip);
     }
 
+    @Override
+    public void writePNGToFile(String name, int compression, boolean palette, int colors, boolean strip) throws VipsException {
+        writePNGToFileNative(name, compression, palette, colors, strip);
+    }
+
+    @Override
+    public void writePNGToFile(String name, PNGSaveOptions options) throws VipsException {
+        writePNGToFileWithOptionsNative(name, options);
+    }
+
     private native byte[] writePNGToArrayNative(int compression, boolean palette, int colors, boolean strip) throws VipsException;
+
+    private native void writePNGToFileNative(String name, int compression, boolean palette, int colors, boolean strip) throws VipsException;
+
+    private native void writePNGToFileWithOptionsNative(String name, PNGSaveOptions options) throws VipsException;
 
     public byte[] writeJPEGToArray(int quality, boolean strip) throws VipsException {
         return writeJPEGToArrayNative(quality, strip);
     }
 
+    @Override
+    public void writeJPEGToFile(String name, int quality, boolean strip) throws VipsException {
+        writeJPEGToFileNative(name, quality, strip);
+    }
+
+    @Override
+    public void writeJPEGToFile(String name, JPEGSaveOptions options) throws VipsException {
+        writeJPEGToFileWithOptionsNative(name, options);
+    }
+
     private native byte[] writeJPEGToArrayNative(int quality, boolean strip) throws VipsException;
+
+    private native void writeJPEGToFileNative(String name, int quality, boolean strip) throws VipsException;
+
+    private native void writeJPEGToFileWithOptionsNative(String name, JPEGSaveOptions options) throws VipsException;
 
     public byte[] writeAVIFToArray(int Q, boolean lossless, int speed) throws VipsException {
         return writeAVIFToArrayNative(Q, lossless, speed);
@@ -293,7 +323,13 @@ public class VipsImage extends Vips implements Image {
 
     private native byte[] writeWEBPToArrayNative(int Q, boolean lossless, boolean strip) throws VipsException;
 
-    public native void writeToFile(String name) throws VipsException;;
+    public native void writeToFile(String name) throws VipsException;
+
+    public void writeToFile(String name, boolean strip, PixelPacket background, int pageHeight) {
+        writeToFileNative(name, strip, background != null ? background.getComponents() : null, pageHeight);
+    }
+
+    private native void writeToFileNative(String name, boolean strip, double[] background, int pageHeight);
 
     public native int getWidth();
 

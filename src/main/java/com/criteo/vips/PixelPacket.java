@@ -33,6 +33,10 @@ public class PixelPacket extends Vips {
         this(r, g, b, 255.0);
     }
 
+    public PixelPacket(double[] doublearray) {
+        this(doublearray[0], doublearray[1], doublearray[2], doublearray[3]);
+    }
+
     public double getRed() {
         return r;
     }

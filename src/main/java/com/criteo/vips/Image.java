@@ -17,6 +17,8 @@
 package com.criteo.vips;
 
 import com.criteo.vips.enums.*;
+import com.criteo.vips.options.JPEGSaveOptions;
+import com.criteo.vips.options.PNGSaveOptions;
 import com.criteo.vips.options.ThumbnailOptions;
 
 import java.awt.*;
@@ -267,6 +269,10 @@ public interface Image extends AutoCloseable {
      */
     byte[] writePNGToArray(int compression, boolean palette, int colors, boolean strip) throws VipsException;
 
+    void writePNGToFile(String name, int compression, boolean palette, int colors, boolean strip) throws VipsException;
+
+    void writePNGToFile(String name, PNGSaveOptions options) throws VipsException;
+
     /**
      * Write a VIPS Image to byte array in JPEG output format
      *
@@ -276,6 +282,10 @@ public interface Image extends AutoCloseable {
      * @throws VipsException if error
      */
     byte[] writeJPEGToArray(int quality, boolean strip) throws VipsException;
+
+    void writeJPEGToFile(String name, int quality, boolean strip) throws VipsException;
+
+    void writeJPEGToFile(String name, JPEGSaveOptions options) throws VipsException;
 
     /**
      * Write a VIPS Image to byte array in WEBP output format
@@ -295,6 +305,16 @@ public interface Image extends AutoCloseable {
      * @throws VipsException if error
      */
     void writeToFile(String name) throws VipsException;
+
+    default void writeToFile(String name, boolean strip) throws VipsException {
+        writeToFile(name, strip, null, -1);
+    }
+
+    default void writeToFile(String name, boolean strip, PixelPacket background) throws VipsException {
+        writeToFile(name, strip, background, -1);
+    }
+
+    void writeToFile(String name, boolean strip, PixelPacket background, int pageHeight) throws VipsException;
 
     /**
      * @return VipsImage width

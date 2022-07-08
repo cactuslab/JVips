@@ -526,6 +526,60 @@ Java_com_criteo_vips_VipsImage_writePNGToArrayNative(JNIEnv *env, jobject obj, j
     return ret;
 }
 
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_writePNGToFileNative(JNIEnv *env, jobject obj, jstring name, jint compression, jboolean palette, jint colors, jboolean strip)
+{
+    const char *filename = (*env)->GetStringUTFChars(env, name, NULL);
+    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
+
+    if (vips_pngsave(im, filename,
+                            "compression", compression,
+                            "palette", palette,
+                            "colours", colors,
+                            "strip", strip,
+                            NULL))
+    {
+        throwVipsException(env, "Unable to write PNG to file");
+        return;
+    }
+
+    (*env)->ReleaseStringUTFChars(env, name, filename);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_writePNGToFileWithOptionsNative(JNIEnv *env, jobject obj, jstring name, jobject options)
+{
+    const char *filename = (*env)->GetStringUTFChars(env, name, NULL);
+    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
+
+    jclass optionsCls = (*env)->GetObjectClass(env, options);
+    jfieldID compressionFid = (*env)->GetFieldID(env, optionsCls, "compression", "I");
+    jfieldID interlaceFid = (*env)->GetFieldID(env, optionsCls, "interlace", "Z");
+    jfieldID paletteFid = (*env)->GetFieldID(env, optionsCls, "palette", "Z");
+    jfieldID bitdepthFid = (*env)->GetFieldID(env, optionsCls, "bitdepth", "I");
+    jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Z");
+
+    jint compression = (*env)->GetIntField(env, options, compressionFid);
+    jboolean interlace = (*env)->GetBooleanField(env, options, interlaceFid);
+    jboolean palette = (*env)->GetBooleanField(env, options, paletteFid);
+    jint bitdepth = (*env)->GetIntField(env, options, bitdepthFid);
+    jboolean strip = (*env)->GetBooleanField(env, options, stripFid);
+
+    if (vips_pngsave(im, filename,
+                            "compression", compression != -1 ? compression : 6,
+                            "interlace", interlace,
+                            "palette", palette,
+                            "bitdepth", bitdepth != -1 ? bitdepth : 0,
+                            "strip", strip,
+                            NULL))
+    {
+        throwVipsException(env, "Unable to write PNG to file");
+        return;
+    }
+
+    (*env)->ReleaseStringUTFChars(env, name, filename);
+}
+
 JNIEXPORT jbyteArray JNICALL
 Java_com_criteo_vips_VipsImage_writeJPEGToArrayNative(JNIEnv *env, jobject obj, jint q, jboolean strip)
 {
@@ -544,6 +598,43 @@ Java_com_criteo_vips_VipsImage_writeJPEGToArrayNative(JNIEnv *env, jobject obj, 
     (*env)->SetByteArrayRegion(env, ret, 0, buffer_size, buffer);
     g_free(buffer);
     return ret;
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_writeJPEGToFileNative(JNIEnv *env, jobject obj, jstring name, jint q, jboolean strip)
+{
+    const char *filename = (*env)->GetStringUTFChars(env, name, NULL);
+    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
+
+    if (vips_jpegsave(im, filename, "Q", q, "strip", strip, NULL))
+    {
+        throwVipsException(env, "Unable to write JPEG to file");
+        return;
+    }
+
+    (*env)->ReleaseStringUTFChars(env, name, filename);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_writeJPEGToFileWithOptionsNative(JNIEnv *env, jobject obj, jstring name, jobject options)
+{
+    const char *filename = (*env)->GetStringUTFChars(env, name, NULL);
+    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
+
+    jclass optionsCls = (*env)->GetObjectClass(env, options);
+    jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "I");
+    jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Z");
+
+    jint q = (*env)->GetIntField(env, options, qFid);
+    jboolean strip = (*env)->GetBooleanField(env, options, stripFid);
+
+    if (vips_jpegsave(im, filename, "Q", q, "strip", strip, NULL))
+    {
+        throwVipsException(env, "Unable to write JPEG to file");
+        return;
+    }
+
+    (*env)->ReleaseStringUTFChars(env, name, filename);
 }
 
 JNIEXPORT jbyteArray JNICALL
@@ -602,6 +693,36 @@ Java_com_criteo_vips_VipsImage_writeToFile(JNIEnv *env, jobject obj, jstring nam
     if (vips_image_write_to_file(im, filename, NULL))
     {
         throwVipsException(env, "Unable to write to file");
+    }
+    (*env)->ReleaseStringUTFChars(env, name, filename);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_writeToFileNative(JNIEnv *env, jobject obj, jstring name, jboolean strip, jdoubleArray background, jint pageHeight)
+{
+    const char *filename = (*env)->GetStringUTFChars(env, name, NULL);
+    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
+    
+    VipsArrayDouble *bg_pixel;
+    if (background != NULL) {
+        jdouble *background_values = (*env)->GetDoubleArrayElements(env, background, NULL);
+        jint length = (*env)->GetArrayLength(env, background);
+
+        bg_pixel = vips_array_double_new(background_values, length);
+        (*env)->ReleaseDoubleArrayElements(env, background, background_values, 0);
+    } else {
+        bg_pixel = NULL;
+    }
+
+    if (
+        bg_pixel != NULL
+        ? vips_image_write_to_file(im, filename, "strip", strip, "background", bg_pixel, "page-height", pageHeight != -1 ? pageHeight : 0, NULL)
+        : vips_image_write_to_file(im, filename, "strip", strip, "page-height", pageHeight != -1 ? pageHeight : 0, NULL)
+    ) {
+        throwVipsException(env, "Unable to write to file");
+    }
+    if (bg_pixel != NULL) {
+        vips_area_unref((VipsArea *) bg_pixel);
     }
     (*env)->ReleaseStringUTFChars(env, name, filename);
 }
