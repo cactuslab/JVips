@@ -27,16 +27,8 @@ import java.nio.ByteBuffer;
 /**
  * Operation on image is not thread safe.
  */
-public class VipsImage extends Vips implements Image {
+public class VipsImage extends AbstractVipsImage implements Image {
     public static int JPGQuality = 80;
-
-    // Per instance memory pointer used by the C code to retrieve the image data (Don't remove!)
-    private long vipsImageHandler = 0;
-
-    // VipsImage is created with vips_image_new_from_buffer, we are responsible to free allocated buffer.
-    // We don't want to pass pointer to jbytearray because it will be never garbage collected (Don't remove!)
-    // TODO: Try to create a global ref to jbytearray and delete the ref in release()
-    private long bufferHandler = 0;
 
     static {
         initFieldIDs();
