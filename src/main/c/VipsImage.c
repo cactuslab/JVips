@@ -29,7 +29,8 @@
 jfieldID handle_fid = NULL;
 jfieldID buffer_fid = NULL;
 jmethodID ctor_mid = NULL;
-
+jmethodID booleanValue_mid = NULL;
+jmethodID intValue_mid = NULL;
 
 static VipsImage *
 new_from_buffer(JNIEnv *env, void *buffer, int length)
@@ -98,6 +99,10 @@ Java_com_criteo_vips_VipsImage_initFieldIDs(JNIEnv *env, jobject cls)
     handle_fid = (*env)->GetFieldID(env, cls, "vipsImageHandler", "J");
     buffer_fid = (*env)->GetFieldID(env, cls, "bufferHandler", "J");
     ctor_mid = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
+    jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
+    booleanValue_mid = (*env)->GetMethodID(env, booleanClass, "booleanValue", "()Z");
+    jclass integerClass = (*env)->FindClass(env, "java/lang/Integer");
+    intValue_mid = (*env)->GetMethodID(env, integerClass, "intValue", "()I");
 }
 
 JNIEXPORT void JNICALL
@@ -229,40 +234,186 @@ Java_com_criteo_vips_VipsImage_thumbnailImageNative(JNIEnv *env, jobject obj, ji
     g_object_unref(im);
 }
 
+// JNIEXPORT void JNICALL
+// Java_com_criteo_vips_VipsImage_thumbnailImageWithOptionsNative(JNIEnv *env, jobject obj, jint width, jint height, jobject options)
+// {
+//     VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
+//     VipsImage *out = NULL;
+
+//     jclass optionsCls = (*env)->GetObjectClass(env, options);
+//     jfieldID sizeFid = (*env)->GetFieldID(env, optionsCls, "size", "I");
+//     jfieldID noRotateFid = (*env)->GetFieldID(env, optionsCls, "noRotate", "Z");
+//     jfieldID cropFid = (*env)->GetFieldID(env, optionsCls, "crop", "I");
+//     jfieldID linearFid = (*env)->GetFieldID(env, optionsCls, "linear", "Z");
+//     jfieldID importProfileFid = (*env)->GetFieldID(env, optionsCls, "importProfile", "Ljava/lang/String;");
+//     jfieldID exportProfileFid = (*env)->GetFieldID(env, optionsCls, "exportProfile", "Ljava/lang/String;");
+//     jfieldID intentFid = (*env)->GetFieldID(env, optionsCls, "intent", "I");
+
+//     jint size = (*env)->GetIntField(env, options, sizeFid);
+//     jboolean noRotate = (*env)->GetBooleanField(env, options, noRotateFid);
+//     jint crop = (*env)->GetIntField(env, options, cropFid);
+//     jboolean linear = (*env)->GetBooleanField(env, options, linearFid);
+//     jstring importProfile = (jstring) (*env)->GetObjectField(env, options, importProfileFid); // TODO how to pass if set, as there is no default
+//     jstring exportProfile = (jstring) (*env)->GetObjectField(env, options, exportProfileFid); // TODO how to pass if set, as there is no default
+//     jint intent = (*env)->GetIntField(env, options, intentFid);
+
+//     VipsSize vipsSize = size != -1 ? size : VIPS_SIZE_BOTH;
+//     VipsInteresting vipsCrop = crop != -1 ? crop : VIPS_INTERESTING_NONE;
+//     VipsIntent vipsIntent = intent != -1 ? intent : VIPS_INTENT_RELATIVE;
+
+//     if (vips_thumbnail_image(im, &out, width, "height", height, "size", vipsSize, "no-rotate", noRotate, "crop", vipsCrop, "linear", linear, "intent", intent, NULL))
+//     {
+//         throwVipsException(env, "Unable to make thumbnail image");
+//         return;
+//     }
+//     (*env)->SetLongField(env, obj, handle_fid, (jlong) out);
+//     g_object_unref(im);
+// }
+
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_VipsImage_thumbnailImageWithOptionsNative(JNIEnv *env, jobject obj, jint width, jint height, jobject options)
+Java_com_criteo_vips_VipsImage_thumbnailImageWithOptionsNative(JNIEnv *env, jobject in, jint width, jobject options)
 {
-    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
-    VipsImage *out = NULL;
+        GValue gvalue = { 0 };
 
-    jclass optionsCls = (*env)->GetObjectClass(env, options);
-    jfieldID sizeFid = (*env)->GetFieldID(env, optionsCls, "size", "I");
-    jfieldID noRotateFid = (*env)->GetFieldID(env, optionsCls, "noRotate", "Z");
-    jfieldID cropFid = (*env)->GetFieldID(env, optionsCls, "crop", "I");
-    jfieldID linearFid = (*env)->GetFieldID(env, optionsCls, "linear", "Z");
-    jfieldID importProfileFid = (*env)->GetFieldID(env, optionsCls, "importProfile", "Ljava/lang/String;");
-    jfieldID exportProfileFid = (*env)->GetFieldID(env, optionsCls, "exportProfile", "Ljava/lang/String;");
-    jfieldID intentFid = (*env)->GetFieldID(env, optionsCls, "intent", "I");
+        VipsOperation *op = vips_operation_new("thumbnail_image");
 
-    jint size = (*env)->GetIntField(env, options, sizeFid);
-    jboolean noRotate = (*env)->GetBooleanField(env, options, noRotateFid);
-    jint crop = (*env)->GetIntField(env, options, cropFid);
-    jboolean linear = (*env)->GetBooleanField(env, options, linearFid);
-    jstring importProfile = (jstring) (*env)->GetObjectField(env, options, importProfileFid); // TODO how to pass if set, as there is no default
-    jstring exportProfile = (jstring) (*env)->GetObjectField(env, options, exportProfileFid); // TODO how to pass if set, as there is no default
-    jint intent = (*env)->GetIntField(env, options, intentFid);
+        // in
+        if (in != NULL) {
+                g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+                g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+                g_object_set_property(G_OBJECT(op), "in", &gvalue);
+                g_value_unset(&gvalue);
+        }
 
-    VipsSize vipsSize = size != -1 ? size : VIPS_SIZE_BOTH;
-    VipsInteresting vipsCrop = crop != -1 ? crop : VIPS_INTERESTING_NONE;
-    VipsIntent vipsIntent = intent != -1 ? intent : VIPS_INTENT_RELATIVE;
+        // width
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, width);
+        g_object_set_property(G_OBJECT(op), "width", &gvalue);
+        g_value_unset(&gvalue);
 
-    if (vips_thumbnail_image(im, &out, width, "height", height, "size", vipsSize, "no-rotate", noRotate, "crop", vipsCrop, "linear", linear, "intent", intent, NULL))
-    {
-        throwVipsException(env, "Unable to make thumbnail image");
-        return;
-    }
-    (*env)->SetLongField(env, obj, handle_fid, (jlong) out);
-    g_object_unref(im);
+        // Optionals
+        if (options != NULL) {
+                jclass optionsCls = (*env)->GetObjectClass(env, options);
+                // height
+                jfieldID heightFid = (*env)->GetFieldID(env, optionsCls, "height", "Ljava/lang/Integer;");
+                jobject heightObjectValue = (*env)->GetObjectField(env, options, heightFid);
+                if (heightObjectValue != NULL) {
+                        jint height = (*env)->CallIntMethod(env, heightObjectValue, intValue_mid);
+                        g_value_init(&gvalue, G_TYPE_INT);
+                        g_value_set_int(&gvalue, height);
+                        g_object_set_property(G_OBJECT(op), "height", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+                // size
+                jfieldID sizeFid = (*env)->GetFieldID(env, optionsCls, "size", "Lcom/criteo/vips/enums/VipsSize;");
+                jobject size = (*env)->GetObjectField(env, options, sizeFid);
+                if (size != NULL) {
+                        jclass sizeCls = (*env)->GetObjectClass(env, size);
+                        jfieldID sizeValueFid = (*env)->GetFieldID(env, sizeCls, "value", "I");
+                        jint sizeValue = (*env)->GetIntField(env, size, sizeValueFid);
+                        g_value_init(&gvalue, G_TYPE_INT);
+                        g_value_set_int(&gvalue, sizeValue);
+                        g_object_set_property(G_OBJECT(op), "size", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+                // no-rotate
+                jfieldID noRotateFid = (*env)->GetFieldID(env, optionsCls, "noRotate", "Ljava/lang/Boolean;");
+                jobject noRotateObjectValue = (*env)->GetObjectField(env, options, noRotateFid);
+                if (noRotateObjectValue != NULL) {
+                        jboolean noRotate = (*env)->CallBooleanMethod(env, noRotateObjectValue, booleanValue_mid);
+                        g_value_init(&gvalue, G_TYPE_BOOLEAN);
+                        g_value_set_boolean(&gvalue, noRotate);
+                        g_object_set_property(G_OBJECT(op), "no-rotate", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+                // crop
+                jfieldID cropFid = (*env)->GetFieldID(env, optionsCls, "crop", "Lcom/criteo/vips/enums/VipsInteresting;");
+                jobject crop = (*env)->GetObjectField(env, options, cropFid);
+                if (crop != NULL) {
+                        jclass cropCls = (*env)->GetObjectClass(env, crop);
+                        jfieldID cropValueFid = (*env)->GetFieldID(env, cropCls, "value", "I");
+                        jint cropValue = (*env)->GetIntField(env, crop, cropValueFid);
+                        g_value_init(&gvalue, G_TYPE_INT);
+                        g_value_set_int(&gvalue, cropValue);
+                        g_object_set_property(G_OBJECT(op), "crop", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+                // linear
+                jfieldID linearFid = (*env)->GetFieldID(env, optionsCls, "linear", "Ljava/lang/Boolean;");
+                jobject linearObjectValue = (*env)->GetObjectField(env, options, linearFid);
+                if (linearObjectValue != NULL) {
+                        jboolean linear = (*env)->CallBooleanMethod(env, linearObjectValue, booleanValue_mid);
+                        g_value_init(&gvalue, G_TYPE_BOOLEAN);
+                        g_value_set_boolean(&gvalue, linear);
+                        g_object_set_property(G_OBJECT(op), "linear", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+                // import-profile
+                jfieldID importProfileFid = (*env)->GetFieldID(env, optionsCls, "importProfile", "Ljava/lang/String;");
+                jstring importProfile = (jstring) (*env)->GetObjectField(env, options, importProfileFid);
+                if (importProfile != NULL) {
+                        const char *importProfileChars = (*env)->GetStringUTFChars(env, importProfile, NULL);
+                        g_value_init(&gvalue, G_TYPE_STRING);
+                        g_value_set_string(&gvalue, importProfileChars);
+                        (*env)->ReleaseStringUTFChars(env, importProfile, importProfileChars);
+                        g_object_set_property(G_OBJECT(op), "import-profile", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+                // export-profile
+                jfieldID exportProfileFid = (*env)->GetFieldID(env, optionsCls, "exportProfile", "Ljava/lang/String;");
+                jstring exportProfile = (jstring) (*env)->GetObjectField(env, options, exportProfileFid);
+                if (exportProfile != NULL) {
+                        const char *exportProfileChars = (*env)->GetStringUTFChars(env, exportProfile, NULL);
+                        g_value_init(&gvalue, G_TYPE_STRING);
+                        g_value_set_string(&gvalue, exportProfileChars);
+                        (*env)->ReleaseStringUTFChars(env, exportProfile, exportProfileChars);
+                        g_object_set_property(G_OBJECT(op), "export-profile", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+                // intent
+                jfieldID intentFid = (*env)->GetFieldID(env, optionsCls, "intent", "Lcom/criteo/vips/enums/VipsIntent;");
+                jobject intent = (*env)->GetObjectField(env, options, intentFid);
+                if (intent != NULL) {
+                        jclass intentCls = (*env)->GetObjectClass(env, intent);
+                        jfieldID intentValueFid = (*env)->GetFieldID(env, intentCls, "value", "I");
+                        jint intentValue = (*env)->GetIntField(env, intent, intentValueFid);
+                        g_value_init(&gvalue, G_TYPE_INT);
+                        g_value_set_int(&gvalue, intentValue);
+                        g_object_set_property(G_OBJECT(op), "intent", &gvalue);
+                        g_value_unset(&gvalue);
+                }
+
+        }
+        // Operation
+        VipsOperation *new_op;
+        if (!(new_op = vips_cache_operation_build(op))) {
+                g_object_unref(op);
+                throwVipsException(env, "thumbnail_image failed");
+                return;
+        }
+        g_object_unref(op);
+        op = new_op;
+
+        // Mutating image result
+        g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+        g_object_get_property(G_OBJECT(op), "out", &gvalue);
+        VipsImage *_out = VIPS_IMAGE(g_value_get_object(&gvalue));
+        g_object_ref(_out); 
+        g_value_unset(&gvalue);
+        g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+        (*env)->SetLongField(env, in, handle_fid, (jlong) _out);
+
+        // Free the operation
+        vips_object_unref_outputs(VIPS_OBJECT(op)); 
+        g_object_unref(op);
+
 }
 
 JNIEXPORT jobject JNICALL
@@ -1022,4 +1173,65 @@ JNICALL Java_com_criteo_vips_VipsImage_joinNative(JNIEnv *env, jclass cls, jobje
         throwVipsException(env, "Unable to join image");
     }
     return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_embed(JNIEnv *env, jobject in, jint x, jint y, jint width, jint height, jobject options)
+{
+        GValue gvalue = { 0 };
+
+        VipsOperation *op = vips_operation_new("embed");
+
+        // in
+        g_value_init( &gvalue, VIPS_TYPE_IMAGE );
+        g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+        g_object_set_property(G_OBJECT(op), "in", &gvalue);
+        g_value_unset(&gvalue);
+
+        // x
+        g_value_init(&gvalue, G_TYPE_INT );
+        g_value_set_int(&gvalue, x);
+        g_object_set_property(G_OBJECT(op), "x", &gvalue);
+        g_value_unset(&gvalue);
+
+        // y
+        g_value_init(&gvalue, G_TYPE_INT );
+        g_value_set_int(&gvalue, y);
+        g_object_set_property(G_OBJECT(op), "y", &gvalue);
+        g_value_unset(&gvalue);
+
+        // width
+        g_value_init(&gvalue, G_TYPE_INT );
+        g_value_set_int(&gvalue, width);
+        g_object_set_property(G_OBJECT(op), "width", &gvalue);
+        g_value_unset(&gvalue);
+
+        // height
+        g_value_init(&gvalue, G_TYPE_INT );
+        g_value_set_int(&gvalue, height);
+        g_object_set_property(G_OBJECT(op), "height", &gvalue);
+        g_value_unset(&gvalue);
+
+        // Operation
+        VipsOperation *new_op;
+        if (!(new_op = vips_cache_operation_build(op))) {
+                g_object_unref(op);
+                vips_error_exit(NULL); 
+        }
+        g_object_unref(op);
+        op = new_op;
+
+        // Image result
+        g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+        g_object_get_property(G_OBJECT(op), "out", &gvalue);
+        VipsImage *_out = VIPS_IMAGE(g_value_get_object(&gvalue));
+        g_object_ref(_out); 
+        g_value_unset(&gvalue);
+        g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+        (*env)->SetLongField(env, in, handle_fid, (jlong) _out);
+
+        // Free the operation
+        vips_object_unref_outputs(VIPS_OBJECT(op)); 
+        g_object_unref(op);
+
 }

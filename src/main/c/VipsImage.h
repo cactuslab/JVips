@@ -138,10 +138,10 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_thumbnailImageNative
 /*
  * Class:     com_criteo_vips_VipsImage
  * Method:    thumbnailImageWithOptionsNative
- * Signature: (IILcom/criteo/vips/options/ThumbnailOptions;)V
+ * Signature: (ILcom/criteo/vips/options/ThumbnailOptions;)V
  */
 JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_thumbnailImageWithOptionsNative
-  (JNIEnv *, jobject, jint, jint, jobject);
+  (JNIEnv *, jobject, jint, jobject);
 
 /*
  * Class:     com_criteo_vips_VipsImage
@@ -217,75 +217,11 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_insert
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    flattenNative
- * Signature: ([D)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_flattenNative
-  (JNIEnv *, jobject, jdoubleArray);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    writeToArrayNative
  * Signature: (Ljava/lang/String;IZ)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_VipsImage_writeToArrayNative
   (JNIEnv *, jobject, jstring, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writePNGToArrayNative
- * Signature: (IZIZ)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_VipsImage_writePNGToArrayNative
-  (JNIEnv *, jobject, jint, jboolean, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writePNGToFileNative
- * Signature: (Ljava/lang/String;IZIZ)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_writePNGToFileNative
-  (JNIEnv *, jobject, jstring, jint, jboolean, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writePNGToFileWithOptionsNative
- * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/PNGSaveOptions;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_writePNGToFileWithOptionsNative
-  (JNIEnv *, jobject, jstring, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writeJPEGToArrayNative
- * Signature: (IZ)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_VipsImage_writeJPEGToArrayNative
-  (JNIEnv *, jobject, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writeJPEGToFileNative
- * Signature: (Ljava/lang/String;IZ)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_writeJPEGToFileNative
-  (JNIEnv *, jobject, jstring, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writeJPEGToFileWithOptionsNative
- * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/JPEGSaveOptions;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_writeJPEGToFileWithOptionsNative
-  (JNIEnv *, jobject, jstring, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writeAVIFToArrayNative
- * Signature: (IZI)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_VipsImage_writeAVIFToArrayNative
-  (JNIEnv *, jobject, jint, jboolean, jint);
 
 /*
  * Class:     com_criteo_vips_VipsImage
@@ -438,6 +374,14 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_release
  */
 JNIEXPORT jobject JNICALL Java_com_criteo_vips_VipsImage_joinNative
   (JNIEnv *, jclass, jobject, jobject, jint);
+
+/*
+ * Class:     com_criteo_vips_VipsImage
+ * Method:    embed
+ * Signature: (IIIILjava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_embed
+  (JNIEnv *, jobject, jint, jint, jint, jint, jobject);
 
 #ifdef __cplusplus
 }

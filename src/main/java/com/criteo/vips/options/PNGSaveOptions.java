@@ -1,169 +1,424 @@
 /*
-  Copyright (c) 2021 Criteo
+Copyright (c) 2022 Criteo
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.enums.*;
 import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.VipsForeignPngFilter;
 
+/**
+ * Optional arguments for the "pngsave" operation.
+ */
 public class PNGSaveOptions {
 
-	private int compression = -1;
-	private boolean interlace;
+	private Integer compression;
+	private Boolean interlace;
 	private String profile;
-	private int filter = -1;
-	private boolean palette;
-	private int q;
-	private double dither;
-	private int bitdepth = -1;
-	private int effort = -1;
-	private boolean strip;
-	private double[] background;
-	private int pageHeight = -1;
+	private VipsForeignPngFilter filter;
+	private Boolean palette;
+	private Integer q;
+	private Double dither;
+	private Integer bitdepth;
+	private Integer effort;
+	private Boolean strip;
+	private PixelPacket background;
+	private Integer pageHeight;
 
-	public int getCompression() {
-		return compression;
+	/**
+	 * Optional argument: compression
+	 * <p>
+	 * Compression factor
+	 * @return the value of {@code compression}
+	 */
+	public Integer getCompression() {
+		return this.compression;
 	}
 
-	public void setCompression(int compression) {
+	/**
+	 * Set the optional "compression" argument.
+	 * <p>
+	 * Compression factor
+	 * @param compression the new value of {@code compression}
+	 */
+	public void setCompression(Integer compression) {
 		this.compression = compression;
 	}
 
-	public boolean isInterlace() {
-		return interlace;
+	/**
+	 * Set the optional "compression" argument.
+	 * <p>
+	 * Compression factor
+	 * @param compression the new value of {@code compression}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions compression(Integer compression) {
+		setCompression(compression);
+		return this;
 	}
 
-	public void setInterlace(boolean interlace) {
+	/**
+	 * Optional argument: interlace
+	 * <p>
+	 * Interlace image
+	 * @return the value of {@code interlace}
+	 */
+	public Boolean getInterlace() {
+		return this.interlace;
+	}
+
+	/**
+	 * Set the optional "interlace" argument.
+	 * <p>
+	 * Interlace image
+	 * @param interlace the new value of {@code interlace}
+	 */
+	public void setInterlace(Boolean interlace) {
 		this.interlace = interlace;
 	}
 
-	public PNGSaveOptions interlace(boolean interlace) {
+	/**
+	 * Set the optional "interlace" argument.
+	 * <p>
+	 * Interlace image
+	 * @param interlace the new value of {@code interlace}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions interlace(Boolean interlace) {
 		setInterlace(interlace);
 		return this;
 	}
 
+	/**
+	 * Optional argument: profile
+	 * <p>
+	 * ICC profile to embed
+	 * @return the value of {@code profile}
+	 */
 	public String getProfile() {
-		return profile;
+		return this.profile;
 	}
 
+	/**
+	 * Set the optional "profile" argument.
+	 * <p>
+	 * ICC profile to embed
+	 * @param profile the new value of {@code profile}
+	 */
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
 
+	/**
+	 * Set the optional "profile" argument.
+	 * <p>
+	 * ICC profile to embed
+	 * @param profile the new value of {@code profile}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions profile(String profile) {
+		setProfile(profile);
+		return this;
+	}
+
+	/**
+	 * Optional argument: filter
+	 * <p>
+	 * libpng row filter flag(s)
+	 * @return the value of {@code filter}
+	 */
 	public VipsForeignPngFilter getFilter() {
-		if (filter != -1) {
-			return VipsForeignPngFilter.valueOf(filter);
-		} else {
-			return null;
-		}
+		return this.filter;
 	}
 
+	/**
+	 * Set the optional "filter" argument.
+	 * <p>
+	 * libpng row filter flag(s)
+	 * @param filter the new value of {@code filter}
+	 */
 	public void setFilter(VipsForeignPngFilter filter) {
-		if (filter != null) {
-			this.filter = filter.getValue();
-		} else {
-			this.filter = -1;
-		}
+		this.filter = filter;
 	}
 
-	public boolean isPalette() {
-		return palette;
+	/**
+	 * Set the optional "filter" argument.
+	 * <p>
+	 * libpng row filter flag(s)
+	 * @param filter the new value of {@code filter}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions filter(VipsForeignPngFilter filter) {
+		setFilter(filter);
+		return this;
 	}
 
-	public void setPalette(boolean palette) {
+	/**
+	 * Optional argument: palette
+	 * <p>
+	 * Quantise to 8bpp palette
+	 * @return the value of {@code palette}
+	 */
+	public Boolean getPalette() {
+		return this.palette;
+	}
+
+	/**
+	 * Set the optional "palette" argument.
+	 * <p>
+	 * Quantise to 8bpp palette
+	 * @param palette the new value of {@code palette}
+	 */
+	public void setPalette(Boolean palette) {
 		this.palette = palette;
 	}
 
-	public int getQ() {
-		return q;
+	/**
+	 * Set the optional "palette" argument.
+	 * <p>
+	 * Quantise to 8bpp palette
+	 * @param palette the new value of {@code palette}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions palette(Boolean palette) {
+		setPalette(palette);
+		return this;
 	}
 
-	public void setQ(int q) {
+	/**
+	 * Optional argument: Q
+	 * <p>
+	 * Quantisation quality
+	 * @return the value of {@code q}
+	 */
+	public Integer getQ() {
+		return this.q;
+	}
+
+	/**
+	 * Set the optional "Q" argument.
+	 * <p>
+	 * Quantisation quality
+	 * @param q the new value of {@code q}
+	 */
+	public void setQ(Integer q) {
 		this.q = q;
 	}
 
-	public double getDither() {
-		return dither;
+	/**
+	 * Set the optional "Q" argument.
+	 * <p>
+	 * Quantisation quality
+	 * @param q the new value of {@code q}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions q(Integer q) {
+		setQ(q);
+		return this;
 	}
 
-	public void setDither(double dither) {
+	/**
+	 * Optional argument: dither
+	 * <p>
+	 * Amount of dithering
+	 * @return the value of {@code dither}
+	 */
+	public Double getDither() {
+		return this.dither;
+	}
+
+	/**
+	 * Set the optional "dither" argument.
+	 * <p>
+	 * Amount of dithering
+	 * @param dither the new value of {@code dither}
+	 */
+	public void setDither(Double dither) {
 		this.dither = dither;
 	}
 
-	public int getBitdepth() {
-		return bitdepth;
+	/**
+	 * Set the optional "dither" argument.
+	 * <p>
+	 * Amount of dithering
+	 * @param dither the new value of {@code dither}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions dither(Double dither) {
+		setDither(dither);
+		return this;
 	}
 
-	public void setBitdepth(int bitdepth) {
+	/**
+	 * Optional argument: bitdepth
+	 * <p>
+	 * Write as a 1, 2, 4, 8 or 16 bit image
+	 * @return the value of {@code bitdepth}
+	 */
+	public Integer getBitdepth() {
+		return this.bitdepth;
+	}
+
+	/**
+	 * Set the optional "bitdepth" argument.
+	 * <p>
+	 * Write as a 1, 2, 4, 8 or 16 bit image
+	 * @param bitdepth the new value of {@code bitdepth}
+	 */
+	public void setBitdepth(Integer bitdepth) {
 		this.bitdepth = bitdepth;
 	}
 
-	public PNGSaveOptions bitdepth(int bitdepth) {
+	/**
+	 * Set the optional "bitdepth" argument.
+	 * <p>
+	 * Write as a 1, 2, 4, 8 or 16 bit image
+	 * @param bitdepth the new value of {@code bitdepth}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions bitdepth(Integer bitdepth) {
 		setBitdepth(bitdepth);
 		return this;
 	}
 
-	public int getEffort() {
-		return effort;
+	/**
+	 * Optional argument: effort
+	 * <p>
+	 * Quantisation CPU effort
+	 * @return the value of {@code effort}
+	 */
+	public Integer getEffort() {
+		return this.effort;
 	}
 
-	public void setEffort(int effort) {
+	/**
+	 * Set the optional "effort" argument.
+	 * <p>
+	 * Quantisation CPU effort
+	 * @param effort the new value of {@code effort}
+	 */
+	public void setEffort(Integer effort) {
 		this.effort = effort;
 	}
 
-	public boolean isStrip() {
-		return strip;
+	/**
+	 * Set the optional "effort" argument.
+	 * <p>
+	 * Quantisation CPU effort
+	 * @param effort the new value of {@code effort}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions effort(Integer effort) {
+		setEffort(effort);
+		return this;
 	}
 
-	public void setStrip(boolean strip) {
+	/**
+	 * Optional argument: strip
+	 * <p>
+	 * Strip all metadata from image
+	 * @return the value of {@code strip}
+	 */
+	public Boolean getStrip() {
+		return this.strip;
+	}
+
+	/**
+	 * Set the optional "strip" argument.
+	 * <p>
+	 * Strip all metadata from image
+	 * @param strip the new value of {@code strip}
+	 */
+	public void setStrip(Boolean strip) {
 		this.strip = strip;
 	}
 
-	public PNGSaveOptions strip(boolean strip) {
+	/**
+	 * Set the optional "strip" argument.
+	 * <p>
+	 * Strip all metadata from image
+	 * @param strip the new value of {@code strip}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions strip(Boolean strip) {
 		setStrip(strip);
 		return this;
 	}
 
+	/**
+	 * Optional argument: background
+	 * <p>
+	 * Background value
+	 * @return the value of {@code background}
+	 */
 	public PixelPacket getBackground() {
-		if (background != null) {
-			return new PixelPacket(background);
-		} else {
-			return null;
-		}
+		return this.background;
 	}
 
+	/**
+	 * Set the optional "background" argument.
+	 * <p>
+	 * Background value
+	 * @param background the new value of {@code background}
+	 */
 	public void setBackground(PixelPacket background) {
-		if (background != null) {
-			this.background = background.getComponents();
-		} else {
-			this.background = null;
-		}
+		this.background = background;
 	}
 
+	/**
+	 * Set the optional "background" argument.
+	 * <p>
+	 * Background value
+	 * @param background the new value of {@code background}
+	 * @return this object for chaining
+	 */
 	public PNGSaveOptions background(PixelPacket background) {
 		setBackground(background);
 		return this;
 	}
 
-	public int getPageHeight() {
-		return pageHeight;
+	/**
+	 * Optional argument: page-height
+	 * <p>
+	 * Set page height for multipage save
+	 * @return the value of {@code pageHeight}
+	 */
+	public Integer getPageHeight() {
+		return this.pageHeight;
 	}
 
-	public void setPageHeight(int pageHeight) {
+	/**
+	 * Set the optional "page-height" argument.
+	 * <p>
+	 * Set page height for multipage save
+	 * @param pageHeight the new value of {@code pageHeight}
+	 */
+	public void setPageHeight(Integer pageHeight) {
 		this.pageHeight = pageHeight;
+	}
+
+	/**
+	 * Set the optional "page-height" argument.
+	 * <p>
+	 * Set page height for multipage save
+	 * @param pageHeight the new value of {@code pageHeight}
+	 * @return this object for chaining
+	 */
+	public PNGSaveOptions pageHeight(Integer pageHeight) {
+		setPageHeight(pageHeight);
+		return this;
 	}
 
 }

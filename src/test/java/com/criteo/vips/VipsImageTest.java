@@ -19,7 +19,7 @@ package com.criteo.vips;
 import com.criteo.vips.enums.*;
 import com.criteo.vips.options.JPEGSaveOptions;
 import com.criteo.vips.options.PNGSaveOptions;
-import com.criteo.vips.options.ThumbnailOptions;
+import com.criteo.vips.options.ThumbnailImageOptions;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -349,7 +349,7 @@ public class VipsImageTest {
     public void TestShouldRenderThumbnailImageWithExactDimensionUsingOptions() throws IOException, VipsException {
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("in_vips.jpg");
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
-            img.thumbnailImage(new Dimension(800, 800), new ThumbnailOptions().size(VipsSize.Force));
+            img.thumbnailImage(800, new ThumbnailImageOptions().height(800).size(VipsSize.Force));
             assertEquals(800, img.getWidth());
             assertEquals(800, img.getHeight());
         }
@@ -359,9 +359,10 @@ public class VipsImageTest {
     public void TestShouldRenderThumbnailImageWithExactDimensionUsingCrop() throws IOException, VipsException {
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("in_vips.jpg");
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
-            img.thumbnailImage(new Dimension(800, 800), new ThumbnailOptions().crop(VipsInteresting.Attention));
+            img.thumbnailImage(800, new ThumbnailImageOptions().height(800).crop(VipsInteresting.Attention));
             assertEquals(800, img.getWidth());
             assertEquals(800, img.getHeight());
+            img.writeToFile("/Users/karlvr/Desktop/test.jpg");
         }
     }
 
@@ -723,7 +724,6 @@ public class VipsImageTest {
         }
     }
 
-    @Ignore
     @Theory
     public void TestWriteAVIFFromByteArrayShouldNotThrows(@FromDataPoints("filenames") String filename,
                                                          boolean lossless)
@@ -739,7 +739,6 @@ public class VipsImageTest {
         }
     }
 
-    @Ignore
     @Test
     public void TestWriteAVIFFromByteArrayShouldShrinkOutputSize()
             throws IOException, VipsException {
@@ -1067,6 +1066,19 @@ public class VipsImageTest {
             fail("should throw exception for truncated image if fail-on is set");
         } catch (VipsException e) {
             // expected
+        }
+    }
+
+    @Test
+    public void TestEmbed() throws IOException, VipsException {
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("in_vips.jpg");
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            int w = img.getWidth();
+            int h = img.getHeight();
+            img.embed(10, 10, w + 20, h + 20, null);
+
+            assertEquals(w + 20, img.getWidth());
+            assertEquals(h + 20, img.getHeight());
         }
     }
 }
