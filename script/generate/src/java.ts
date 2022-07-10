@@ -1,6 +1,6 @@
 import { operationInfo } from "./common"
 import { COPYRIGHT } from "./constants"
-import { VipsOperation, VipsOperationInfo, VipsOperationParameter } from "./type"
+import { VipsOperation, VipsOperationInfo, VipsOperationOptions, VipsOperationParameter } from "./type"
 import { isEnum, camelCase, pascalCase, capitalize } from "./utils"
 
 const RESERVED_WORDS = [
@@ -47,11 +47,11 @@ export function javaParameterIdentifier(p: VipsOperationParameter): string {
 
 const PREFIXES = /^(get|gauss)/
 
-export function javaOperationIdentifier(op: VipsOperation, options?: { mutating?: boolean }): string {
+export function javaOperationIdentifier(op: VipsOperation, options?: VipsOperationOptions): string {
 	let result = op.alias
 	result = result.replace(PREFIXES, '$1_')
-	if (options?.mutating) {
-		result = `apply_${result}`
+	if (options?.mode === 'nonmutating') {
+		result = `new_image_using_${result}`
 	}
 	result = camelCase(result)
 	for (const opName of OPERATION_NAMES) {
@@ -93,10 +93,10 @@ export function javaNativeStub(op: VipsOperation): string {
 
 	const info = operationInfo(op)
 	if (info.mutatingInstanceMethod) {
-		result += internalJavaNativeStub(op, info, { mutating: true }) + '\n'
+		result += internalJavaNativeStub(op, info, { mode: 'mutating' }) + '\n'
 
 		const nonMutatingInfo = operationInfo(op, { noMutatingInstanceMethods: true })
-		result += internalJavaNativeStub(op, nonMutatingInfo)
+		result += internalJavaNativeStub(op, nonMutatingInfo, { mode: 'nonmutating' })
 	} else {
 		result += internalJavaNativeStub(op, info)
 	}
@@ -104,7 +104,7 @@ export function javaNativeStub(op: VipsOperation): string {
 	return result
 }
 
-function internalJavaNativeStub(op: VipsOperation, info: VipsOperationInfo, options?: { mutating?: boolean }) {
+function internalJavaNativeStub(op: VipsOperation, info: VipsOperationInfo, options?: VipsOperationOptions) {
 	const { ins, optionals, outs, instanceMethod } = info
 
 	if (outs.length > 1) {
@@ -171,8 +171,10 @@ function internalJavaNativeStub(op: VipsOperation, info: VipsOperationInfo, opti
 		let result = `/**
  * ${op.name} (${op.alias}): ${op.description}
 `
-		if (options?.mutating) {
+		if (info.mutatingInstanceMethod) {
 			result += ` * Mutates the image inplace.\n`
+		} else if (options?.mode === 'nonmutating') {
+			result += ` * Returns a new image.\n`
 		}
 		for (const p of ins) {
 			result += ` * @param ${javaParameterIdentifier(p)} ${p.description}\n`

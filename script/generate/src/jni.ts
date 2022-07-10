@@ -1,7 +1,7 @@
 import { operationInfo } from "./common"
 import { COPYRIGHT } from "./constants"
 import { javaOperationIdentifier, javaParameterIdentifier } from "./java"
-import { VipsOperation, VipsOperationInfo, VipsOperationParameter } from "./type"
+import { VipsOperation, VipsOperationInfo, VipsOperationOptions, VipsOperationParameter } from "./type"
 import { indent, isEnum, camelCase } from "./utils"
 
 function jniTypeForParameter(p: VipsOperationParameter): string {
@@ -284,10 +284,10 @@ export function nativeMethod(op: VipsOperation): string {
 
 	let result = ''
 	if (info.mutatingInstanceMethod) {
-		result += internalNativeMethod(op, info, { mutating: true }) + '\n'
+		result += internalNativeMethod(op, info, { mode: 'mutating' }) + '\n'
 
 		const nonMutatingInfo = operationInfo(op, { noMutatingInstanceMethods: true, dontRemoveInstanceMethodFromIns: true })
-		result += internalNativeMethod(op, nonMutatingInfo)
+		result += internalNativeMethod(op, nonMutatingInfo, { mode: 'nonmutating' })
 	} else {
 		result += internalNativeMethod(op, info)
 	}
@@ -295,7 +295,7 @@ export function nativeMethod(op: VipsOperation): string {
 	return result
 }
 
-function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, options?: { mutating?: boolean }): string {
+function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, options?: VipsOperationOptions): string {
 	let result = ''
 	const { ins, optionals, outs, instanceMethod, mutatingInstanceMethod } = info
 

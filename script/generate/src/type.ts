@@ -39,3 +39,10 @@ export interface VipsOperationInfo {
 	 */
 	mutatingInstanceMethod: VipsOperationParameter | undefined
 }
+
+export interface VipsOperationOptions {
+	/**
+	 * Set if we're generating the operation in a specific mode.
+	 */
+	mode?: 'mutating' | 'nonmutating'
+}
