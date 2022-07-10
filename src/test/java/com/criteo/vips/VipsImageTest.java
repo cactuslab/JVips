@@ -362,7 +362,6 @@ public class VipsImageTest {
             img.thumbnailImage(800, new ThumbnailImageOptions().height(800).crop(VipsInteresting.Attention));
             assertEquals(800, img.getWidth());
             assertEquals(800, img.getHeight());
-            img.writeToFile("/Users/karlvr/Desktop/test.jpg");
         }
     }
 
