@@ -317,6 +317,14 @@ export function nativeMethod(op: VipsOperation): string {
 	g_value_unset(&gvalue);
 `
 				break
+			case 'gboolean':
+				result += `
+	g_value_init(&gvalue, G_TYPE_BOOLEAN);
+	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
+	jboolean ${camelCase(p.name)} = g_value_get_boolean(&gvalue);
+	g_value_unset(&gvalue);
+`
+				break
 			case 'gint':
 				result += `
 	g_value_init(&gvalue, G_TYPE_INT);
