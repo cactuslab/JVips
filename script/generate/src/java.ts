@@ -29,6 +29,7 @@ function javaTypeForType(p: VipsOperationParameter, required: boolean = true): s
 		case 'VipsImage': return 'VipsImage'
 		case 'VipsArrayDouble': return 'PixelPacket' // TODO are they all PixelPackets?
 		case 'VipsBlob': return 'byte[]'
+		case 'Rectangle': return 'Rectangle'
 	}
 	throw new Error(`Unsupported Java parameter type '${p.type} for parameter '${p.name}'`)
 }
@@ -224,6 +225,8 @@ export function javaFileHeader(): string {
 	return `${COPYRIGHT}
 
 package com.criteo.vips;
+
+import java.awt.Rectangle;
 
 import javax.annotation.Generated;
 

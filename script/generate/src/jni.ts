@@ -18,6 +18,7 @@ function jniTypeForParameter(p: VipsOperationParameter): string {
 		case 'VipsImage': return 'jobject'
 		case 'VipsArrayDouble': return 'jobject' /* Represented by PixelPacket */
 		case 'VipsBlob': return 'jbyteArray'
+		case 'Rectangle': return 'jobject' /* A special handling for find_trim, which returns a Rectangle */
 	}
 	throw new Error(`Unsupported JNI parameter type '${p.type}' for parameter '${p.name}'`)
 }
@@ -158,7 +159,9 @@ static jmethodID longValue_mid = NULL;
 static jmethodID doubleValue_mid = NULL;
 static jclass imageClass = NULL;
 static jclass pixelPacketClass = NULL;
-static jmethodID pixelPacket_ctor_mid = NULL;`
+static jmethodID pixelPacket_ctor_mid = NULL;
+static jclass rectangleClass = NULL;
+static jmethodID rectangle_ctor_mid = NULL;`
 }
 
 function initFields(): string {
@@ -177,7 +180,9 @@ intValue_mid = (*env)->GetMethodID(env, integerClass, "intValue", "()I");
 jclass longClass = (*env)->FindClass(env, "java/lang/Long");
 longValue_mid = (*env)->GetMethodID(env, longClass, "longValue", "()J");
 jclass doubleClass = (*env)->FindClass(env, "java/lang/Double");
-doubleValue_mid = (*env)->GetMethodID(env, doubleClass, "doubleValue", "()D");`
+doubleValue_mid = (*env)->GetMethodID(env, doubleClass, "doubleValue", "()D");
+rectangleClass = (*env)->FindClass(env, "java/awt/Rectangle");
+rectangle_ctor_mid = (*env)->GetMethodID(env, rectangleClass, "<init>", "(IIII)V");`
 }
 
 function applyPrimitiveParameter(p: VipsOperationParameter, vipsType: string, vipsValueSetFunction: string) {
@@ -333,6 +338,21 @@ export function nativeMethod(op: VipsOperation): string {
 	jbyteArray ${camelCase(p.name)} = (*env)->NewByteArray(env, ${camelCase(p.name)}Length);
 	(*env)->SetByteArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Data);
 	g_value_unset(&gvalue);
+`
+				break
+			case 'Rectangle':
+				result += `
+		g_value_init(&gvalue, G_TYPE_INT);
+		g_object_get_property(G_OBJECT(op), "left", &gvalue);
+		jint ${camelCase(p.name)}Left = g_value_get_int(&gvalue);
+		g_object_get_property(G_OBJECT(op), "top", &gvalue);
+		jint ${camelCase(p.name)}Top = g_value_get_int(&gvalue);
+		g_object_get_property(G_OBJECT(op), "width", &gvalue);
+		jint ${camelCase(p.name)}Width = g_value_get_int(&gvalue);
+		g_object_get_property(G_OBJECT(op), "height", &gvalue);
+		jint ${camelCase(p.name)}Height = g_value_get_int(&gvalue);
+		jobject ${camelCase(p.name)} = (*env)->NewObject(env, rectangleClass, rectangle_ctor_mid, ${camelCase(p.name)}Left, ${camelCase(p.name)}Top, ${camelCase(p.name)}Width, ${camelCase(p.name)}Height);
+		g_value_unset(&gvalue);
 `
 				break
 			default:
