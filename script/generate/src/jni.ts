@@ -1,3 +1,4 @@
+import { operationInfo } from "./common"
 import { COPYRIGHT } from "./constants"
 import { javaOperationIdentifier, javaParameterIdentifier } from "./java"
 import { VipsOperation, VipsOperationParameter } from "./type"
@@ -188,16 +189,7 @@ g_value_unset(&gvalue);`
 
 export function nativeMethod(op: VipsOperation): string {
 	let result = ''
-	const ins = op.parameters.filter(p => p.direction === 'input' && p.required)
-	const optionals = op.parameters.filter(p => p.direction === 'input' && !p.required)
-	const outs = op.parameters.filter(p => p.direction === 'output' && p.required)
-
-	const instanceMethod = ins.length > 0 && ins[0].direction === 'input' && ins[0].type === 'VipsImage' ? ins[0] : undefined
-	const instanceMutatingMethod = instanceMethod && outs.length && outs[0].type === 'VipsImage' && !op.alias.startsWith('extract')  ? outs[0] : undefined
-	if (instanceMutatingMethod) {
-		/* Remove the out parameter that is our instance mutator */
-		outs.splice(0, 1)
-	}
+	const { ins, optionals, outs, instanceMethod, mutatingInstanceMethod } = operationInfo(op, { dontRemoveInstanceMethodFromIns: true })
 
 	if (outs.length > 1) {
 		throw new Error(`Multiple outputs for ${op.alias}: ${outs.map(p => p.name)}`)
@@ -277,15 +269,15 @@ export function nativeMethod(op: VipsOperation): string {
 
 `
 
-	if (instanceMethod && instanceMutatingMethod) {
+	if (instanceMethod && mutatingInstanceMethod) {
 		result += `\t// Mutating image result
 	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "${instanceMutatingMethod.name}", &gvalue);
-	VipsImage *_${instanceMutatingMethod.name} = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(_${instanceMutatingMethod.name}); 
+	g_object_get_property(G_OBJECT(op), "${mutatingInstanceMethod.name}", &gvalue);
+	VipsImage *_${mutatingInstanceMethod.name} = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(_${mutatingInstanceMethod.name}); 
 	g_value_unset(&gvalue);
 	g_object_unref((VipsImage *) (*env)->GetLongField(env, ${instanceMethod.name}, handle_fid));
-	(*env)->SetLongField(env, ${instanceMethod.name}, handle_fid, (jlong) _${instanceMutatingMethod.name});
+	(*env)->SetLongField(env, ${instanceMethod.name}, handle_fid, (jlong) _${mutatingInstanceMethod.name});
 `
 	}
 

@@ -1,3 +1,4 @@
+import { operationInfo } from "./common"
 import { COPYRIGHT } from "./constants"
 import { VipsOperation, VipsOperationParameter } from "./type"
 import { isEnum, camelCase, pascalCase, capitalize } from "./utils"
@@ -80,20 +81,8 @@ export function javaOperationClassName(op: VipsOperation): string {
 
 export function javaNativeStub(op: VipsOperation): string {
 	let result = ''
-	const ins = op.parameters.filter(p => p.direction === 'input' && p.required)
-	const optionals = op.parameters.filter(p => p.direction === 'input' && !p.required)
-	const outs = op.parameters.filter(p => p.direction === 'output' && p.required)
+	const { ins, optionals, outs, instanceMethod } = operationInfo(op)
 
-	const instanceMethod = ins.length > 0 && ins[0].direction === 'input' && ins[0].type === 'VipsImage' ? ins[0] : undefined
-	if (instanceMethod) {
-		ins.splice(0, 1)
-	}
-
-	const instanceMutatingMethod = instanceMethod && outs.length && outs[0].type === 'VipsImage' && !op.alias.startsWith('extract') ? outs[0] : undefined
-	if (instanceMutatingMethod) {
-		/* Remove the out parameter that is our instance mutator */
-		outs.splice(0, 1)
-	}
 	if (outs.length > 1) {
 		throw new Error(`Multiple outputs for ${op.alias}: ${outs.map(p => p.name)}`)
 	}
