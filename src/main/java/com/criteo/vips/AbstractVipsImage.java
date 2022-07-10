@@ -42,14 +42,31 @@ abstract class AbstractVipsImage extends Vips {
 
 	/**
 	 * VipsAbs (abs): absolute value of an image
+	 * Mutates the image inplace.
 	 */
-	public native void abs() throws VipsException;
+	public native void applyAbs() throws VipsException;
+	
+	
+	/**
+	 * VipsAbs (abs): absolute value of an image
+	 * Returns a new image.
+	 */
+	public native VipsImage abs() throws VipsException;
 	
 	/**
 	 * VipsAdd (add): add two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void add(Image right) throws VipsException;
+	public native void applyAdd(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsAdd (add): add two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 */
+	public native VipsImage add(Image right) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadAnalyze (analyzeload): load an Analyze6 image
@@ -83,8 +100,16 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsAutorot (autorot): autorotate image by exif tag
+	 * Mutates the image inplace.
 	 */
-	public native void autorot() throws VipsException;
+	public native void applyAutorot() throws VipsException;
+	
+	
+	/**
+	 * VipsAutorot (autorot): autorotate image by exif tag
+	 * Returns a new image.
+	 */
+	public native VipsImage autorot() throws VipsException;
 	
 	/**
 	 * VipsAvg (avg): find image average
@@ -93,21 +118,48 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsBandbool (bandbool): boolean operation across image bands
+	 * Mutates the image inplace.
 	 * @param booleanParam boolean to perform
 	 */
-	public native void bandbool(VipsOperationBoolean booleanParam) throws VipsException;
+	public native void applyBandbool(VipsOperationBoolean booleanParam) throws VipsException;
+	
+	
+	/**
+	 * VipsBandbool (bandbool): boolean operation across image bands
+	 * Returns a new image.
+	 * @param booleanParam boolean to perform
+	 */
+	public native VipsImage bandbool(VipsOperationBoolean booleanParam) throws VipsException;
 	
 	/**
 	 * VipsBandfold (bandfold): fold up x axis into bands
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void bandfold(BandfoldOptions options) throws VipsException;
+	public native void applyBandfold(BandfoldOptions options) throws VipsException;
 	
 	/**
 	 * VipsBandfold (bandfold): fold up x axis into bands
+	 * Mutates the image inplace.
 	 */
-	public void bandfold() throws VipsException {
-		bandfold(null);
+	public void applyBandfold() throws VipsException {
+		applyBandfold(null);
+	}
+	
+	
+	/**
+	 * VipsBandfold (bandfold): fold up x axis into bands
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage bandfold(BandfoldOptions options) throws VipsException;
+	
+	/**
+	 * VipsBandfold (bandfold): fold up x axis into bands
+	 * Returns a new image.
+	 */
+	public VipsImage bandfold() throws VipsException {
+		return bandfold(null);
 	}
 	
 	/**
@@ -118,14 +170,31 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsBandjoinConst (bandjoin_const): append a constant band to an image
+	 * Mutates the image inplace.
 	 * @param c Array of constants to add
 	 */
-	public native void bandjoinConst(double[] c) throws VipsException;
+	public native void applyBandjoinConst(double[] c) throws VipsException;
+	
+	
+	/**
+	 * VipsBandjoinConst (bandjoin_const): append a constant band to an image
+	 * Returns a new image.
+	 * @param c Array of constants to add
+	 */
+	public native VipsImage bandjoinConst(double[] c) throws VipsException;
 	
 	/**
 	 * VipsBandmean (bandmean): band-wise average
+	 * Mutates the image inplace.
 	 */
-	public native void bandmean() throws VipsException;
+	public native void applyBandmean() throws VipsException;
+	
+	
+	/**
+	 * VipsBandmean (bandmean): band-wise average
+	 * Returns a new image.
+	 */
+	public native VipsImage bandmean() throws VipsException;
 	
 	/**
 	 * VipsBandrank (bandrank): band-wise rank of a set of images
@@ -144,15 +213,33 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsBandunfold (bandunfold): unfold image bands into x axis
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void bandunfold(BandunfoldOptions options) throws VipsException;
+	public native void applyBandunfold(BandunfoldOptions options) throws VipsException;
 	
 	/**
 	 * VipsBandunfold (bandunfold): unfold image bands into x axis
+	 * Mutates the image inplace.
 	 */
-	public void bandunfold() throws VipsException {
-		bandunfold(null);
+	public void applyBandunfold() throws VipsException {
+		applyBandunfold(null);
+	}
+	
+	
+	/**
+	 * VipsBandunfold (bandunfold): unfold image bands into x axis
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage bandunfold(BandunfoldOptions options) throws VipsException;
+	
+	/**
+	 * VipsBandunfold (bandunfold): unfold image bands into x axis
+	 * Returns a new image.
+	 */
+	public VipsImage bandunfold() throws VipsException {
+		return bandunfold(null);
 	}
 	
 	/**
@@ -174,139 +261,333 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsBoolean (boolean): boolean operation on two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 * @param booleanParam boolean to perform
 	 */
-	public native void booleanOp(Image right, VipsOperationBoolean booleanParam) throws VipsException;
+	public native void applyBoolean(Image right, VipsOperationBoolean booleanParam) throws VipsException;
+	
+	
+	/**
+	 * VipsBoolean (boolean): boolean operation on two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 * @param booleanParam boolean to perform
+	 */
+	public native VipsImage booleanOp(Image right, VipsOperationBoolean booleanParam) throws VipsException;
 	
 	/**
 	 * VipsBooleanConst (boolean_const): boolean operations against a constant
+	 * Mutates the image inplace.
 	 * @param booleanParam boolean to perform
 	 * @param c Array of constants
 	 */
-	public native void booleanConst(VipsOperationBoolean booleanParam, double[] c) throws VipsException;
+	public native void applyBooleanConst(VipsOperationBoolean booleanParam, double[] c) throws VipsException;
+	
+	
+	/**
+	 * VipsBooleanConst (boolean_const): boolean operations against a constant
+	 * Returns a new image.
+	 * @param booleanParam boolean to perform
+	 * @param c Array of constants
+	 */
+	public native VipsImage booleanConst(VipsOperationBoolean booleanParam, double[] c) throws VipsException;
 	
 	/**
 	 * VipsBuildlut (buildlut): build a look-up table
+	 * Mutates the image inplace.
 	 */
-	public native void buildlut() throws VipsException;
+	public native void applyBuildlut() throws VipsException;
+	
+	
+	/**
+	 * VipsBuildlut (buildlut): build a look-up table
+	 * Returns a new image.
+	 */
+	public native VipsImage buildlut() throws VipsException;
 	
 	/**
 	 * VipsByteswap (byteswap): byteswap an image
+	 * Mutates the image inplace.
 	 */
-	public native void byteswap() throws VipsException;
+	public native void applyByteswap() throws VipsException;
+	
+	
+	/**
+	 * VipsByteswap (byteswap): byteswap an image
+	 * Returns a new image.
+	 */
+	public native VipsImage byteswap() throws VipsException;
 	
 	/**
 	 * VipsCache (cache): cache an image
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void cache(CacheOptions options) throws VipsException;
+	public native void applyCache(CacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsCache (cache): cache an image
+	 * Mutates the image inplace.
 	 */
-	public void cache() throws VipsException {
-		cache(null);
+	public void applyCache() throws VipsException {
+		applyCache(null);
+	}
+	
+	
+	/**
+	 * VipsCache (cache): cache an image
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage cache(CacheOptions options) throws VipsException;
+	
+	/**
+	 * VipsCache (cache): cache an image
+	 * Returns a new image.
+	 */
+	public VipsImage cache() throws VipsException {
+		return cache(null);
 	}
 	
 	/**
 	 * VipsCanny (canny): Canny edge detector
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void canny(CannyOptions options) throws VipsException;
+	public native void applyCanny(CannyOptions options) throws VipsException;
 	
 	/**
 	 * VipsCanny (canny): Canny edge detector
+	 * Mutates the image inplace.
 	 */
-	public void canny() throws VipsException {
-		canny(null);
+	public void applyCanny() throws VipsException {
+		applyCanny(null);
+	}
+	
+	
+	/**
+	 * VipsCanny (canny): Canny edge detector
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage canny(CannyOptions options) throws VipsException;
+	
+	/**
+	 * VipsCanny (canny): Canny edge detector
+	 * Returns a new image.
+	 */
+	public VipsImage canny() throws VipsException {
+		return canny(null);
 	}
 	
 	/**
 	 * VipsCase (case): use pixel values to pick cases from an array of images
+	 * Mutates the image inplace.
 	 * @param cases Array of case images
 	 */
-	public native void caseOp(Image[] cases) throws VipsException;
+	public native void applyCase(Image[] cases) throws VipsException;
+	
+	
+	/**
+	 * VipsCase (case): use pixel values to pick cases from an array of images
+	 * Returns a new image.
+	 * @param cases Array of case images
+	 */
+	public native VipsImage caseOp(Image[] cases) throws VipsException;
 	
 	/**
 	 * VipsCast (cast): cast an image
+	 * Mutates the image inplace.
 	 * @param format Format to cast to
 	 * @param options optional arguments
 	 */
-	public native void cast(VipsBandFormat format, CastOptions options) throws VipsException;
+	public native void applyCast(VipsBandFormat format, CastOptions options) throws VipsException;
 	
 	/**
 	 * VipsCast (cast): cast an image
+	 * Mutates the image inplace.
 	 * @param format Format to cast to
 	 */
-	public void cast(VipsBandFormat format) throws VipsException {
-		cast(format, null);
+	public void applyCast(VipsBandFormat format) throws VipsException {
+		applyCast(format, null);
+	}
+	
+	
+	/**
+	 * VipsCast (cast): cast an image
+	 * Returns a new image.
+	 * @param format Format to cast to
+	 * @param options optional arguments
+	 */
+	public native VipsImage cast(VipsBandFormat format, CastOptions options) throws VipsException;
+	
+	/**
+	 * VipsCast (cast): cast an image
+	 * Returns a new image.
+	 * @param format Format to cast to
+	 */
+	public VipsImage cast(VipsBandFormat format) throws VipsException {
+		return cast(format, null);
 	}
 	
 	/**
 	 * VipsCMC2LCh (CMC2LCh): transform LCh to CMC
+	 * Mutates the image inplace.
 	 */
-	public native void cMC2LCh() throws VipsException;
+	public native void applyCMC2LCh() throws VipsException;
+	
+	
+	/**
+	 * VipsCMC2LCh (CMC2LCh): transform LCh to CMC
+	 * Returns a new image.
+	 */
+	public native VipsImage cMC2LCh() throws VipsException;
 	
 	/**
 	 * VipsCMYK2XYZ (CMYK2XYZ): transform CMYK to XYZ
+	 * Mutates the image inplace.
 	 */
-	public native void cmyk2xyz() throws VipsException;
+	public native void applyCMYK2XYZ() throws VipsException;
+	
+	
+	/**
+	 * VipsCMYK2XYZ (CMYK2XYZ): transform CMYK to XYZ
+	 * Returns a new image.
+	 */
+	public native VipsImage cmyk2xyz() throws VipsException;
 	
 	/**
 	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * Mutates the image inplace.
 	 * @param space Destination colour space
 	 * @param options optional arguments
 	 */
-	public native void colourspace(VipsInterpretation space, ColourspaceOptions options) throws VipsException;
+	public native void applyColourspace(VipsInterpretation space, ColourspaceOptions options) throws VipsException;
 	
 	/**
 	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * Mutates the image inplace.
 	 * @param space Destination colour space
 	 */
-	public void colourspace(VipsInterpretation space) throws VipsException {
-		colourspace(space, null);
+	public void applyColourspace(VipsInterpretation space) throws VipsException {
+		applyColourspace(space, null);
+	}
+	
+	
+	/**
+	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * Returns a new image.
+	 * @param space Destination colour space
+	 * @param options optional arguments
+	 */
+	public native VipsImage colourspace(VipsInterpretation space, ColourspaceOptions options) throws VipsException;
+	
+	/**
+	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * Returns a new image.
+	 * @param space Destination colour space
+	 */
+	public VipsImage colourspace(VipsInterpretation space) throws VipsException {
+		return colourspace(space, null);
 	}
 	
 	/**
 	 * VipsCompass (compass): convolve with rotating mask
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void compass(Image mask, CompassOptions options) throws VipsException;
+	public native void applyCompass(Image mask, CompassOptions options) throws VipsException;
 	
 	/**
 	 * VipsCompass (compass): convolve with rotating mask
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void compass(Image mask) throws VipsException {
-		compass(mask, null);
+	public void applyCompass(Image mask) throws VipsException {
+		applyCompass(mask, null);
+	}
+	
+	
+	/**
+	 * VipsCompass (compass): convolve with rotating mask
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 * @param options optional arguments
+	 */
+	public native VipsImage compass(Image mask, CompassOptions options) throws VipsException;
+	
+	/**
+	 * VipsCompass (compass): convolve with rotating mask
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 */
+	public VipsImage compass(Image mask) throws VipsException {
+		return compass(mask, null);
 	}
 	
 	/**
 	 * VipsComplex (complex): perform a complex operation on an image
+	 * Mutates the image inplace.
 	 * @param cmplx complex to perform
 	 */
-	public native void complex(VipsOperationComplex cmplx) throws VipsException;
+	public native void applyComplex(VipsOperationComplex cmplx) throws VipsException;
+	
+	
+	/**
+	 * VipsComplex (complex): perform a complex operation on an image
+	 * Returns a new image.
+	 * @param cmplx complex to perform
+	 */
+	public native VipsImage complex(VipsOperationComplex cmplx) throws VipsException;
 	
 	/**
 	 * VipsComplex2 (complex2): complex binary operations on two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 * @param cmplx binary complex operation to perform
 	 */
-	public native void complex2(Image right, VipsOperationComplex2 cmplx) throws VipsException;
+	public native void applyComplex2(Image right, VipsOperationComplex2 cmplx) throws VipsException;
+	
+	
+	/**
+	 * VipsComplex2 (complex2): complex binary operations on two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 * @param cmplx binary complex operation to perform
+	 */
+	public native VipsImage complex2(Image right, VipsOperationComplex2 cmplx) throws VipsException;
 	
 	/**
 	 * VipsComplexform (complexform): form a complex image from two real images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void complexform(Image right) throws VipsException;
+	public native void applyComplexform(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsComplexform (complexform): form a complex image from two real images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 */
+	public native VipsImage complexform(Image right) throws VipsException;
 	
 	/**
 	 * VipsComplexget (complexget): get a component from a complex image
+	 * Mutates the image inplace.
 	 * @param get complex to perform
 	 */
-	public native void complexget(VipsOperationComplexget get) throws VipsException;
+	public native void applyComplexget(VipsOperationComplexget get) throws VipsException;
+	
+	
+	/**
+	 * VipsComplexget (complexget): get a component from a complex image
+	 * Returns a new image.
+	 * @param get complex to perform
+	 */
+	public native VipsImage complexget(VipsOperationComplexget get) throws VipsException;
 	
 	/**
 	 * VipsComposite (composite): blend an array of images with an array of blend modes
@@ -327,104 +608,242 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsComposite2 (composite2): blend a pair of images with a blend mode
+	 * Mutates the image inplace.
 	 * @param overlay Overlay image
 	 * @param mode VipsBlendMode to join with
 	 * @param options optional arguments
 	 */
-	public native void composite2(Image overlay, VipsBlendMode mode, Composite2Options options) throws VipsException;
+	public native void applyComposite2(Image overlay, VipsBlendMode mode, Composite2Options options) throws VipsException;
 	
 	/**
 	 * VipsComposite2 (composite2): blend a pair of images with a blend mode
+	 * Mutates the image inplace.
 	 * @param overlay Overlay image
 	 * @param mode VipsBlendMode to join with
 	 */
-	public void composite2(Image overlay, VipsBlendMode mode) throws VipsException {
-		composite2(overlay, mode, null);
+	public void applyComposite2(Image overlay, VipsBlendMode mode) throws VipsException {
+		applyComposite2(overlay, mode, null);
+	}
+	
+	
+	/**
+	 * VipsComposite2 (composite2): blend a pair of images with a blend mode
+	 * Returns a new image.
+	 * @param overlay Overlay image
+	 * @param mode VipsBlendMode to join with
+	 * @param options optional arguments
+	 */
+	public native VipsImage composite2(Image overlay, VipsBlendMode mode, Composite2Options options) throws VipsException;
+	
+	/**
+	 * VipsComposite2 (composite2): blend a pair of images with a blend mode
+	 * Returns a new image.
+	 * @param overlay Overlay image
+	 * @param mode VipsBlendMode to join with
+	 */
+	public VipsImage composite2(Image overlay, VipsBlendMode mode) throws VipsException {
+		return composite2(overlay, mode, null);
 	}
 	
 	/**
 	 * VipsConv (conv): convolution operation
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void conv(Image mask, ConvOptions options) throws VipsException;
+	public native void applyConv(Image mask, ConvOptions options) throws VipsException;
 	
 	/**
 	 * VipsConv (conv): convolution operation
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void conv(Image mask) throws VipsException {
-		conv(mask, null);
+	public void applyConv(Image mask) throws VipsException {
+		applyConv(mask, null);
+	}
+	
+	
+	/**
+	 * VipsConv (conv): convolution operation
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 * @param options optional arguments
+	 */
+	public native VipsImage conv(Image mask, ConvOptions options) throws VipsException;
+	
+	/**
+	 * VipsConv (conv): convolution operation
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 */
+	public VipsImage conv(Image mask) throws VipsException {
+		return conv(mask, null);
 	}
 	
 	/**
 	 * VipsConva (conva): approximate integer convolution
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void conva(Image mask, ConvaOptions options) throws VipsException;
+	public native void applyConva(Image mask, ConvaOptions options) throws VipsException;
 	
 	/**
 	 * VipsConva (conva): approximate integer convolution
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void conva(Image mask) throws VipsException {
-		conva(mask, null);
+	public void applyConva(Image mask) throws VipsException {
+		applyConva(mask, null);
+	}
+	
+	
+	/**
+	 * VipsConva (conva): approximate integer convolution
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 * @param options optional arguments
+	 */
+	public native VipsImage conva(Image mask, ConvaOptions options) throws VipsException;
+	
+	/**
+	 * VipsConva (conva): approximate integer convolution
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 */
+	public VipsImage conva(Image mask) throws VipsException {
+		return conva(mask, null);
 	}
 	
 	/**
 	 * VipsConvasep (convasep): approximate separable integer convolution
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void convasep(Image mask, ConvasepOptions options) throws VipsException;
+	public native void applyConvasep(Image mask, ConvasepOptions options) throws VipsException;
 	
 	/**
 	 * VipsConvasep (convasep): approximate separable integer convolution
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void convasep(Image mask) throws VipsException {
-		convasep(mask, null);
+	public void applyConvasep(Image mask) throws VipsException {
+		applyConvasep(mask, null);
+	}
+	
+	
+	/**
+	 * VipsConvasep (convasep): approximate separable integer convolution
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 * @param options optional arguments
+	 */
+	public native VipsImage convasep(Image mask, ConvasepOptions options) throws VipsException;
+	
+	/**
+	 * VipsConvasep (convasep): approximate separable integer convolution
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 */
+	public VipsImage convasep(Image mask) throws VipsException {
+		return convasep(mask, null);
 	}
 	
 	/**
 	 * VipsConvf (convf): float convolution operation
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public native void convf(Image mask) throws VipsException;
+	public native void applyConvf(Image mask) throws VipsException;
+	
+	
+	/**
+	 * VipsConvf (convf): float convolution operation
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 */
+	public native VipsImage convf(Image mask) throws VipsException;
 	
 	/**
 	 * VipsConvi (convi): int convolution operation
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public native void convi(Image mask) throws VipsException;
+	public native void applyConvi(Image mask) throws VipsException;
+	
+	
+	/**
+	 * VipsConvi (convi): int convolution operation
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 */
+	public native VipsImage convi(Image mask) throws VipsException;
 	
 	/**
 	 * VipsConvsep (convsep): seperable convolution operation
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void convsep(Image mask, ConvsepOptions options) throws VipsException;
+	public native void applyConvsep(Image mask, ConvsepOptions options) throws VipsException;
 	
 	/**
 	 * VipsConvsep (convsep): seperable convolution operation
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void convsep(Image mask) throws VipsException {
-		convsep(mask, null);
+	public void applyConvsep(Image mask) throws VipsException {
+		applyConvsep(mask, null);
+	}
+	
+	
+	/**
+	 * VipsConvsep (convsep): seperable convolution operation
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 * @param options optional arguments
+	 */
+	public native VipsImage convsep(Image mask, ConvsepOptions options) throws VipsException;
+	
+	/**
+	 * VipsConvsep (convsep): seperable convolution operation
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 */
+	public VipsImage convsep(Image mask) throws VipsException {
+		return convsep(mask, null);
 	}
 	
 	/**
 	 * VipsCopy (copy): copy an image
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void copy(CopyOptions options) throws VipsException;
+	public native void applyCopy(CopyOptions options) throws VipsException;
 	
 	/**
 	 * VipsCopy (copy): copy an image
+	 * Mutates the image inplace.
 	 */
-	public void copy() throws VipsException {
-		copy(null);
+	public void applyCopy() throws VipsException {
+		applyCopy(null);
+	}
+	
+	
+	/**
+	 * VipsCopy (copy): copy an image
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage copy(CopyOptions options) throws VipsException;
+	
+	/**
+	 * VipsCopy (copy): copy an image
+	 * Returns a new image.
+	 */
+	public VipsImage copy() throws VipsException {
+		return copy(null);
 	}
 	
 	/**
@@ -465,21 +884,48 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsdE00 (dE00): calculate dE00
+	 * Mutates the image inplace.
 	 * @param right Right-hand input image
 	 */
-	public native void dE00(Image right) throws VipsException;
+	public native void applyDE00(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsdE00 (dE00): calculate dE00
+	 * Returns a new image.
+	 * @param right Right-hand input image
+	 */
+	public native VipsImage dE00(Image right) throws VipsException;
 	
 	/**
 	 * VipsdE76 (dE76): calculate dE76
+	 * Mutates the image inplace.
 	 * @param right Right-hand input image
 	 */
-	public native void dE76(Image right) throws VipsException;
+	public native void applyDE76(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsdE76 (dE76): calculate dE76
+	 * Returns a new image.
+	 * @param right Right-hand input image
+	 */
+	public native VipsImage dE76(Image right) throws VipsException;
 	
 	/**
 	 * VipsdECMC (dECMC): calculate dECMC
+	 * Mutates the image inplace.
 	 * @param right Right-hand input image
 	 */
-	public native void dECMC(Image right) throws VipsException;
+	public native void applyDECMC(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsdECMC (dECMC): calculate dECMC
+	 * Returns a new image.
+	 * @param right Right-hand input image
+	 */
+	public native VipsImage dECMC(Image right) throws VipsException;
 	
 	/**
 	 * VipsDeviate (deviate): find image standard deviation
@@ -488,9 +934,18 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsDivide (divide): divide two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void divide(Image right) throws VipsException;
+	public native void applyDivide(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsDivide (divide): divide two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 */
+	public native VipsImage divide(Image right) throws VipsException;
 	
 	/**
 	 * VipsDrawCircle (draw_circle): draw a circle on an image
@@ -632,27 +1087,65 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsEmbed (embed): embed an image in a larger image
+	 * Mutates the image inplace.
 	 * @param x Left edge of input in output
 	 * @param y Top edge of input in output
 	 * @param width Image width in pixels
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public native void embed(int x, int y, int width, int height, EmbedOptions options) throws VipsException;
+	public native void applyEmbed(int x, int y, int width, int height, EmbedOptions options) throws VipsException;
 	
 	/**
 	 * VipsEmbed (embed): embed an image in a larger image
+	 * Mutates the image inplace.
 	 * @param x Left edge of input in output
 	 * @param y Top edge of input in output
 	 * @param width Image width in pixels
 	 * @param height Image height in pixels
 	 */
-	public void embed(int x, int y, int width, int height) throws VipsException {
-		embed(x, y, width, height, null);
+	public void applyEmbed(int x, int y, int width, int height) throws VipsException {
+		applyEmbed(x, y, width, height, null);
+	}
+	
+	
+	/**
+	 * VipsEmbed (embed): embed an image in a larger image
+	 * Returns a new image.
+	 * @param x Left edge of input in output
+	 * @param y Top edge of input in output
+	 * @param width Image width in pixels
+	 * @param height Image height in pixels
+	 * @param options optional arguments
+	 */
+	public native VipsImage embed(int x, int y, int width, int height, EmbedOptions options) throws VipsException;
+	
+	/**
+	 * VipsEmbed (embed): embed an image in a larger image
+	 * Returns a new image.
+	 * @param x Left edge of input in output
+	 * @param y Top edge of input in output
+	 * @param width Image width in pixels
+	 * @param height Image height in pixels
+	 */
+	public VipsImage embed(int x, int y, int width, int height) throws VipsException {
+		return embed(x, y, width, height, null);
 	}
 	
 	/**
 	 * VipsExtractArea (extract_area): extract an area from an image
+	 * Mutates the image inplace.
+	 * @param left Left edge of extract area
+	 * @param top Top edge of extract area
+	 * @param width Width of extract area
+	 * @param height Height of extract area
+	 */
+	public native void applyExtractArea(int left, int top, int width, int height) throws VipsException;
+	
+	
+	/**
+	 * VipsExtractArea (extract_area): extract an area from an image
+	 * Returns a new image.
 	 * @param left Left edge of extract area
 	 * @param top Top edge of extract area
 	 * @param width Width of extract area
@@ -662,6 +1155,25 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsExtractBand (extract_band): extract band from an image
+	 * Mutates the image inplace.
+	 * @param band Band to extract
+	 * @param options optional arguments
+	 */
+	public native void applyExtractBand(int band, ExtractBandOptions options) throws VipsException;
+	
+	/**
+	 * VipsExtractBand (extract_band): extract band from an image
+	 * Mutates the image inplace.
+	 * @param band Band to extract
+	 */
+	public void applyExtractBand(int band) throws VipsException {
+		applyExtractBand(band, null);
+	}
+	
+	
+	/**
+	 * VipsExtractBand (extract_band): extract band from an image
+	 * Returns a new image.
 	 * @param band Band to extract
 	 * @param options optional arguments
 	 */
@@ -669,6 +1181,7 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsExtractBand (extract_band): extract band from an image
+	 * Returns a new image.
 	 * @param band Band to extract
 	 */
 	public VipsImage extractBand(int band) throws VipsException {
@@ -694,19 +1207,44 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsFalsecolour (falsecolour): false-colour an image
+	 * Mutates the image inplace.
 	 */
-	public native void falsecolour() throws VipsException;
+	public native void applyFalsecolour() throws VipsException;
+	
+	
+	/**
+	 * VipsFalsecolour (falsecolour): false-colour an image
+	 * Returns a new image.
+	 */
+	public native VipsImage falsecolour() throws VipsException;
 	
 	/**
 	 * VipsFastcor (fastcor): fast correlation
+	 * Mutates the image inplace.
 	 * @param ref Input reference image
 	 */
-	public native void fastcor(Image ref) throws VipsException;
+	public native void applyFastcor(Image ref) throws VipsException;
+	
+	
+	/**
+	 * VipsFastcor (fastcor): fast correlation
+	 * Returns a new image.
+	 * @param ref Input reference image
+	 */
+	public native VipsImage fastcor(Image ref) throws VipsException;
 	
 	/**
 	 * VipsFillNearest (fill_nearest): fill image zeros with nearest non-zero pixel
+	 * Mutates the image inplace.
 	 */
-	public native void fillNearest() throws VipsException;
+	public native void applyFillNearest() throws VipsException;
+	
+	
+	/**
+	 * VipsFillNearest (fill_nearest): fill image zeros with nearest non-zero pixel
+	 * Returns a new image.
+	 */
+	public native VipsImage fillNearest() throws VipsException;
 	
 	/**
 	 * VipsFindTrim (find_trim): search an image for non-edge areas
@@ -753,27 +1291,62 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsFlatten (flatten): flatten alpha out of an image
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void flatten(FlattenOptions options) throws VipsException;
+	public native void applyFlatten(FlattenOptions options) throws VipsException;
 	
 	/**
 	 * VipsFlatten (flatten): flatten alpha out of an image
+	 * Mutates the image inplace.
 	 */
-	public void flatten() throws VipsException {
-		flatten(null);
+	public void applyFlatten() throws VipsException {
+		applyFlatten(null);
+	}
+	
+	
+	/**
+	 * VipsFlatten (flatten): flatten alpha out of an image
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage flatten(FlattenOptions options) throws VipsException;
+	
+	/**
+	 * VipsFlatten (flatten): flatten alpha out of an image
+	 * Returns a new image.
+	 */
+	public VipsImage flatten() throws VipsException {
+		return flatten(null);
 	}
 	
 	/**
 	 * VipsFlip (flip): flip an image
+	 * Mutates the image inplace.
 	 * @param direction Direction to flip image
 	 */
-	public native void flip(VipsDirection direction) throws VipsException;
+	public native void applyFlip(VipsDirection direction) throws VipsException;
+	
+	
+	/**
+	 * VipsFlip (flip): flip an image
+	 * Returns a new image.
+	 * @param direction Direction to flip image
+	 */
+	public native VipsImage flip(VipsDirection direction) throws VipsException;
 	
 	/**
 	 * VipsFloat2rad (float2rad): transform float RGB to Radiance coding
+	 * Mutates the image inplace.
 	 */
-	public native void float2rad() throws VipsException;
+	public native void applyFloat2rad() throws VipsException;
+	
+	
+	/**
+	 * VipsFloat2rad (float2rad): transform float RGB to Radiance coding
+	 * Returns a new image.
+	 */
+	public native VipsImage float2rad() throws VipsException;
 	
 	/**
 	 * VipsFractsurf (fractsurf): make a fractal surface
@@ -785,41 +1358,96 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsFreqmult (freqmult): frequency-domain filtering
+	 * Mutates the image inplace.
 	 * @param mask Input mask image
 	 */
-	public native void freqmult(Image mask) throws VipsException;
+	public native void applyFreqmult(Image mask) throws VipsException;
+	
+	
+	/**
+	 * VipsFreqmult (freqmult): frequency-domain filtering
+	 * Returns a new image.
+	 * @param mask Input mask image
+	 */
+	public native VipsImage freqmult(Image mask) throws VipsException;
 	
 	/**
 	 * VipsFwfft (fwfft): forward FFT
+	 * Mutates the image inplace.
 	 */
-	public native void fwfft() throws VipsException;
+	public native void applyFwfft() throws VipsException;
+	
+	
+	/**
+	 * VipsFwfft (fwfft): forward FFT
+	 * Returns a new image.
+	 */
+	public native VipsImage fwfft() throws VipsException;
 	
 	/**
 	 * VipsGamma (gamma): gamma an image
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void gamma(GammaOptions options) throws VipsException;
+	public native void applyGamma(GammaOptions options) throws VipsException;
 	
 	/**
 	 * VipsGamma (gamma): gamma an image
+	 * Mutates the image inplace.
 	 */
-	public void gamma() throws VipsException {
-		gamma(null);
+	public void applyGamma() throws VipsException {
+		applyGamma(null);
+	}
+	
+	
+	/**
+	 * VipsGamma (gamma): gamma an image
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage gamma(GammaOptions options) throws VipsException;
+	
+	/**
+	 * VipsGamma (gamma): gamma an image
+	 * Returns a new image.
+	 */
+	public VipsImage gamma() throws VipsException {
+		return gamma(null);
 	}
 	
 	/**
 	 * VipsGaussblur (gaussblur): gaussian blur
+	 * Mutates the image inplace.
 	 * @param sigma Sigma of Gaussian
 	 * @param options optional arguments
 	 */
-	public native void gaussBlur(double sigma, GaussBlurOptions options) throws VipsException;
+	public native void applyGaussBlur(double sigma, GaussBlurOptions options) throws VipsException;
 	
 	/**
 	 * VipsGaussblur (gaussblur): gaussian blur
+	 * Mutates the image inplace.
 	 * @param sigma Sigma of Gaussian
 	 */
-	public void gaussBlur(double sigma) throws VipsException {
-		gaussBlur(sigma, null);
+	public void applyGaussBlur(double sigma) throws VipsException {
+		applyGaussBlur(sigma, null);
+	}
+	
+	
+	/**
+	 * VipsGaussblur (gaussblur): gaussian blur
+	 * Returns a new image.
+	 * @param sigma Sigma of Gaussian
+	 * @param options optional arguments
+	 */
+	public native VipsImage gaussBlur(double sigma, GaussBlurOptions options) throws VipsException;
+	
+	/**
+	 * VipsGaussblur (gaussblur): gaussian blur
+	 * Returns a new image.
+	 * @param sigma Sigma of Gaussian
+	 */
+	public VipsImage gaussBlur(double sigma) throws VipsException {
+		return gaussBlur(sigma, null);
 	}
 	
 	/**
@@ -923,34 +1551,76 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsGlobalbalance (globalbalance): global balance an image mosaic
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void globalbalance(GlobalbalanceOptions options) throws VipsException;
+	public native void applyGlobalbalance(GlobalbalanceOptions options) throws VipsException;
 	
 	/**
 	 * VipsGlobalbalance (globalbalance): global balance an image mosaic
+	 * Mutates the image inplace.
 	 */
-	public void globalbalance() throws VipsException {
-		globalbalance(null);
+	public void applyGlobalbalance() throws VipsException {
+		applyGlobalbalance(null);
+	}
+	
+	
+	/**
+	 * VipsGlobalbalance (globalbalance): global balance an image mosaic
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage globalbalance(GlobalbalanceOptions options) throws VipsException;
+	
+	/**
+	 * VipsGlobalbalance (globalbalance): global balance an image mosaic
+	 * Returns a new image.
+	 */
+	public VipsImage globalbalance() throws VipsException {
+		return globalbalance(null);
 	}
 	
 	/**
 	 * VipsGravity (gravity): place an image within a larger image with a certain gravity
+	 * Mutates the image inplace.
 	 * @param direction direction to place image within width/height
 	 * @param width Image width in pixels
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public native void gravity(VipsCompassDirection direction, int width, int height, GravityOptions options) throws VipsException;
+	public native void applyGravity(VipsCompassDirection direction, int width, int height, GravityOptions options) throws VipsException;
 	
 	/**
 	 * VipsGravity (gravity): place an image within a larger image with a certain gravity
+	 * Mutates the image inplace.
 	 * @param direction direction to place image within width/height
 	 * @param width Image width in pixels
 	 * @param height Image height in pixels
 	 */
-	public void gravity(VipsCompassDirection direction, int width, int height) throws VipsException {
-		gravity(direction, width, height, null);
+	public void applyGravity(VipsCompassDirection direction, int width, int height) throws VipsException {
+		applyGravity(direction, width, height, null);
+	}
+	
+	
+	/**
+	 * VipsGravity (gravity): place an image within a larger image with a certain gravity
+	 * Returns a new image.
+	 * @param direction direction to place image within width/height
+	 * @param width Image width in pixels
+	 * @param height Image height in pixels
+	 * @param options optional arguments
+	 */
+	public native VipsImage gravity(VipsCompassDirection direction, int width, int height, GravityOptions options) throws VipsException;
+	
+	/**
+	 * VipsGravity (gravity): place an image within a larger image with a certain gravity
+	 * Returns a new image.
+	 * @param direction direction to place image within width/height
+	 * @param width Image width in pixels
+	 * @param height Image height in pixels
+	 */
+	public VipsImage gravity(VipsCompassDirection direction, int width, int height) throws VipsException {
+		return gravity(direction, width, height, null);
 	}
 	
 	/**
@@ -972,11 +1642,22 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsGrid (grid): grid an image
+	 * Mutates the image inplace.
 	 * @param tileHeight chop into tiles this high
 	 * @param across number of tiles across
 	 * @param down number of tiles down
 	 */
-	public native void grid(int tileHeight, int across, int down) throws VipsException;
+	public native void applyGrid(int tileHeight, int across, int down) throws VipsException;
+	
+	
+	/**
+	 * VipsGrid (grid): grid an image
+	 * Returns a new image.
+	 * @param tileHeight chop into tiles this high
+	 * @param across number of tiles across
+	 * @param down number of tiles down
+	 */
+	public native VipsImage grid(int tileHeight, int across, int down) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadHeifFile (heifload): load a HEIF image
@@ -1038,8 +1719,16 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsHistCum (hist_cum): form cumulative histogram
+	 * Mutates the image inplace.
 	 */
-	public native void histCum() throws VipsException;
+	public native void applyHistCum() throws VipsException;
+	
+	
+	/**
+	 * VipsHistCum (hist_cum): form cumulative histogram
+	 * Returns a new image.
+	 */
+	public native VipsImage histCum() throws VipsException;
 	
 	/**
 	 * VipsHistEntropy (hist_entropy): estimate image entropy
@@ -1048,56 +1737,130 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsHistEqual (hist_equal): histogram equalisation
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void histEqual(HistEqualOptions options) throws VipsException;
+	public native void applyHistEqual(HistEqualOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistEqual (hist_equal): histogram equalisation
+	 * Mutates the image inplace.
 	 */
-	public void histEqual() throws VipsException {
-		histEqual(null);
+	public void applyHistEqual() throws VipsException {
+		applyHistEqual(null);
+	}
+	
+	
+	/**
+	 * VipsHistEqual (hist_equal): histogram equalisation
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage histEqual(HistEqualOptions options) throws VipsException;
+	
+	/**
+	 * VipsHistEqual (hist_equal): histogram equalisation
+	 * Returns a new image.
+	 */
+	public VipsImage histEqual() throws VipsException {
+		return histEqual(null);
 	}
 	
 	/**
 	 * VipsHistFind (hist_find): find image histogram
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void histFind(HistFindOptions options) throws VipsException;
+	public native void applyHistFind(HistFindOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFind (hist_find): find image histogram
+	 * Mutates the image inplace.
 	 */
-	public void histFind() throws VipsException {
-		histFind(null);
+	public void applyHistFind() throws VipsException {
+		applyHistFind(null);
+	}
+	
+	
+	/**
+	 * VipsHistFind (hist_find): find image histogram
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage histFind(HistFindOptions options) throws VipsException;
+	
+	/**
+	 * VipsHistFind (hist_find): find image histogram
+	 * Returns a new image.
+	 */
+	public VipsImage histFind() throws VipsException {
+		return histFind(null);
 	}
 	
 	/**
 	 * VipsHistFindIndexed (hist_find_indexed): find indexed image histogram
+	 * Mutates the image inplace.
 	 * @param index Index image
 	 * @param options optional arguments
 	 */
-	public native void histFindIndexed(Image index, HistFindIndexedOptions options) throws VipsException;
+	public native void applyHistFindIndexed(Image index, HistFindIndexedOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFindIndexed (hist_find_indexed): find indexed image histogram
+	 * Mutates the image inplace.
 	 * @param index Index image
 	 */
-	public void histFindIndexed(Image index) throws VipsException {
-		histFindIndexed(index, null);
+	public void applyHistFindIndexed(Image index) throws VipsException {
+		applyHistFindIndexed(index, null);
+	}
+	
+	
+	/**
+	 * VipsHistFindIndexed (hist_find_indexed): find indexed image histogram
+	 * Returns a new image.
+	 * @param index Index image
+	 * @param options optional arguments
+	 */
+	public native VipsImage histFindIndexed(Image index, HistFindIndexedOptions options) throws VipsException;
+	
+	/**
+	 * VipsHistFindIndexed (hist_find_indexed): find indexed image histogram
+	 * Returns a new image.
+	 * @param index Index image
+	 */
+	public VipsImage histFindIndexed(Image index) throws VipsException {
+		return histFindIndexed(index, null);
 	}
 	
 	/**
 	 * VipsHistFindNDim (hist_find_ndim): find n-dimensional image histogram
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void histFindNdim(HistFindNdimOptions options) throws VipsException;
+	public native void applyHistFindNdim(HistFindNdimOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFindNDim (hist_find_ndim): find n-dimensional image histogram
+	 * Mutates the image inplace.
 	 */
-	public void histFindNdim() throws VipsException {
-		histFindNdim(null);
+	public void applyHistFindNdim() throws VipsException {
+		applyHistFindNdim(null);
+	}
+	
+	
+	/**
+	 * VipsHistFindNDim (hist_find_ndim): find n-dimensional image histogram
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage histFindNdim(HistFindNdimOptions options) throws VipsException;
+	
+	/**
+	 * VipsHistFindNDim (hist_find_ndim): find n-dimensional image histogram
+	 * Returns a new image.
+	 */
+	public VipsImage histFindNdim() throws VipsException {
+		return histFindNdim(null);
 	}
 	
 	/**
@@ -1107,107 +1870,254 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsHistLocal (hist_local): local histogram equalisation
+	 * Mutates the image inplace.
 	 * @param width Window width in pixels
 	 * @param height Window height in pixels
 	 * @param options optional arguments
 	 */
-	public native void histLocal(int width, int height, HistLocalOptions options) throws VipsException;
+	public native void applyHistLocal(int width, int height, HistLocalOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistLocal (hist_local): local histogram equalisation
+	 * Mutates the image inplace.
 	 * @param width Window width in pixels
 	 * @param height Window height in pixels
 	 */
-	public void histLocal(int width, int height) throws VipsException {
-		histLocal(width, height, null);
+	public void applyHistLocal(int width, int height) throws VipsException {
+		applyHistLocal(width, height, null);
+	}
+	
+	
+	/**
+	 * VipsHistLocal (hist_local): local histogram equalisation
+	 * Returns a new image.
+	 * @param width Window width in pixels
+	 * @param height Window height in pixels
+	 * @param options optional arguments
+	 */
+	public native VipsImage histLocal(int width, int height, HistLocalOptions options) throws VipsException;
+	
+	/**
+	 * VipsHistLocal (hist_local): local histogram equalisation
+	 * Returns a new image.
+	 * @param width Window width in pixels
+	 * @param height Window height in pixels
+	 */
+	public VipsImage histLocal(int width, int height) throws VipsException {
+		return histLocal(width, height, null);
 	}
 	
 	/**
 	 * VipsHistMatch (hist_match): match two histograms
+	 * Mutates the image inplace.
 	 * @param ref Reference histogram
 	 */
-	public native void histMatch(Image ref) throws VipsException;
+	public native void applyHistMatch(Image ref) throws VipsException;
+	
+	
+	/**
+	 * VipsHistMatch (hist_match): match two histograms
+	 * Returns a new image.
+	 * @param ref Reference histogram
+	 */
+	public native VipsImage histMatch(Image ref) throws VipsException;
 	
 	/**
 	 * VipsHistNorm (hist_norm): normalise histogram
+	 * Mutates the image inplace.
 	 */
-	public native void histNorm() throws VipsException;
+	public native void applyHistNorm() throws VipsException;
+	
+	
+	/**
+	 * VipsHistNorm (hist_norm): normalise histogram
+	 * Returns a new image.
+	 */
+	public native VipsImage histNorm() throws VipsException;
 	
 	/**
 	 * VipsHistPlot (hist_plot): plot histogram
+	 * Mutates the image inplace.
 	 */
-	public native void histPlot() throws VipsException;
+	public native void applyHistPlot() throws VipsException;
+	
+	
+	/**
+	 * VipsHistPlot (hist_plot): plot histogram
+	 * Returns a new image.
+	 */
+	public native VipsImage histPlot() throws VipsException;
 	
 	/**
 	 * VipsHoughCircle (hough_circle): find hough circle transform
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void houghCircle(HoughCircleOptions options) throws VipsException;
+	public native void applyHoughCircle(HoughCircleOptions options) throws VipsException;
 	
 	/**
 	 * VipsHoughCircle (hough_circle): find hough circle transform
+	 * Mutates the image inplace.
 	 */
-	public void houghCircle() throws VipsException {
-		houghCircle(null);
+	public void applyHoughCircle() throws VipsException {
+		applyHoughCircle(null);
+	}
+	
+	
+	/**
+	 * VipsHoughCircle (hough_circle): find hough circle transform
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage houghCircle(HoughCircleOptions options) throws VipsException;
+	
+	/**
+	 * VipsHoughCircle (hough_circle): find hough circle transform
+	 * Returns a new image.
+	 */
+	public VipsImage houghCircle() throws VipsException {
+		return houghCircle(null);
 	}
 	
 	/**
 	 * VipsHoughLine (hough_line): find hough line transform
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void houghLine(HoughLineOptions options) throws VipsException;
+	public native void applyHoughLine(HoughLineOptions options) throws VipsException;
 	
 	/**
 	 * VipsHoughLine (hough_line): find hough line transform
+	 * Mutates the image inplace.
 	 */
-	public void houghLine() throws VipsException {
-		houghLine(null);
+	public void applyHoughLine() throws VipsException {
+		applyHoughLine(null);
+	}
+	
+	
+	/**
+	 * VipsHoughLine (hough_line): find hough line transform
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage houghLine(HoughLineOptions options) throws VipsException;
+	
+	/**
+	 * VipsHoughLine (hough_line): find hough line transform
+	 * Returns a new image.
+	 */
+	public VipsImage houghLine() throws VipsException {
+		return houghLine(null);
 	}
 	
 	/**
 	 * VipsHSV2sRGB (HSV2sRGB): transform HSV to sRGB
+	 * Mutates the image inplace.
 	 */
-	public native void hSV2sRGB() throws VipsException;
+	public native void applyHSV2sRGB() throws VipsException;
+	
+	
+	/**
+	 * VipsHSV2sRGB (HSV2sRGB): transform HSV to sRGB
+	 * Returns a new image.
+	 */
+	public native VipsImage hSV2sRGB() throws VipsException;
 	
 	/**
 	 * VipsIccExport (icc_export): output to device with ICC profile
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void iccExport(ICCExportOptions options) throws VipsException;
+	public native void applyIccExport(ICCExportOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccExport (icc_export): output to device with ICC profile
+	 * Mutates the image inplace.
 	 */
-	public void iccExport() throws VipsException {
-		iccExport(null);
+	public void applyIccExport() throws VipsException {
+		applyIccExport(null);
+	}
+	
+	
+	/**
+	 * VipsIccExport (icc_export): output to device with ICC profile
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage iccExport(ICCExportOptions options) throws VipsException;
+	
+	/**
+	 * VipsIccExport (icc_export): output to device with ICC profile
+	 * Returns a new image.
+	 */
+	public VipsImage iccExport() throws VipsException {
+		return iccExport(null);
 	}
 	
 	/**
 	 * VipsIccImport (icc_import): import from device with ICC profile
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void iccImport(ICCImportOptions options) throws VipsException;
+	public native void applyIccImport(ICCImportOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccImport (icc_import): import from device with ICC profile
+	 * Mutates the image inplace.
 	 */
-	public void iccImport() throws VipsException {
-		iccImport(null);
+	public void applyIccImport() throws VipsException {
+		applyIccImport(null);
+	}
+	
+	
+	/**
+	 * VipsIccImport (icc_import): import from device with ICC profile
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage iccImport(ICCImportOptions options) throws VipsException;
+	
+	/**
+	 * VipsIccImport (icc_import): import from device with ICC profile
+	 * Returns a new image.
+	 */
+	public VipsImage iccImport() throws VipsException {
+		return iccImport(null);
 	}
 	
 	/**
 	 * VipsIccTransform (icc_transform): transform between devices with ICC profiles
+	 * Mutates the image inplace.
 	 * @param outputProfile Filename to load output profile from
 	 * @param options optional arguments
 	 */
-	public native void iccTransform(String outputProfile, ICCTransformOptions options) throws VipsException;
+	public native void applyIccTransform(String outputProfile, ICCTransformOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccTransform (icc_transform): transform between devices with ICC profiles
+	 * Mutates the image inplace.
 	 * @param outputProfile Filename to load output profile from
 	 */
-	public void iccTransform(String outputProfile) throws VipsException {
-		iccTransform(outputProfile, null);
+	public void applyIccTransform(String outputProfile) throws VipsException {
+		applyIccTransform(outputProfile, null);
+	}
+	
+	
+	/**
+	 * VipsIccTransform (icc_transform): transform between devices with ICC profiles
+	 * Returns a new image.
+	 * @param outputProfile Filename to load output profile from
+	 * @param options optional arguments
+	 */
+	public native VipsImage iccTransform(String outputProfile, ICCTransformOptions options) throws VipsException;
+	
+	/**
+	 * VipsIccTransform (icc_transform): transform between devices with ICC profiles
+	 * Returns a new image.
+	 * @param outputProfile Filename to load output profile from
+	 */
+	public VipsImage iccTransform(String outputProfile) throws VipsException {
+		return iccTransform(outputProfile, null);
 	}
 	
 	/**
@@ -1225,73 +2135,184 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsIfthenelse (ifthenelse): ifthenelse an image
+	 * Mutates the image inplace.
 	 * @param in1 Source for TRUE pixels
 	 * @param in2 Source for FALSE pixels
 	 * @param options optional arguments
 	 */
-	public native void ifthenelse(Image in1, Image in2, IfthenelseOptions options) throws VipsException;
+	public native void applyIfthenelse(Image in1, Image in2, IfthenelseOptions options) throws VipsException;
 	
 	/**
 	 * VipsIfthenelse (ifthenelse): ifthenelse an image
+	 * Mutates the image inplace.
 	 * @param in1 Source for TRUE pixels
 	 * @param in2 Source for FALSE pixels
 	 */
-	public void ifthenelse(Image in1, Image in2) throws VipsException {
-		ifthenelse(in1, in2, null);
+	public void applyIfthenelse(Image in1, Image in2) throws VipsException {
+		applyIfthenelse(in1, in2, null);
+	}
+	
+	
+	/**
+	 * VipsIfthenelse (ifthenelse): ifthenelse an image
+	 * Returns a new image.
+	 * @param in1 Source for TRUE pixels
+	 * @param in2 Source for FALSE pixels
+	 * @param options optional arguments
+	 */
+	public native VipsImage ifthenelse(Image in1, Image in2, IfthenelseOptions options) throws VipsException;
+	
+	/**
+	 * VipsIfthenelse (ifthenelse): ifthenelse an image
+	 * Returns a new image.
+	 * @param in1 Source for TRUE pixels
+	 * @param in2 Source for FALSE pixels
+	 */
+	public VipsImage ifthenelse(Image in1, Image in2) throws VipsException {
+		return ifthenelse(in1, in2, null);
 	}
 	
 	/**
 	 * VipsInsert (insert): insert image @sub into @main at @x, @y
+	 * Mutates the image inplace.
 	 * @param sub Sub-image to insert into main image
 	 * @param x Left edge of sub in main
 	 * @param y Top edge of sub in main
 	 * @param options optional arguments
 	 */
-	public native void insert(Image sub, int x, int y, InsertOptions options) throws VipsException;
+	public native void applyInsert(Image sub, int x, int y, InsertOptions options) throws VipsException;
 	
 	/**
 	 * VipsInsert (insert): insert image @sub into @main at @x, @y
+	 * Mutates the image inplace.
 	 * @param sub Sub-image to insert into main image
 	 * @param x Left edge of sub in main
 	 * @param y Top edge of sub in main
 	 */
-	public void insert(Image sub, int x, int y) throws VipsException {
-		insert(sub, x, y, null);
+	public void applyInsert(Image sub, int x, int y) throws VipsException {
+		applyInsert(sub, x, y, null);
+	}
+	
+	
+	/**
+	 * VipsInsert (insert): insert image @sub into @main at @x, @y
+	 * Returns a new image.
+	 * @param sub Sub-image to insert into main image
+	 * @param x Left edge of sub in main
+	 * @param y Top edge of sub in main
+	 * @param options optional arguments
+	 */
+	public native VipsImage insert(Image sub, int x, int y, InsertOptions options) throws VipsException;
+	
+	/**
+	 * VipsInsert (insert): insert image @sub into @main at @x, @y
+	 * Returns a new image.
+	 * @param sub Sub-image to insert into main image
+	 * @param x Left edge of sub in main
+	 * @param y Top edge of sub in main
+	 */
+	public VipsImage insert(Image sub, int x, int y) throws VipsException {
+		return insert(sub, x, y, null);
 	}
 	
 	/**
 	 * VipsInvert (invert): invert an image
+	 * Mutates the image inplace.
 	 */
-	public native void invert() throws VipsException;
+	public native void applyInvert() throws VipsException;
+	
+	
+	/**
+	 * VipsInvert (invert): invert an image
+	 * Returns a new image.
+	 */
+	public native VipsImage invert() throws VipsException;
 	
 	/**
 	 * VipsInvertlut (invertlut): build an inverted look-up table
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void invertlut(InvertLUTOptions options) throws VipsException;
+	public native void applyInvertlut(InvertLUTOptions options) throws VipsException;
 	
 	/**
 	 * VipsInvertlut (invertlut): build an inverted look-up table
+	 * Mutates the image inplace.
 	 */
-	public void invertlut() throws VipsException {
-		invertlut(null);
+	public void applyInvertlut() throws VipsException {
+		applyInvertlut(null);
+	}
+	
+	
+	/**
+	 * VipsInvertlut (invertlut): build an inverted look-up table
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage invertlut(InvertLUTOptions options) throws VipsException;
+	
+	/**
+	 * VipsInvertlut (invertlut): build an inverted look-up table
+	 * Returns a new image.
+	 */
+	public VipsImage invertlut() throws VipsException {
+		return invertlut(null);
 	}
 	
 	/**
 	 * VipsInvfft (invfft): inverse FFT
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void invfft(InvFFTOptions options) throws VipsException;
+	public native void applyInvfft(InvFFTOptions options) throws VipsException;
 	
 	/**
 	 * VipsInvfft (invfft): inverse FFT
+	 * Mutates the image inplace.
 	 */
-	public void invfft() throws VipsException {
-		invfft(null);
+	public void applyInvfft() throws VipsException {
+		applyInvfft(null);
+	}
+	
+	
+	/**
+	 * VipsInvfft (invfft): inverse FFT
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage invfft(InvFFTOptions options) throws VipsException;
+	
+	/**
+	 * VipsInvfft (invfft): inverse FFT
+	 * Returns a new image.
+	 */
+	public VipsImage invfft() throws VipsException {
+		return invfft(null);
 	}
 	
 	/**
 	 * VipsJoin (join): join a pair of images
+	 * Mutates the image inplace.
+	 * @param in2 Second input image
+	 * @param direction Join left-right or up-down
+	 * @param options optional arguments
+	 */
+	public native void applyJoin(Image in2, VipsDirection direction, JoinOptions options) throws VipsException;
+	
+	/**
+	 * VipsJoin (join): join a pair of images
+	 * Mutates the image inplace.
+	 * @param in2 Second input image
+	 * @param direction Join left-right or up-down
+	 */
+	public void applyJoin(Image in2, VipsDirection direction) throws VipsException {
+		applyJoin(in2, direction, null);
+	}
+	
+	
+	/**
+	 * VipsJoin (join): join a pair of images
+	 * Returns a new image.
 	 * @param in2 Second input image
 	 * @param direction Join left-right or up-down
 	 * @param options optional arguments
@@ -1300,6 +2321,7 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsJoin (join): join a pair of images
+	 * Returns a new image.
 	 * @param in2 Second input image
 	 * @param direction Join left-right or up-down
 	 */
@@ -1496,100 +2518,246 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsLab2LabQ (Lab2LabQ): transform float Lab to LabQ coding
+	 * Mutates the image inplace.
 	 */
-	public native void lab2LabQ() throws VipsException;
+	public native void applyLab2LabQ() throws VipsException;
+	
+	
+	/**
+	 * VipsLab2LabQ (Lab2LabQ): transform float Lab to LabQ coding
+	 * Returns a new image.
+	 */
+	public native VipsImage lab2LabQ() throws VipsException;
 	
 	/**
 	 * VipsLab2LabS (Lab2LabS): transform float Lab to signed short
+	 * Mutates the image inplace.
 	 */
-	public native void lab2LabS() throws VipsException;
+	public native void applyLab2LabS() throws VipsException;
+	
+	
+	/**
+	 * VipsLab2LabS (Lab2LabS): transform float Lab to signed short
+	 * Returns a new image.
+	 */
+	public native VipsImage lab2LabS() throws VipsException;
 	
 	/**
 	 * VipsLab2LCh (Lab2LCh): transform Lab to LCh
+	 * Mutates the image inplace.
 	 */
-	public native void lab2LCh() throws VipsException;
+	public native void applyLab2LCh() throws VipsException;
+	
+	
+	/**
+	 * VipsLab2LCh (Lab2LCh): transform Lab to LCh
+	 * Returns a new image.
+	 */
+	public native VipsImage lab2LCh() throws VipsException;
 	
 	/**
 	 * VipsLab2XYZ (Lab2XYZ): transform CIELAB to XYZ
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void lab2XYZ(LAB2XYZOptions options) throws VipsException;
+	public native void applyLab2XYZ(LAB2XYZOptions options) throws VipsException;
 	
 	/**
 	 * VipsLab2XYZ (Lab2XYZ): transform CIELAB to XYZ
+	 * Mutates the image inplace.
 	 */
-	public void lab2XYZ() throws VipsException {
-		lab2XYZ(null);
+	public void applyLab2XYZ() throws VipsException {
+		applyLab2XYZ(null);
+	}
+	
+	
+	/**
+	 * VipsLab2XYZ (Lab2XYZ): transform CIELAB to XYZ
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage lab2XYZ(LAB2XYZOptions options) throws VipsException;
+	
+	/**
+	 * VipsLab2XYZ (Lab2XYZ): transform CIELAB to XYZ
+	 * Returns a new image.
+	 */
+	public VipsImage lab2XYZ() throws VipsException {
+		return lab2XYZ(null);
 	}
 	
 	/**
 	 * VipsLabelregions (labelregions): label regions in an image
+	 * Mutates the image inplace.
 	 */
-	public native void labelregions() throws VipsException;
+	public native void applyLabelregions() throws VipsException;
+	
+	
+	/**
+	 * VipsLabelregions (labelregions): label regions in an image
+	 * Returns a new image.
+	 */
+	public native VipsImage labelregions() throws VipsException;
 	
 	/**
 	 * VipsLabQ2Lab (LabQ2Lab): unpack a LabQ image to float Lab
+	 * Mutates the image inplace.
 	 */
-	public native void labQ2Lab() throws VipsException;
+	public native void applyLabQ2Lab() throws VipsException;
+	
+	
+	/**
+	 * VipsLabQ2Lab (LabQ2Lab): unpack a LabQ image to float Lab
+	 * Returns a new image.
+	 */
+	public native VipsImage labQ2Lab() throws VipsException;
 	
 	/**
 	 * VipsLabQ2LabS (LabQ2LabS): unpack a LabQ image to short Lab
+	 * Mutates the image inplace.
 	 */
-	public native void labQ2LabS() throws VipsException;
+	public native void applyLabQ2LabS() throws VipsException;
+	
+	
+	/**
+	 * VipsLabQ2LabS (LabQ2LabS): unpack a LabQ image to short Lab
+	 * Returns a new image.
+	 */
+	public native VipsImage labQ2LabS() throws VipsException;
 	
 	/**
 	 * VipsLabQ2sRGB (LabQ2sRGB): convert a LabQ image to sRGB
+	 * Mutates the image inplace.
 	 */
-	public native void labQ2sRGB() throws VipsException;
+	public native void applyLabQ2sRGB() throws VipsException;
+	
+	
+	/**
+	 * VipsLabQ2sRGB (LabQ2sRGB): convert a LabQ image to sRGB
+	 * Returns a new image.
+	 */
+	public native VipsImage labQ2sRGB() throws VipsException;
 	
 	/**
 	 * VipsLabS2Lab (LabS2Lab): transform signed short Lab to float
+	 * Mutates the image inplace.
 	 */
-	public native void labS2Lab() throws VipsException;
+	public native void applyLabS2Lab() throws VipsException;
+	
+	
+	/**
+	 * VipsLabS2Lab (LabS2Lab): transform signed short Lab to float
+	 * Returns a new image.
+	 */
+	public native VipsImage labS2Lab() throws VipsException;
 	
 	/**
 	 * VipsLabS2LabQ (LabS2LabQ): transform short Lab to LabQ coding
+	 * Mutates the image inplace.
 	 */
-	public native void labS2LabQ() throws VipsException;
+	public native void applyLabS2LabQ() throws VipsException;
+	
+	
+	/**
+	 * VipsLabS2LabQ (LabS2LabQ): transform short Lab to LabQ coding
+	 * Returns a new image.
+	 */
+	public native VipsImage labS2LabQ() throws VipsException;
 	
 	/**
 	 * VipsLCh2CMC (LCh2CMC): transform LCh to CMC
+	 * Mutates the image inplace.
 	 */
-	public native void lCh2CMC() throws VipsException;
+	public native void applyLCh2CMC() throws VipsException;
+	
+	
+	/**
+	 * VipsLCh2CMC (LCh2CMC): transform LCh to CMC
+	 * Returns a new image.
+	 */
+	public native VipsImage lCh2CMC() throws VipsException;
 	
 	/**
 	 * VipsLCh2Lab (LCh2Lab): transform LCh to Lab
+	 * Mutates the image inplace.
 	 */
-	public native void lCh2Lab() throws VipsException;
+	public native void applyLCh2Lab() throws VipsException;
+	
+	
+	/**
+	 * VipsLCh2Lab (LCh2Lab): transform LCh to Lab
+	 * Returns a new image.
+	 */
+	public native VipsImage lCh2Lab() throws VipsException;
 	
 	/**
 	 * VipsLinear (linear): calculate (a * in + b)
+	 * Mutates the image inplace.
 	 * @param a Multiply by this
 	 * @param b Add this
 	 * @param options optional arguments
 	 */
-	public native void linear(double[] a, double[] b, LinearOptions options) throws VipsException;
+	public native void applyLinear(double[] a, double[] b, LinearOptions options) throws VipsException;
 	
 	/**
 	 * VipsLinear (linear): calculate (a * in + b)
+	 * Mutates the image inplace.
 	 * @param a Multiply by this
 	 * @param b Add this
 	 */
-	public void linear(double[] a, double[] b) throws VipsException {
-		linear(a, b, null);
+	public void applyLinear(double[] a, double[] b) throws VipsException {
+		applyLinear(a, b, null);
+	}
+	
+	
+	/**
+	 * VipsLinear (linear): calculate (a * in + b)
+	 * Returns a new image.
+	 * @param a Multiply by this
+	 * @param b Add this
+	 * @param options optional arguments
+	 */
+	public native VipsImage linear(double[] a, double[] b, LinearOptions options) throws VipsException;
+	
+	/**
+	 * VipsLinear (linear): calculate (a * in + b)
+	 * Returns a new image.
+	 * @param a Multiply by this
+	 * @param b Add this
+	 */
+	public VipsImage linear(double[] a, double[] b) throws VipsException {
+		return linear(a, b, null);
 	}
 	
 	/**
 	 * VipsLineCache (linecache): cache an image as a set of lines
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void linecache(LinecacheOptions options) throws VipsException;
+	public native void applyLinecache(LinecacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsLineCache (linecache): cache an image as a set of lines
+	 * Mutates the image inplace.
 	 */
-	public void linecache() throws VipsException {
-		linecache(null);
+	public void applyLinecache() throws VipsException {
+		applyLinecache(null);
+	}
+	
+	
+	/**
+	 * VipsLineCache (linecache): cache an image as a set of lines
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage linecache(LinecacheOptions options) throws VipsException;
+	
+	/**
+	 * VipsLineCache (linecache): cache an image as a set of lines
+	 * Returns a new image.
+	 */
+	public VipsImage linecache() throws VipsException {
+		return linecache(null);
 	}
 	
 	/**
@@ -1669,17 +2837,37 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsMaplut (maplut): map an image though a lut
+	 * Mutates the image inplace.
 	 * @param lut Look-up table image
 	 * @param options optional arguments
 	 */
-	public native void maplut(Image lut, MapLUTOptions options) throws VipsException;
+	public native void applyMaplut(Image lut, MapLUTOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaplut (maplut): map an image though a lut
+	 * Mutates the image inplace.
 	 * @param lut Look-up table image
 	 */
-	public void maplut(Image lut) throws VipsException {
-		maplut(lut, null);
+	public void applyMaplut(Image lut) throws VipsException {
+		applyMaplut(lut, null);
+	}
+	
+	
+	/**
+	 * VipsMaplut (maplut): map an image though a lut
+	 * Returns a new image.
+	 * @param lut Look-up table image
+	 * @param options optional arguments
+	 */
+	public native VipsImage maplut(Image lut, MapLUTOptions options) throws VipsException;
+	
+	/**
+	 * VipsMaplut (maplut): map an image though a lut
+	 * Returns a new image.
+	 * @param lut Look-up table image
+	 */
+	public VipsImage maplut(Image lut) throws VipsException {
+		return maplut(lut, null);
 	}
 	
 	/**
@@ -1910,23 +3098,52 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsMath (math): apply a math operation to an image
+	 * Mutates the image inplace.
 	 * @param math math to perform
 	 */
-	public native void math(VipsOperationMath math) throws VipsException;
+	public native void applyMath(VipsOperationMath math) throws VipsException;
+	
+	
+	/**
+	 * VipsMath (math): apply a math operation to an image
+	 * Returns a new image.
+	 * @param math math to perform
+	 */
+	public native VipsImage math(VipsOperationMath math) throws VipsException;
 	
 	/**
 	 * VipsMath2 (math2): binary math operations
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 * @param math2 math to perform
 	 */
-	public native void math2(Image right, VipsOperationMath2 math2) throws VipsException;
+	public native void applyMath2(Image right, VipsOperationMath2 math2) throws VipsException;
+	
+	
+	/**
+	 * VipsMath2 (math2): binary math operations
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 * @param math2 math to perform
+	 */
+	public native VipsImage math2(Image right, VipsOperationMath2 math2) throws VipsException;
 	
 	/**
 	 * VipsMath2Const (math2_const): binary math operations with a constant
+	 * Mutates the image inplace.
 	 * @param math2 math to perform
 	 * @param c Array of constants
 	 */
-	public native void math2Const(VipsOperationMath2 math2, double[] c) throws VipsException;
+	public native void applyMath2Const(VipsOperationMath2 math2, double[] c) throws VipsException;
+	
+	
+	/**
+	 * VipsMath2Const (math2_const): binary math operations with a constant
+	 * Returns a new image.
+	 * @param math2 math to perform
+	 * @param c Array of constants
+	 */
+	public native VipsImage math2Const(VipsOperationMath2 math2, double[] c) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadMat (matload): load mat from file
@@ -1945,8 +3162,16 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsMatrixinvert (matrixinvert): invert an matrix
+	 * Mutates the image inplace.
 	 */
-	public native void matrixinvert() throws VipsException;
+	public native void applyMatrixinvert() throws VipsException;
+	
+	
+	/**
+	 * VipsMatrixinvert (matrixinvert): invert an matrix
+	 * Returns a new image.
+	 */
+	public native VipsImage matrixinvert() throws VipsException;
 	
 	/**
 	 * VipsForeignLoadMatrixFile (matrixload): load matrix
@@ -2006,40 +3231,88 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * Mutates the image inplace.
 	 * @param h Number of patches across chart
 	 * @param v Number of patches down chart
 	 * @param options optional arguments
 	 */
-	public native void measure(int h, int v, MeasureOptions options) throws VipsException;
+	public native void applyMeasure(int h, int v, MeasureOptions options) throws VipsException;
 	
 	/**
 	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * Mutates the image inplace.
 	 * @param h Number of patches across chart
 	 * @param v Number of patches down chart
 	 */
-	public void measure(int h, int v) throws VipsException {
-		measure(h, v, null);
+	public void applyMeasure(int h, int v) throws VipsException {
+		applyMeasure(h, v, null);
+	}
+	
+	
+	/**
+	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * Returns a new image.
+	 * @param h Number of patches across chart
+	 * @param v Number of patches down chart
+	 * @param options optional arguments
+	 */
+	public native VipsImage measure(int h, int v, MeasureOptions options) throws VipsException;
+	
+	/**
+	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * Returns a new image.
+	 * @param h Number of patches across chart
+	 * @param v Number of patches down chart
+	 */
+	public VipsImage measure(int h, int v) throws VipsException {
+		return measure(h, v, null);
 	}
 	
 	/**
 	 * VipsMerge (merge): merge two images
+	 * Mutates the image inplace.
 	 * @param sec Secondary image
 	 * @param direction Horizontal or vertical merge
 	 * @param dx Horizontal displacement from sec to ref
 	 * @param dy Vertical displacement from sec to ref
 	 * @param options optional arguments
 	 */
-	public native void merge(Image sec, VipsDirection direction, int dx, int dy, MergeOptions options) throws VipsException;
+	public native void applyMerge(Image sec, VipsDirection direction, int dx, int dy, MergeOptions options) throws VipsException;
 	
 	/**
 	 * VipsMerge (merge): merge two images
+	 * Mutates the image inplace.
 	 * @param sec Secondary image
 	 * @param direction Horizontal or vertical merge
 	 * @param dx Horizontal displacement from sec to ref
 	 * @param dy Vertical displacement from sec to ref
 	 */
-	public void merge(Image sec, VipsDirection direction, int dx, int dy) throws VipsException {
-		merge(sec, direction, dx, dy, null);
+	public void applyMerge(Image sec, VipsDirection direction, int dx, int dy) throws VipsException {
+		applyMerge(sec, direction, dx, dy, null);
+	}
+	
+	
+	/**
+	 * VipsMerge (merge): merge two images
+	 * Returns a new image.
+	 * @param sec Secondary image
+	 * @param direction Horizontal or vertical merge
+	 * @param dx Horizontal displacement from sec to ref
+	 * @param dy Vertical displacement from sec to ref
+	 * @param options optional arguments
+	 */
+	public native VipsImage merge(Image sec, VipsDirection direction, int dx, int dy, MergeOptions options) throws VipsException;
+	
+	/**
+	 * VipsMerge (merge): merge two images
+	 * Returns a new image.
+	 * @param sec Secondary image
+	 * @param direction Horizontal or vertical merge
+	 * @param dx Horizontal displacement from sec to ref
+	 * @param dy Vertical displacement from sec to ref
+	 */
+	public VipsImage merge(Image sec, VipsDirection direction, int dx, int dy) throws VipsException {
+		return merge(sec, direction, dx, dy, null);
 	}
 	
 	/**
@@ -2057,13 +3330,24 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsMorph (morph): morphology operation
+	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 * @param morph Morphological operation to perform
 	 */
-	public native void morph(Image mask, VipsOperationMorphology morph) throws VipsException;
+	public native void applyMorph(Image mask, VipsOperationMorphology morph) throws VipsException;
+	
+	
+	/**
+	 * VipsMorph (morph): morphology operation
+	 * Returns a new image.
+	 * @param mask Input matrix image
+	 * @param morph Morphological operation to perform
+	 */
+	public native VipsImage morph(Image mask, VipsOperationMorphology morph) throws VipsException;
 	
 	/**
 	 * VipsMosaic (mosaic): mosaic two images
+	 * Mutates the image inplace.
 	 * @param sec Secondary image
 	 * @param direction Horizontal or vertical mosaic
 	 * @param xref Position of reference tie-point
@@ -2072,10 +3356,11 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param ysec Position of secondary tie-point
 	 * @param options optional arguments
 	 */
-	public native void mosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec, MosaicOptions options) throws VipsException;
+	public native void applyMosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec, MosaicOptions options) throws VipsException;
 	
 	/**
 	 * VipsMosaic (mosaic): mosaic two images
+	 * Mutates the image inplace.
 	 * @param sec Secondary image
 	 * @param direction Horizontal or vertical mosaic
 	 * @param xref Position of reference tie-point
@@ -2083,28 +3368,83 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param xsec Position of secondary tie-point
 	 * @param ysec Position of secondary tie-point
 	 */
-	public void mosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec) throws VipsException {
-		mosaic(sec, direction, xref, yref, xsec, ysec, null);
+	public void applyMosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec) throws VipsException {
+		applyMosaic(sec, direction, xref, yref, xsec, ysec, null);
+	}
+	
+	
+	/**
+	 * VipsMosaic (mosaic): mosaic two images
+	 * Returns a new image.
+	 * @param sec Secondary image
+	 * @param direction Horizontal or vertical mosaic
+	 * @param xref Position of reference tie-point
+	 * @param yref Position of reference tie-point
+	 * @param xsec Position of secondary tie-point
+	 * @param ysec Position of secondary tie-point
+	 * @param options optional arguments
+	 */
+	public native VipsImage mosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec, MosaicOptions options) throws VipsException;
+	
+	/**
+	 * VipsMosaic (mosaic): mosaic two images
+	 * Returns a new image.
+	 * @param sec Secondary image
+	 * @param direction Horizontal or vertical mosaic
+	 * @param xref Position of reference tie-point
+	 * @param yref Position of reference tie-point
+	 * @param xsec Position of secondary tie-point
+	 * @param ysec Position of secondary tie-point
+	 */
+	public VipsImage mosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec) throws VipsException {
+		return mosaic(sec, direction, xref, yref, xsec, ysec, null);
 	}
 	
 	/**
 	 * VipsMsb (msb): pick most-significant byte from an image
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void msb(MsbOptions options) throws VipsException;
+	public native void applyMsb(MsbOptions options) throws VipsException;
 	
 	/**
 	 * VipsMsb (msb): pick most-significant byte from an image
+	 * Mutates the image inplace.
 	 */
-	public void msb() throws VipsException {
-		msb(null);
+	public void applyMsb() throws VipsException {
+		applyMsb(null);
+	}
+	
+	
+	/**
+	 * VipsMsb (msb): pick most-significant byte from an image
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage msb(MsbOptions options) throws VipsException;
+	
+	/**
+	 * VipsMsb (msb): pick most-significant byte from an image
+	 * Returns a new image.
+	 */
+	public VipsImage msb() throws VipsException {
+		return msb(null);
 	}
 	
 	/**
 	 * VipsMultiply (multiply): multiply two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void multiply(Image right) throws VipsException;
+	public native void applyMultiply(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsMultiply (multiply): multiply two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 */
+	public native VipsImage multiply(Image right) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadOpenexr (openexrload): load an OpenEXR image
@@ -2191,9 +3531,18 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsPhasecor (phasecor): calculate phase correlation
+	 * Mutates the image inplace.
 	 * @param in2 Second input image
 	 */
-	public native void phasecor(Image in2) throws VipsException;
+	public native void applyPhasecor(Image in2) throws VipsException;
+	
+	
+	/**
+	 * VipsPhasecor (phasecor): calculate phase correlation
+	 * Returns a new image.
+	 * @param in2 Second input image
+	 */
+	public native VipsImage phasecor(Image in2) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadPngFile (pngload): load png from file
@@ -2285,21 +3634,34 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsPremultiply (premultiply): premultiply image alpha
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void premultiply(PremultiplyOptions options) throws VipsException;
+	public native void applyPremultiply(PremultiplyOptions options) throws VipsException;
 	
 	/**
 	 * VipsPremultiply (premultiply): premultiply image alpha
+	 * Mutates the image inplace.
 	 */
-	public void premultiply() throws VipsException {
-		premultiply(null);
+	public void applyPremultiply() throws VipsException {
+		applyPremultiply(null);
 	}
 	
+	
 	/**
-	 * VipsProfile (profile): find image profiles
+	 * VipsPremultiply (premultiply): premultiply image alpha
+	 * Returns a new image.
+	 * @param options optional arguments
 	 */
-	public native VipsImage profile() throws VipsException;
+	public native VipsImage premultiply(PremultiplyOptions options) throws VipsException;
+	
+	/**
+	 * VipsPremultiply (premultiply): premultiply image alpha
+	 * Returns a new image.
+	 */
+	public VipsImage premultiply() throws VipsException {
+		return premultiply(null);
+	}
 	
 	/**
 	 * VipsProfileLoad (profile_load): load named ICC profile
@@ -2308,14 +3670,17 @@ abstract class AbstractVipsImage extends Vips {
 	public static native byte[] profileLoad(String name) throws VipsException;
 	
 	/**
-	 * VipsProject (project): find image projections
+	 * VipsRad2float (rad2float): unpack Radiance coding to float RGB
+	 * Mutates the image inplace.
 	 */
-	public native VipsImage project() throws VipsException;
+	public native void applyRad2float() throws VipsException;
+	
 	
 	/**
 	 * VipsRad2float (rad2float): unpack Radiance coding to float RGB
+	 * Returns a new image.
 	 */
-	public native void rad2float() throws VipsException;
+	public native VipsImage rad2float() throws VipsException;
 	
 	/**
 	 * VipsForeignLoadRadFile (radload): load a Radiance image from a file
@@ -2377,11 +3742,22 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsRank (rank): rank filter
+	 * Mutates the image inplace.
 	 * @param width Window width in pixels
 	 * @param height Window height in pixels
 	 * @param index Select pixel at index
 	 */
-	public native void rank(int width, int height, int index) throws VipsException;
+	public native void applyRank(int width, int height, int index) throws VipsException;
+	
+	
+	/**
+	 * VipsRank (rank): rank filter
+	 * Returns a new image.
+	 * @param width Window width in pixels
+	 * @param height Window height in pixels
+	 * @param index Select pixel at index
+	 */
+	public native VipsImage rank(int width, int height, int index) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadRaw (rawload): load raw data from a file
@@ -2436,223 +3812,532 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsRecomb (recomb): linear recombination with matrix
+	 * Mutates the image inplace.
 	 * @param m matrix of coefficients
 	 */
-	public native void recomb(Image m) throws VipsException;
+	public native void applyRecomb(Image m) throws VipsException;
+	
+	
+	/**
+	 * VipsRecomb (recomb): linear recombination with matrix
+	 * Returns a new image.
+	 * @param m matrix of coefficients
+	 */
+	public native VipsImage recomb(Image m) throws VipsException;
 	
 	/**
 	 * VipsReduce (reduce): reduce an image
+	 * Mutates the image inplace.
 	 * @param hshrink Horizontal shrink factor
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native void reduce(double hshrink, double vshrink, ReduceOptions options) throws VipsException;
+	public native void applyReduce(double hshrink, double vshrink, ReduceOptions options) throws VipsException;
 	
 	/**
 	 * VipsReduce (reduce): reduce an image
+	 * Mutates the image inplace.
 	 * @param hshrink Horizontal shrink factor
 	 * @param vshrink Vertical shrink factor
 	 */
-	public void reduce(double hshrink, double vshrink) throws VipsException {
-		reduce(hshrink, vshrink, null);
+	public void applyReduce(double hshrink, double vshrink) throws VipsException {
+		applyReduce(hshrink, vshrink, null);
+	}
+	
+	
+	/**
+	 * VipsReduce (reduce): reduce an image
+	 * Returns a new image.
+	 * @param hshrink Horizontal shrink factor
+	 * @param vshrink Vertical shrink factor
+	 * @param options optional arguments
+	 */
+	public native VipsImage reduce(double hshrink, double vshrink, ReduceOptions options) throws VipsException;
+	
+	/**
+	 * VipsReduce (reduce): reduce an image
+	 * Returns a new image.
+	 * @param hshrink Horizontal shrink factor
+	 * @param vshrink Vertical shrink factor
+	 */
+	public VipsImage reduce(double hshrink, double vshrink) throws VipsException {
+		return reduce(hshrink, vshrink, null);
 	}
 	
 	/**
 	 * VipsReduceh (reduceh): shrink an image horizontally
+	 * Mutates the image inplace.
 	 * @param hshrink Horizontal shrink factor
 	 * @param options optional arguments
 	 */
-	public native void reduceh(double hshrink, ReducehOptions options) throws VipsException;
+	public native void applyReduceh(double hshrink, ReducehOptions options) throws VipsException;
 	
 	/**
 	 * VipsReduceh (reduceh): shrink an image horizontally
+	 * Mutates the image inplace.
 	 * @param hshrink Horizontal shrink factor
 	 */
-	public void reduceh(double hshrink) throws VipsException {
-		reduceh(hshrink, null);
+	public void applyReduceh(double hshrink) throws VipsException {
+		applyReduceh(hshrink, null);
+	}
+	
+	
+	/**
+	 * VipsReduceh (reduceh): shrink an image horizontally
+	 * Returns a new image.
+	 * @param hshrink Horizontal shrink factor
+	 * @param options optional arguments
+	 */
+	public native VipsImage reduceh(double hshrink, ReducehOptions options) throws VipsException;
+	
+	/**
+	 * VipsReduceh (reduceh): shrink an image horizontally
+	 * Returns a new image.
+	 * @param hshrink Horizontal shrink factor
+	 */
+	public VipsImage reduceh(double hshrink) throws VipsException {
+		return reduceh(hshrink, null);
 	}
 	
 	/**
 	 * VipsReducev (reducev): shrink an image vertically
+	 * Mutates the image inplace.
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native void reducev(double vshrink, ReducevOptions options) throws VipsException;
+	public native void applyReducev(double vshrink, ReducevOptions options) throws VipsException;
 	
 	/**
 	 * VipsReducev (reducev): shrink an image vertically
+	 * Mutates the image inplace.
 	 * @param vshrink Vertical shrink factor
 	 */
-	public void reducev(double vshrink) throws VipsException {
-		reducev(vshrink, null);
+	public void applyReducev(double vshrink) throws VipsException {
+		applyReducev(vshrink, null);
+	}
+	
+	
+	/**
+	 * VipsReducev (reducev): shrink an image vertically
+	 * Returns a new image.
+	 * @param vshrink Vertical shrink factor
+	 * @param options optional arguments
+	 */
+	public native VipsImage reducev(double vshrink, ReducevOptions options) throws VipsException;
+	
+	/**
+	 * VipsReducev (reducev): shrink an image vertically
+	 * Returns a new image.
+	 * @param vshrink Vertical shrink factor
+	 */
+	public VipsImage reducev(double vshrink) throws VipsException {
+		return reducev(vshrink, null);
 	}
 	
 	/**
 	 * VipsRelational (relational): relational operation on two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 * @param relational relational to perform
 	 */
-	public native void relational(Image right, VipsOperationRelational relational) throws VipsException;
+	public native void applyRelational(Image right, VipsOperationRelational relational) throws VipsException;
+	
+	
+	/**
+	 * VipsRelational (relational): relational operation on two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 * @param relational relational to perform
+	 */
+	public native VipsImage relational(Image right, VipsOperationRelational relational) throws VipsException;
 	
 	/**
 	 * VipsRelationalConst (relational_const): relational operations against a constant
+	 * Mutates the image inplace.
 	 * @param relational relational to perform
 	 * @param c Array of constants
 	 */
-	public native void relationalConst(VipsOperationRelational relational, double[] c) throws VipsException;
+	public native void applyRelationalConst(VipsOperationRelational relational, double[] c) throws VipsException;
+	
+	
+	/**
+	 * VipsRelationalConst (relational_const): relational operations against a constant
+	 * Returns a new image.
+	 * @param relational relational to perform
+	 * @param c Array of constants
+	 */
+	public native VipsImage relationalConst(VipsOperationRelational relational, double[] c) throws VipsException;
 	
 	/**
 	 * VipsRemainder (remainder): remainder after integer division of two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void remainder(Image right) throws VipsException;
+	public native void applyRemainder(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsRemainder (remainder): remainder after integer division of two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 */
+	public native VipsImage remainder(Image right) throws VipsException;
 	
 	/**
 	 * VipsRemainderConst (remainder_const): remainder after integer division of an image and a constant
+	 * Mutates the image inplace.
 	 * @param c Array of constants
 	 */
-	public native void remainderConst(double[] c) throws VipsException;
+	public native void applyRemainderConst(double[] c) throws VipsException;
+	
+	
+	/**
+	 * VipsRemainderConst (remainder_const): remainder after integer division of an image and a constant
+	 * Returns a new image.
+	 * @param c Array of constants
+	 */
+	public native VipsImage remainderConst(double[] c) throws VipsException;
 	
 	/**
 	 * VipsReplicate (replicate): replicate an image
+	 * Mutates the image inplace.
 	 * @param across Repeat this many times horizontally
 	 * @param down Repeat this many times vertically
 	 */
-	public native void replicate(int across, int down) throws VipsException;
+	public native void applyReplicate(int across, int down) throws VipsException;
+	
+	
+	/**
+	 * VipsReplicate (replicate): replicate an image
+	 * Returns a new image.
+	 * @param across Repeat this many times horizontally
+	 * @param down Repeat this many times vertically
+	 */
+	public native VipsImage replicate(int across, int down) throws VipsException;
 	
 	/**
 	 * VipsResize (resize): resize an image
+	 * Mutates the image inplace.
 	 * @param scale Scale image by this factor
 	 * @param options optional arguments
 	 */
-	public native void resize(double scale, ResizeOptions options) throws VipsException;
+	public native void applyResize(double scale, ResizeOptions options) throws VipsException;
 	
 	/**
 	 * VipsResize (resize): resize an image
+	 * Mutates the image inplace.
 	 * @param scale Scale image by this factor
 	 */
-	public void resize(double scale) throws VipsException {
-		resize(scale, null);
+	public void applyResize(double scale) throws VipsException {
+		applyResize(scale, null);
+	}
+	
+	
+	/**
+	 * VipsResize (resize): resize an image
+	 * Returns a new image.
+	 * @param scale Scale image by this factor
+	 * @param options optional arguments
+	 */
+	public native VipsImage resize(double scale, ResizeOptions options) throws VipsException;
+	
+	/**
+	 * VipsResize (resize): resize an image
+	 * Returns a new image.
+	 * @param scale Scale image by this factor
+	 */
+	public VipsImage resize(double scale) throws VipsException {
+		return resize(scale, null);
 	}
 	
 	/**
 	 * VipsRot (rot): rotate an image
+	 * Mutates the image inplace.
 	 * @param angle Angle to rotate image
 	 */
-	public native void rot(VipsAngle angle) throws VipsException;
+	public native void applyRot(VipsAngle angle) throws VipsException;
+	
+	
+	/**
+	 * VipsRot (rot): rotate an image
+	 * Returns a new image.
+	 * @param angle Angle to rotate image
+	 */
+	public native VipsImage rot(VipsAngle angle) throws VipsException;
 	
 	/**
 	 * VipsRot45 (rot45): rotate an image
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void rot45(Rot45Options options) throws VipsException;
+	public native void applyRot45(Rot45Options options) throws VipsException;
 	
 	/**
 	 * VipsRot45 (rot45): rotate an image
+	 * Mutates the image inplace.
 	 */
-	public void rot45() throws VipsException {
-		rot45(null);
+	public void applyRot45() throws VipsException {
+		applyRot45(null);
+	}
+	
+	
+	/**
+	 * VipsRot45 (rot45): rotate an image
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage rot45(Rot45Options options) throws VipsException;
+	
+	/**
+	 * VipsRot45 (rot45): rotate an image
+	 * Returns a new image.
+	 */
+	public VipsImage rot45() throws VipsException {
+		return rot45(null);
 	}
 	
 	/**
 	 * VipsRound (round): perform a round function on an image
+	 * Mutates the image inplace.
 	 * @param round rounding operation to perform
 	 */
-	public native void round(VipsOperationRound round) throws VipsException;
+	public native void applyRound(VipsOperationRound round) throws VipsException;
+	
+	
+	/**
+	 * VipsRound (round): perform a round function on an image
+	 * Returns a new image.
+	 * @param round rounding operation to perform
+	 */
+	public native VipsImage round(VipsOperationRound round) throws VipsException;
 	
 	/**
 	 * VipsScale (scale): scale an image to uchar
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void scale(ScaleOptions options) throws VipsException;
+	public native void applyScale(ScaleOptions options) throws VipsException;
 	
 	/**
 	 * VipsScale (scale): scale an image to uchar
+	 * Mutates the image inplace.
 	 */
-	public void scale() throws VipsException {
-		scale(null);
+	public void applyScale() throws VipsException {
+		applyScale(null);
+	}
+	
+	
+	/**
+	 * VipsScale (scale): scale an image to uchar
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage scale(ScaleOptions options) throws VipsException;
+	
+	/**
+	 * VipsScale (scale): scale an image to uchar
+	 * Returns a new image.
+	 */
+	public VipsImage scale() throws VipsException {
+		return scale(null);
 	}
 	
 	/**
 	 * VipsscRGB2BW (scRGB2BW): convert scRGB to BW
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void scRGB2BW(ScRGB2BWOptions options) throws VipsException;
+	public native void applyScRGB2BW(ScRGB2BWOptions options) throws VipsException;
 	
 	/**
 	 * VipsscRGB2BW (scRGB2BW): convert scRGB to BW
+	 * Mutates the image inplace.
 	 */
-	public void scRGB2BW() throws VipsException {
-		scRGB2BW(null);
+	public void applyScRGB2BW() throws VipsException {
+		applyScRGB2BW(null);
+	}
+	
+	
+	/**
+	 * VipsscRGB2BW (scRGB2BW): convert scRGB to BW
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage scRGB2BW(ScRGB2BWOptions options) throws VipsException;
+	
+	/**
+	 * VipsscRGB2BW (scRGB2BW): convert scRGB to BW
+	 * Returns a new image.
+	 */
+	public VipsImage scRGB2BW() throws VipsException {
+		return scRGB2BW(null);
 	}
 	
 	/**
 	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void scRGB2sRGB(ScRGB2sRGBOptions options) throws VipsException;
+	public native void applyScRGB2sRGB(ScRGB2sRGBOptions options) throws VipsException;
 	
 	/**
 	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * Mutates the image inplace.
 	 */
-	public void scRGB2sRGB() throws VipsException {
-		scRGB2sRGB(null);
+	public void applyScRGB2sRGB() throws VipsException {
+		applyScRGB2sRGB(null);
+	}
+	
+	
+	/**
+	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage scRGB2sRGB(ScRGB2sRGBOptions options) throws VipsException;
+	
+	/**
+	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * Returns a new image.
+	 */
+	public VipsImage scRGB2sRGB() throws VipsException {
+		return scRGB2sRGB(null);
 	}
 	
 	/**
 	 * VipsscRGB2XYZ (scRGB2XYZ): transform scRGB to XYZ
+	 * Mutates the image inplace.
 	 */
-	public native void scRGB2XYZ() throws VipsException;
+	public native void applyScRGB2XYZ() throws VipsException;
+	
+	
+	/**
+	 * VipsscRGB2XYZ (scRGB2XYZ): transform scRGB to XYZ
+	 * Returns a new image.
+	 */
+	public native VipsImage scRGB2XYZ() throws VipsException;
 	
 	/**
 	 * VipsSequential (sequential): check sequential access
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void sequential(SequentialOptions options) throws VipsException;
+	public native void applySequential(SequentialOptions options) throws VipsException;
 	
 	/**
 	 * VipsSequential (sequential): check sequential access
+	 * Mutates the image inplace.
 	 */
-	public void sequential() throws VipsException {
-		sequential(null);
+	public void applySequential() throws VipsException {
+		applySequential(null);
+	}
+	
+	
+	/**
+	 * VipsSequential (sequential): check sequential access
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage sequential(SequentialOptions options) throws VipsException;
+	
+	/**
+	 * VipsSequential (sequential): check sequential access
+	 * Returns a new image.
+	 */
+	public VipsImage sequential() throws VipsException {
+		return sequential(null);
 	}
 	
 	/**
 	 * VipsSharpen (sharpen): unsharp masking for print
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void sharpen(SharpenOptions options) throws VipsException;
+	public native void applySharpen(SharpenOptions options) throws VipsException;
 	
 	/**
 	 * VipsSharpen (sharpen): unsharp masking for print
+	 * Mutates the image inplace.
 	 */
-	public void sharpen() throws VipsException {
-		sharpen(null);
+	public void applySharpen() throws VipsException {
+		applySharpen(null);
+	}
+	
+	
+	/**
+	 * VipsSharpen (sharpen): unsharp masking for print
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage sharpen(SharpenOptions options) throws VipsException;
+	
+	/**
+	 * VipsSharpen (sharpen): unsharp masking for print
+	 * Returns a new image.
+	 */
+	public VipsImage sharpen() throws VipsException {
+		return sharpen(null);
 	}
 	
 	/**
 	 * VipsShrink (shrink): shrink an image
+	 * Mutates the image inplace.
 	 * @param hshrink Horizontal shrink factor
 	 * @param vshrink Vertical shrink factor
 	 */
-	public native void shrink(double hshrink, double vshrink) throws VipsException;
+	public native void applyShrink(double hshrink, double vshrink) throws VipsException;
+	
+	
+	/**
+	 * VipsShrink (shrink): shrink an image
+	 * Returns a new image.
+	 * @param hshrink Horizontal shrink factor
+	 * @param vshrink Vertical shrink factor
+	 */
+	public native VipsImage shrink(double hshrink, double vshrink) throws VipsException;
 	
 	/**
 	 * VipsShrinkh (shrinkh): shrink an image horizontally
+	 * Mutates the image inplace.
 	 * @param hshrink Horizontal shrink factor
 	 */
-	public native void shrinkh(int hshrink) throws VipsException;
+	public native void applyShrinkh(int hshrink) throws VipsException;
+	
+	
+	/**
+	 * VipsShrinkh (shrinkh): shrink an image horizontally
+	 * Returns a new image.
+	 * @param hshrink Horizontal shrink factor
+	 */
+	public native VipsImage shrinkh(int hshrink) throws VipsException;
 	
 	/**
 	 * VipsShrinkv (shrinkv): shrink an image vertically
+	 * Mutates the image inplace.
 	 * @param vshrink Vertical shrink factor
 	 */
-	public native void shrinkv(int vshrink) throws VipsException;
+	public native void applyShrinkv(int vshrink) throws VipsException;
+	
+	
+	/**
+	 * VipsShrinkv (shrinkv): shrink an image vertically
+	 * Returns a new image.
+	 * @param vshrink Vertical shrink factor
+	 */
+	public native VipsImage shrinkv(int vshrink) throws VipsException;
 	
 	/**
 	 * VipsSign (sign): unit vector of pixel
+	 * Mutates the image inplace.
 	 */
-	public native void sign() throws VipsException;
+	public native void applySign() throws VipsException;
+	
+	
+	/**
+	 * VipsSign (sign): unit vector of pixel
+	 * Returns a new image.
+	 */
+	public native VipsImage sign() throws VipsException;
 	
 	/**
 	 * VipsSines (sines): make a 2D sine wave
@@ -2673,91 +4358,215 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsSmartcrop (smartcrop): extract an area from an image
+	 * Mutates the image inplace.
 	 * @param width Width of extract area
 	 * @param height Height of extract area
 	 * @param options optional arguments
 	 */
-	public native void smartcrop(int width, int height, SmartcropOptions options) throws VipsException;
+	public native void applySmartcrop(int width, int height, SmartcropOptions options) throws VipsException;
 	
 	/**
 	 * VipsSmartcrop (smartcrop): extract an area from an image
+	 * Mutates the image inplace.
 	 * @param width Width of extract area
 	 * @param height Height of extract area
 	 */
-	public void smartcrop(int width, int height) throws VipsException {
-		smartcrop(width, height, null);
+	public void applySmartcrop(int width, int height) throws VipsException {
+		applySmartcrop(width, height, null);
+	}
+	
+	
+	/**
+	 * VipsSmartcrop (smartcrop): extract an area from an image
+	 * Returns a new image.
+	 * @param width Width of extract area
+	 * @param height Height of extract area
+	 * @param options optional arguments
+	 */
+	public native VipsImage smartcrop(int width, int height, SmartcropOptions options) throws VipsException;
+	
+	/**
+	 * VipsSmartcrop (smartcrop): extract an area from an image
+	 * Returns a new image.
+	 * @param width Width of extract area
+	 * @param height Height of extract area
+	 */
+	public VipsImage smartcrop(int width, int height) throws VipsException {
+		return smartcrop(width, height, null);
 	}
 	
 	/**
 	 * VipsSobel (sobel): Sobel edge detector
+	 * Mutates the image inplace.
 	 */
-	public native void sobel() throws VipsException;
+	public native void applySobel() throws VipsException;
+	
+	
+	/**
+	 * VipsSobel (sobel): Sobel edge detector
+	 * Returns a new image.
+	 */
+	public native VipsImage sobel() throws VipsException;
 	
 	/**
 	 * VipsSpcor (spcor): spatial correlation
+	 * Mutates the image inplace.
 	 * @param ref Input reference image
 	 */
-	public native void spcor(Image ref) throws VipsException;
+	public native void applySpcor(Image ref) throws VipsException;
+	
+	
+	/**
+	 * VipsSpcor (spcor): spatial correlation
+	 * Returns a new image.
+	 * @param ref Input reference image
+	 */
+	public native VipsImage spcor(Image ref) throws VipsException;
 	
 	/**
 	 * VipsSpectrum (spectrum): make displayable power spectrum
+	 * Mutates the image inplace.
 	 */
-	public native void spectrum() throws VipsException;
+	public native void applySpectrum() throws VipsException;
+	
+	
+	/**
+	 * VipsSpectrum (spectrum): make displayable power spectrum
+	 * Returns a new image.
+	 */
+	public native VipsImage spectrum() throws VipsException;
 	
 	/**
 	 * VipssRGB2HSV (sRGB2HSV): transform sRGB to HSV
+	 * Mutates the image inplace.
 	 */
-	public native void sRGB2HSV() throws VipsException;
+	public native void applySRGB2HSV() throws VipsException;
+	
+	
+	/**
+	 * VipssRGB2HSV (sRGB2HSV): transform sRGB to HSV
+	 * Returns a new image.
+	 */
+	public native VipsImage sRGB2HSV() throws VipsException;
 	
 	/**
 	 * VipssRGB2scRGB (sRGB2scRGB): convert an sRGB image to scRGB
+	 * Mutates the image inplace.
 	 */
-	public native void sRGB2scRGB() throws VipsException;
+	public native void applySRGB2scRGB() throws VipsException;
+	
+	
+	/**
+	 * VipssRGB2scRGB (sRGB2scRGB): convert an sRGB image to scRGB
+	 * Returns a new image.
+	 */
+	public native VipsImage sRGB2scRGB() throws VipsException;
 	
 	/**
 	 * VipsStats (stats): find many image stats
+	 * Mutates the image inplace.
 	 */
-	public native void stats() throws VipsException;
+	public native void applyStats() throws VipsException;
+	
+	
+	/**
+	 * VipsStats (stats): find many image stats
+	 * Returns a new image.
+	 */
+	public native VipsImage stats() throws VipsException;
 	
 	/**
 	 * VipsStdif (stdif): statistical difference
+	 * Mutates the image inplace.
 	 * @param width Window width in pixels
 	 * @param height Window height in pixels
 	 * @param options optional arguments
 	 */
-	public native void stdif(int width, int height, StdifOptions options) throws VipsException;
+	public native void applyStdif(int width, int height, StdifOptions options) throws VipsException;
 	
 	/**
 	 * VipsStdif (stdif): statistical difference
+	 * Mutates the image inplace.
 	 * @param width Window width in pixels
 	 * @param height Window height in pixels
 	 */
-	public void stdif(int width, int height) throws VipsException {
-		stdif(width, height, null);
+	public void applyStdif(int width, int height) throws VipsException {
+		applyStdif(width, height, null);
+	}
+	
+	
+	/**
+	 * VipsStdif (stdif): statistical difference
+	 * Returns a new image.
+	 * @param width Window width in pixels
+	 * @param height Window height in pixels
+	 * @param options optional arguments
+	 */
+	public native VipsImage stdif(int width, int height, StdifOptions options) throws VipsException;
+	
+	/**
+	 * VipsStdif (stdif): statistical difference
+	 * Returns a new image.
+	 * @param width Window width in pixels
+	 * @param height Window height in pixels
+	 */
+	public VipsImage stdif(int width, int height) throws VipsException {
+		return stdif(width, height, null);
 	}
 	
 	/**
 	 * VipsSubsample (subsample): subsample an image
+	 * Mutates the image inplace.
 	 * @param xfac Horizontal subsample factor
 	 * @param yfac Vertical subsample factor
 	 * @param options optional arguments
 	 */
-	public native void subsample(int xfac, int yfac, SubsampleOptions options) throws VipsException;
+	public native void applySubsample(int xfac, int yfac, SubsampleOptions options) throws VipsException;
 	
 	/**
 	 * VipsSubsample (subsample): subsample an image
+	 * Mutates the image inplace.
 	 * @param xfac Horizontal subsample factor
 	 * @param yfac Vertical subsample factor
 	 */
-	public void subsample(int xfac, int yfac) throws VipsException {
-		subsample(xfac, yfac, null);
+	public void applySubsample(int xfac, int yfac) throws VipsException {
+		applySubsample(xfac, yfac, null);
+	}
+	
+	
+	/**
+	 * VipsSubsample (subsample): subsample an image
+	 * Returns a new image.
+	 * @param xfac Horizontal subsample factor
+	 * @param yfac Vertical subsample factor
+	 * @param options optional arguments
+	 */
+	public native VipsImage subsample(int xfac, int yfac, SubsampleOptions options) throws VipsException;
+	
+	/**
+	 * VipsSubsample (subsample): subsample an image
+	 * Returns a new image.
+	 * @param xfac Horizontal subsample factor
+	 * @param yfac Vertical subsample factor
+	 */
+	public VipsImage subsample(int xfac, int yfac) throws VipsException {
+		return subsample(xfac, yfac, null);
 	}
 	
 	/**
 	 * VipsSubtract (subtract): subtract two images
+	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void subtract(Image right) throws VipsException;
+	public native void applySubtract(Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsSubtract (subtract): subtract two images
+	 * Returns a new image.
+	 * @param right Right-hand image argument
+	 */
+	public native VipsImage subtract(Image right) throws VipsException;
 	
 	/**
 	 * VipsSum (sum): sum an array of images
@@ -2867,17 +4676,37 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsThumbnailImage (thumbnail_image): generate thumbnail from image
+	 * Mutates the image inplace.
 	 * @param width Size to this width
 	 * @param options optional arguments
 	 */
-	public native void thumbnailImage(int width, ThumbnailImageOptions options) throws VipsException;
+	public native void applyThumbnailImage(int width, ThumbnailImageOptions options) throws VipsException;
 	
 	/**
 	 * VipsThumbnailImage (thumbnail_image): generate thumbnail from image
+	 * Mutates the image inplace.
 	 * @param width Size to this width
 	 */
-	public void thumbnailImage(int width) throws VipsException {
-		thumbnailImage(width, null);
+	public void applyThumbnailImage(int width) throws VipsException {
+		applyThumbnailImage(width, null);
+	}
+	
+	
+	/**
+	 * VipsThumbnailImage (thumbnail_image): generate thumbnail from image
+	 * Returns a new image.
+	 * @param width Size to this width
+	 * @param options optional arguments
+	 */
+	public native VipsImage thumbnailImage(int width, ThumbnailImageOptions options) throws VipsException;
+	
+	/**
+	 * VipsThumbnailImage (thumbnail_image): generate thumbnail from image
+	 * Returns a new image.
+	 * @param width Size to this width
+	 */
+	public VipsImage thumbnailImage(int width) throws VipsException {
+		return thumbnailImage(width, null);
 	}
 	
 	/**
@@ -2940,15 +4769,33 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsTileCache (tilecache): cache an image as a set of tiles
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void tilecache(TilecacheOptions options) throws VipsException;
+	public native void applyTilecache(TilecacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsTileCache (tilecache): cache an image as a set of tiles
+	 * Mutates the image inplace.
 	 */
-	public void tilecache() throws VipsException {
-		tilecache(null);
+	public void applyTilecache() throws VipsException {
+		applyTilecache(null);
+	}
+	
+	
+	/**
+	 * VipsTileCache (tilecache): cache an image as a set of tiles
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage tilecache(TilecacheOptions options) throws VipsException;
+	
+	/**
+	 * VipsTileCache (tilecache): cache an image as a set of tiles
+	 * Returns a new image.
+	 */
+	public VipsImage tilecache() throws VipsException {
+		return tilecache(null);
 	}
 	
 	/**
@@ -2966,28 +4813,64 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsTranspose3d (transpose3d): transpose3d an image
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void transpose3d(Transpose3dOptions options) throws VipsException;
+	public native void applyTranspose3d(Transpose3dOptions options) throws VipsException;
 	
 	/**
 	 * VipsTranspose3d (transpose3d): transpose3d an image
+	 * Mutates the image inplace.
 	 */
-	public void transpose3d() throws VipsException {
-		transpose3d(null);
+	public void applyTranspose3d() throws VipsException {
+		applyTranspose3d(null);
+	}
+	
+	
+	/**
+	 * VipsTranspose3d (transpose3d): transpose3d an image
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage transpose3d(Transpose3dOptions options) throws VipsException;
+	
+	/**
+	 * VipsTranspose3d (transpose3d): transpose3d an image
+	 * Returns a new image.
+	 */
+	public VipsImage transpose3d() throws VipsException {
+		return transpose3d(null);
 	}
 	
 	/**
 	 * VipsUnpremultiply (unpremultiply): unpremultiply image alpha
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void unpremultiply(UnpremultiplyOptions options) throws VipsException;
+	public native void applyUnpremultiply(UnpremultiplyOptions options) throws VipsException;
 	
 	/**
 	 * VipsUnpremultiply (unpremultiply): unpremultiply image alpha
+	 * Mutates the image inplace.
 	 */
-	public void unpremultiply() throws VipsException {
-		unpremultiply(null);
+	public void applyUnpremultiply() throws VipsException {
+		applyUnpremultiply(null);
+	}
+	
+	
+	/**
+	 * VipsUnpremultiply (unpremultiply): unpremultiply image alpha
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage unpremultiply(UnpremultiplyOptions options) throws VipsException;
+	
+	/**
+	 * VipsUnpremultiply (unpremultiply): unpremultiply image alpha
+	 * Returns a new image.
+	 */
+	public VipsImage unpremultiply() throws VipsException {
+		return unpremultiply(null);
 	}
 	
 	/**
@@ -3097,15 +4980,33 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsWrap (wrap): wrap image origin
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void wrap(WrapOptions options) throws VipsException;
+	public native void applyWrap(WrapOptions options) throws VipsException;
 	
 	/**
 	 * VipsWrap (wrap): wrap image origin
+	 * Mutates the image inplace.
 	 */
-	public void wrap() throws VipsException {
-		wrap(null);
+	public void applyWrap() throws VipsException {
+		applyWrap(null);
+	}
+	
+	
+	/**
+	 * VipsWrap (wrap): wrap image origin
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage wrap(WrapOptions options) throws VipsException;
+	
+	/**
+	 * VipsWrap (wrap): wrap image origin
+	 * Returns a new image.
+	 */
+	public VipsImage wrap() throws VipsException {
+		return wrap(null);
 	}
 	
 	/**
@@ -3127,36 +5028,86 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsXYZ2CMYK (XYZ2CMYK): transform XYZ to CMYK
+	 * Mutates the image inplace.
 	 */
-	public native void xyz2cmyk() throws VipsException;
+	public native void applyXYZ2CMYK() throws VipsException;
+	
+	
+	/**
+	 * VipsXYZ2CMYK (XYZ2CMYK): transform XYZ to CMYK
+	 * Returns a new image.
+	 */
+	public native VipsImage xyz2cmyk() throws VipsException;
 	
 	/**
 	 * VipsXYZ2Lab (XYZ2Lab): transform XYZ to Lab
+	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void xYZ2Lab(XYZ2LabOptions options) throws VipsException;
+	public native void applyXYZ2Lab(XYZ2LabOptions options) throws VipsException;
 	
 	/**
 	 * VipsXYZ2Lab (XYZ2Lab): transform XYZ to Lab
+	 * Mutates the image inplace.
 	 */
-	public void xYZ2Lab() throws VipsException {
-		xYZ2Lab(null);
+	public void applyXYZ2Lab() throws VipsException {
+		applyXYZ2Lab(null);
+	}
+	
+	
+	/**
+	 * VipsXYZ2Lab (XYZ2Lab): transform XYZ to Lab
+	 * Returns a new image.
+	 * @param options optional arguments
+	 */
+	public native VipsImage xYZ2Lab(XYZ2LabOptions options) throws VipsException;
+	
+	/**
+	 * VipsXYZ2Lab (XYZ2Lab): transform XYZ to Lab
+	 * Returns a new image.
+	 */
+	public VipsImage xYZ2Lab() throws VipsException {
+		return xYZ2Lab(null);
 	}
 	
 	/**
 	 * VipsXYZ2scRGB (XYZ2scRGB): transform XYZ to scRGB
+	 * Mutates the image inplace.
 	 */
-	public native void xYZ2scRGB() throws VipsException;
+	public native void applyXYZ2scRGB() throws VipsException;
+	
+	
+	/**
+	 * VipsXYZ2scRGB (XYZ2scRGB): transform XYZ to scRGB
+	 * Returns a new image.
+	 */
+	public native VipsImage xYZ2scRGB() throws VipsException;
 	
 	/**
 	 * VipsXYZ2Yxy (XYZ2Yxy): transform XYZ to Yxy
+	 * Mutates the image inplace.
 	 */
-	public native void xYZ2Yxy() throws VipsException;
+	public native void applyXYZ2Yxy() throws VipsException;
+	
+	
+	/**
+	 * VipsXYZ2Yxy (XYZ2Yxy): transform XYZ to Yxy
+	 * Returns a new image.
+	 */
+	public native VipsImage xYZ2Yxy() throws VipsException;
 	
 	/**
 	 * VipsYxy2XYZ (Yxy2XYZ): transform Yxy to XYZ
+	 * Mutates the image inplace.
 	 */
-	public native void yxy2XYZ() throws VipsException;
+	public native void applyYxy2XYZ() throws VipsException;
+	
+	
+	/**
+	 * VipsYxy2XYZ (Yxy2XYZ): transform Yxy to XYZ
+	 * Returns a new image.
+	 */
+	public native VipsImage yxy2XYZ() throws VipsException;
 	
 	/**
 	 * VipsZone (zone): make a zone plate
@@ -3177,9 +5128,19 @@ abstract class AbstractVipsImage extends Vips {
 	
 	/**
 	 * VipsZoom (zoom): zoom an image
+	 * Mutates the image inplace.
 	 * @param xfac Horizontal zoom factor
 	 * @param yfac Vertical zoom factor
 	 */
-	public native void zoom(int xfac, int yfac) throws VipsException;
+	public native void applyZoom(int xfac, int yfac) throws VipsException;
+	
+	
+	/**
+	 * VipsZoom (zoom): zoom an image
+	 * Returns a new image.
+	 * @param xfac Horizontal zoom factor
+	 * @param yfac Vertical zoom factor
+	 */
+	public native VipsImage zoom(int xfac, int yfac) throws VipsException;
 	
 }

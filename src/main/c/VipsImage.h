@@ -89,14 +89,6 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_max1Native
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    cropNative
- * Signature: (IIII)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_cropNative
-  (JNIEnv *, jobject, jint, jint, jint, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    writeToArrayNative
  * Signature: (Ljava/lang/String;IZ)[B
  */
@@ -161,10 +153,10 @@ JNIEXPORT jboolean JNICALL Java_com_criteo_vips_VipsImage_hasAlpha
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    convertTosRGB
+ * Method:    applyConvertTosRGB
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_convertTosRGB
+JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_applyConvertTosRGB
   (JNIEnv *, jobject);
 
 /*
@@ -177,10 +169,10 @@ JNIEXPORT jint JNICALL Java_com_criteo_vips_VipsImage_getNbFrame
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    removeAutorotAngle
+ * Method:    applyRemoveAutorotAngle
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_removeAutorotAngle
+JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_applyRemoveAutorotAngle
   (JNIEnv *, jobject);
 
 /*

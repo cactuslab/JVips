@@ -188,23 +188,6 @@ JNIEXPORT int JNICALL Java_com_criteo_vips_VipsImage_imageGetInterpretationNativ
     return vips_image_get_interpretation(im);
 }
 
-JNIEXPORT void JNICALL
-Java_com_criteo_vips_VipsImage_cropNative(JNIEnv *env, jobject obj, jint left, jint top, jint width, jint height)
-{
-    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
-    int w = vips_image_get_width(im);
-    int h = vips_image_get_height(im);
-    VipsImage *out = NULL;
-
-    if (vips_crop(im, &out, left, top, width, height, NULL))
-    {
-        throwVipsException(env, "Unable to crop image");
-        return;
-    }
-    (*env)->SetLongField(env, obj, handle_fid, (jlong) out);
-    g_object_unref(im);
-}
-
 JNIEXPORT jbyteArray JNICALL
 Java_com_criteo_vips_VipsImage_writeToArrayNative(JNIEnv *env, jobject obj, jstring extension, jint quality, jboolean strip)
 {

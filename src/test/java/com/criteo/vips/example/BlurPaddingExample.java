@@ -32,7 +32,7 @@ public class BlurPaddingExample {
         int borderHeight = direction == VipsDirection.Horizontal ? height : paddingSize;
 
         try (VipsImage blur = img.clone()) {
-            blur.gaussblur(16.0, 0.2);
+            blur.applyGaussBlur(16.0, 0.2);
             try (VipsImage border1 = blur.extractArea(0, 0, borderWidth, borderHeight);
                  VipsImage border2 = blur.extractArea(borderLeft, borderTop, borderWidth, borderHeight);
                  VipsImage concat1 = VipsImage.join(border1, img, direction)) {

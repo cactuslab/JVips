@@ -92,9 +92,9 @@ public class SimpleBenchmark {
     private void ThumbnailCropPad(byte[] content, VipsImageFormat format) {
         VipsImage img = new VipsImage(content, content.length);
 
-        img.thumbnailImage(thumbnailTarget, false);
-        img.crop(cropTarget);
-        img.pad(padTarget, pixelPacket, VipsCompassDirection.Centre);
+        img.applyThumbnailImage(thumbnailTarget, false);
+        img.applyCrop(cropTarget);
+        img.applyPad(padTarget, pixelPacket, VipsCompassDirection.Centre);
         byte[] out = img.writeToArray(format, 80, false);
         img.release();
     }

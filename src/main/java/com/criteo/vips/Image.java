@@ -32,7 +32,7 @@ public interface Image extends AutoCloseable {
      * @param uchar: output uchar pixels if true
      * @throws VipsException if error
      */
-    void linear(double[] a, double[] b, boolean uchar) throws VipsException;
+    void applyLinear(double[] a, double[] b, boolean uchar) throws VipsException;
 
     /**
      * Pass image through a linear transform, ie. (@out = @in * @a + @b)
@@ -41,7 +41,7 @@ public interface Image extends AutoCloseable {
      * @param b: (array length=b.length): array of constants for addition
      * @throws VipsException if error
      */
-    void linear(double[] a, double[] b) throws VipsException;
+    void applyLinear(double[] a, double[] b) throws VipsException;
 
     /**
      * Read a single pixel from an image.
@@ -73,7 +73,7 @@ public interface Image extends AutoCloseable {
      *
      * @throws VipsException if error
      */
-    void castUchar() throws VipsException;
+    void applyCastUchar() throws VipsException;
 
     /**
      * Convert to VIPS_FORMAT_CHAR
@@ -81,7 +81,7 @@ public interface Image extends AutoCloseable {
      * @param shift values are shifted
      * @throws VipsException if error
      */
-    void castUchar(boolean shift) throws VipsException;
+    void applyCastUchar(boolean shift) throws VipsException;
 
     /**
      * Convert to format without shifting
@@ -89,7 +89,7 @@ public interface Image extends AutoCloseable {
      * @param format the image's new format
      * @throws VipsException if error
      */
-    void cast(VipsBandFormat format) throws VipsException;
+    void applyCast(VipsBandFormat format) throws VipsException;
 
     /**
      * Convert to format
@@ -98,7 +98,7 @@ public interface Image extends AutoCloseable {
      * @param shift  integer values are shifted
      * @throws VipsException if error
      */
-    void cast(VipsBandFormat format, boolean shift) throws VipsException;
+    void applyCast(VipsBandFormat format, boolean shift) throws VipsException;
 
     /**
      * Make a one, two or three dimensional histogram of a 1, 2 or 3 band image
@@ -106,7 +106,7 @@ public interface Image extends AutoCloseable {
      * @param bins number of bins
      * @throws VipsException if error
      */
-    void histFindNdim(int bins) throws VipsException;
+    void applyHistFindNdim(int bins) throws VipsException;
 
     /**
      * Get the VipsInterpretation from the image header.
@@ -121,7 +121,7 @@ public interface Image extends AutoCloseable {
      * @param space the new colourspace.
      * @throws VipsException if error
      */
-    void colourspace(VipsInterpretation space) throws VipsException;
+    void applyColourspace(VipsInterpretation space) throws VipsException;
 
     /**
      * Convert this VipsImage's colourspace to the given space
@@ -130,7 +130,7 @@ public interface Image extends AutoCloseable {
      * @param source_space the input colourspace.
      * @throws VipsException if error
      */
-    void colourspace(VipsInterpretation space, VipsInterpretation source_space) throws VipsException;
+    void applyColourspace(VipsInterpretation space, VipsInterpretation source_space) throws VipsException;
 
     /**
      * Make a thumbnail of this VipsImage with new target dimension
@@ -139,7 +139,7 @@ public interface Image extends AutoCloseable {
      * @param scale     If scale is enabled, force to resize ignoring aspect ratio
      * @throws VipsException if error
      */
-    void thumbnailImage(Dimension dimension, boolean scale) throws VipsException;
+    void applyThumbnailImage(Dimension dimension, boolean scale) throws VipsException;
 
     /**
      * Make a thumbnail of this VipsImage with new target dimension
@@ -149,9 +149,9 @@ public interface Image extends AutoCloseable {
      * @param scale  If scale is enabled, force to resize ignoring aspect ratio
      * @throws VipsException if error
      */
-    void thumbnailImage(int width, int height, boolean scale) throws VipsException;
+    void applyThumbnailImage(int width, int height, boolean scale) throws VipsException;
 
-    void thumbnailImage(int width, ThumbnailImageOptions options) throws VipsException;
+    void applyThumbnailImage(int width, ThumbnailImageOptions options) throws VipsException;
 
     /**
      * Make a thumbnail of this VipsImage with new target dimension
@@ -160,10 +160,10 @@ public interface Image extends AutoCloseable {
      * @param scale     If scale is enabled, force to resize ignoring aspect ratio
      * @throws VipsException if error
      *
-     * @deprecated Use {@link #thumbnailImage(Dimension, boolean)} instead.
+     * @deprecated Use {@link #applyThumbnailImage(Dimension, boolean)} instead.
      */
     @Deprecated
-    void resize(Dimension dimension, boolean scale) throws VipsException;
+    void applyResize(Dimension dimension, boolean scale) throws VipsException;
 
     /**
      * Resize this VipsImage with target scaling factor and resampling kernel
@@ -173,7 +173,7 @@ public interface Image extends AutoCloseable {
      * @param kernel Resampling kernel
      * @throws VipsException if error
      */
-    void resize(double hscale, double vscale, VipsKernel kernel) throws VipsException;
+    void applyResize(double hscale, double vscale, VipsKernel kernel) throws VipsException;
 
     /**
      * Pad VipsImage with new target dimension and background pixel
@@ -183,7 +183,7 @@ public interface Image extends AutoCloseable {
      * @param gravity    Gravity direction
      * @throws VipsException if error
      */
-    void pad(Dimension dimension, PixelPacket background, VipsCompassDirection gravity) throws VipsException;
+    void applyPad(Dimension dimension, PixelPacket background, VipsCompassDirection gravity) throws VipsException;
 
     /**
      * Crop this VipsImage with new target dimension
@@ -193,7 +193,7 @@ public interface Image extends AutoCloseable {
      *                  width, height are cropped image dimension target
      * @throws VipsException if error
      */
-    void crop(Rectangle rectangle) throws VipsException;
+    void applyCrop(Rectangle rectangle) throws VipsException;
 
     /**
      * Find VipsImage bounding box
@@ -212,7 +212,7 @@ public interface Image extends AutoCloseable {
      * @param sub VipsImage to compose
      * @throws VipsException if error
      */
-    void compose(Image sub) throws VipsException;
+    void applyCompose(Image sub) throws VipsException;
     
     /**
      * Insert a sub VipsImage into this VipsImage at (x, y) coordinates
@@ -222,7 +222,7 @@ public interface Image extends AutoCloseable {
      * @param y top position of sub
      * @throws VipsException if error
      */
-    void insert(Image sub, int x, int y) throws VipsException;
+    void applyInsert(Image sub, int x, int y) throws VipsException;
 
     /**
      * Take the last band of this VipsImage as an alpha and use it tot blend the remaining channels with background
@@ -230,7 +230,7 @@ public interface Image extends AutoCloseable {
      * @param background PixelPacket color for new pixels
      * @throws VipsException if error
      */
-    void flatten(PixelPacket background) throws VipsException;
+    void applyFlatten(PixelPacket background) throws VipsException;
 
     /**
      * Write VipsImage to byte array with default quality
@@ -354,7 +354,7 @@ public interface Image extends AutoCloseable {
      *
      * @throws VipsException if error
      */
-    void gaussblur(double sigma, double minAmpl) throws VipsException;
+    void applyGaussBlur(double sigma, double minAmpl) throws VipsException;
 
 
     /**
@@ -374,7 +374,7 @@ public interface Image extends AutoCloseable {
      *
      * @throws VipsException if error
      */
-    void convertTosRGB() throws VipsException;
+    void applyConvertTosRGB() throws VipsException;
 
     /**
      * @return Image frame number
@@ -386,12 +386,12 @@ public interface Image extends AutoCloseable {
      *
      * @throws VipsException if error
      */
-    void autorot() throws VipsException;
+    void applyAutorot() throws VipsException;
 
     /**
      * Remove the orientation tag on the image
      */
-    void removeAutorotAngle();
+    void applyRemoveAutorotAngle();
 
     /**
      * Release VipsImage reference
