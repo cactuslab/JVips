@@ -27,7 +27,7 @@ function javaTypeForType(p: VipsOperationParameter, required: boolean = true): s
 		case 'guint64': return required ? 'long' : 'Long' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'String'
 		case 'VipsImage': return 'VipsImage'
-		case 'VipsArrayDouble': return 'PixelPacket' // TODO are they all PixelPackets?
+		case 'VipsArrayDouble': return 'double[]'
 		case 'VipsBlob': return 'byte[]'
 		case 'Rectangle': return 'Rectangle'
 	}
@@ -264,7 +264,6 @@ function optionsFileHeader(op: VipsOperation): string {
 package com.criteo.vips.options;
 
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "${op.alias}" operation.

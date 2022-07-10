@@ -16,7 +16,7 @@ function jniTypeForParameter(p: VipsOperationParameter): string {
 		case 'guint64': return 'jlong' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'jstring'
 		case 'VipsImage': return 'jobject'
-		case 'VipsArrayDouble': return 'jobject' /* Represented by PixelPacket */
+		case 'VipsArrayDouble': return 'jdoubleArray'
 		case 'VipsBlob': return 'jbyteArray'
 		case 'Rectangle': return 'jobject' /* A special handling for find_trim, which returns a Rectangle */
 	}
@@ -35,7 +35,7 @@ function wrappedJniTypeCodeForParameter(p: VipsOperationParameter): string {
 		case 'guint64': return 'Ljava/lang/Long;' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'Ljava/lang/String;'
 		case 'VipsImage': throw new Error(`VipsImage should be handled specially for parameter ${p.name}`)
-		case 'VipsArrayDouble': return 'Lcom/criteo/vips/PixelPacket;' // TODO
+		case 'VipsArrayDouble': return '[D'
 	}
 	throw new Error(`Unsupported JNI wrapping parameter type '${p.type}' for parameter '${p.name}'`)
 }
@@ -158,8 +158,6 @@ static jmethodID intValue_mid = NULL;
 static jmethodID longValue_mid = NULL;
 static jmethodID doubleValue_mid = NULL;
 static jclass imageClass = NULL;
-static jclass pixelPacketClass = NULL;
-static jmethodID pixelPacket_ctor_mid = NULL;
 static jclass rectangleClass = NULL;
 static jmethodID rectangle_ctor_mid = NULL;`
 }
@@ -170,8 +168,6 @@ buffer_fid = (*env)->GetFieldID(env, cls, "bufferHandler", "J");
 
 imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 ctor_mid = (*env)->GetMethodID(env, imageClass, "<init>", "(J)V");
-pixelPacketClass = (*env)->FindClass(env, "com/criteo/vips/PixelPacket");
-pixelPacket_ctor_mid = (*env)->GetMethodID(env, pixelPacketClass, "<init>", "([D)V");
 
 jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
 booleanValue_mid = (*env)->GetMethodID(env, booleanClass, "booleanValue", "()Z");
@@ -321,10 +317,8 @@ export function nativeMethod(op: VipsOperation): string {
 	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
 	jint ${camelCase(p.name)}Length = 0;
 	jdouble *${camelCase(p.name)}Elements = vips_value_get_array_double(&gvalue, &${camelCase(p.name)}Length);
-	jdoubleArray ${camelCase(p.name)}Array = (*env)->NewDoubleArray(env, ${camelCase(p.name)}Length);
-	(*env)->SetDoubleArrayRegion(env, ${camelCase(p.name)}Array, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Elements);
-	(*env)->ReleaseDoubleArrayElements(env, ${camelCase(p.name)}Array, ${camelCase(p.name)}Elements, JNI_COMMIT);
-	jobject ${camelCase(p.name)} = (*env)->NewObject(env, pixelPacketClass, pixelPacket_ctor_mid, ${camelCase(p.name)}Array);
+	jdoubleArray ${camelCase(p.name)} = (*env)->NewDoubleArray(env, ${camelCase(p.name)}Length);
+	(*env)->SetDoubleArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Elements);
 	g_value_unset(&gvalue);
 `
 				break
