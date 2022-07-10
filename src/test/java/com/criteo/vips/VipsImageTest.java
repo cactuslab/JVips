@@ -728,6 +728,7 @@ public class VipsImageTest {
         }
     }
 
+    @Ignore
     @Theory
     public void TestWriteAVIFFromByteArrayShouldNotThrows(@FromDataPoints("filenames") String filename,
                                                          boolean lossless)
@@ -743,6 +744,7 @@ public class VipsImageTest {
         }
     }
 
+    @Ignore
     @Test
     public void TestWriteAVIFFromByteArrayShouldShrinkOutputSize()
             throws IOException, VipsException {
