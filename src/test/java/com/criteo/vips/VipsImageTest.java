@@ -645,6 +645,11 @@ public class VipsImageTest {
     public void TestGetPointShouldReturn256bitsValue() throws IOException, VipsException {
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("white_48_bits.png");
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            double[] p1 = img.getPoint(0, 0);
+            assertEquals(65535.0, p1[0], Delta);
+            assertEquals(65535.0, p1[1], Delta);
+            assertEquals(65535.0, p1[2], Delta);
+
             PixelPacket p = img.getPointPixelPacket(new Point(0, 0));
             assertEquals(255.0, p.getRed(), Delta);
             assertEquals(255.0, p.getGreen(), Delta);

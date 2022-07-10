@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "magicksave_buffer" operation.
@@ -29,7 +29,7 @@ public class MagickSaveBufferOptions {
 	private Boolean optimizeGifFrames;
 	private Boolean optimizeGifTransparency;
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -198,7 +198,7 @@ public class MagickSaveBufferOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -208,7 +208,7 @@ public class MagickSaveBufferOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -219,7 +219,7 @@ public class MagickSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public MagickSaveBufferOptions background(PixelPacket background) {
+	public MagickSaveBufferOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

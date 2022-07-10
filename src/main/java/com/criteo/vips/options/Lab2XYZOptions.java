@@ -16,15 +16,15 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "Lab2XYZ" operation.
  */
-public class Lab2XYZOptions {
+public class LAB2XYZOptions {
 
-	private PixelPacket temp;
+	private double[] temp;
 
 	/**
 	 * Optional argument: temp
@@ -32,7 +32,7 @@ public class Lab2XYZOptions {
 	 * Color temperature
 	 * @return the value of {@code temp}
 	 */
-	public PixelPacket getTemp() {
+	public double[] getTemp() {
 		return this.temp;
 	}
 
@@ -42,7 +42,7 @@ public class Lab2XYZOptions {
 	 * Color temperature
 	 * @param temp the new value of {@code temp}
 	 */
-	public void setTemp(PixelPacket temp) {
+	public void setTemp(double[] temp) {
 		this.temp = temp;
 	}
 
@@ -53,7 +53,7 @@ public class Lab2XYZOptions {
 	 * @param temp the new value of {@code temp}
 	 * @return this object for chaining
 	 */
-	public Lab2XYZOptions temp(PixelPacket temp) {
+	public LAB2XYZOptions temp(double[] temp) {
 		setTemp(temp);
 		return this;
 	}

@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "jxlsave" operation.
@@ -30,7 +30,7 @@ public class JXLSaveOptions {
 	private Boolean lossless;
 	private Integer q;
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -231,7 +231,7 @@ public class JXLSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -241,7 +241,7 @@ public class JXLSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -252,7 +252,7 @@ public class JXLSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public JXLSaveOptions background(PixelPacket background) {
+	public JXLSaveOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

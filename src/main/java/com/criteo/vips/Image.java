@@ -20,7 +20,6 @@ import com.criteo.vips.enums.*;
 import com.criteo.vips.options.JPEGSaveOptions;
 import com.criteo.vips.options.PNGSaveOptions;
 import com.criteo.vips.options.ThumbnailImageOptions;
-import com.criteo.vips.options.ThumbnailOptions;
 
 import java.awt.*;
 

@@ -16,13 +16,13 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "gaussnoise" operation.
  */
-public class GaussnoiseOptions {
+public class GaussNoiseOptions {
 
 	private Double sigma;
 	private Double mean;
@@ -55,7 +55,7 @@ public class GaussnoiseOptions {
 	 * @param sigma the new value of {@code sigma}
 	 * @return this object for chaining
 	 */
-	public GaussnoiseOptions sigma(Double sigma) {
+	public GaussNoiseOptions sigma(Double sigma) {
 		setSigma(sigma);
 		return this;
 	}
@@ -87,7 +87,7 @@ public class GaussnoiseOptions {
 	 * @param mean the new value of {@code mean}
 	 * @return this object for chaining
 	 */
-	public GaussnoiseOptions mean(Double mean) {
+	public GaussNoiseOptions mean(Double mean) {
 		setMean(mean);
 		return this;
 	}
@@ -119,7 +119,7 @@ public class GaussnoiseOptions {
 	 * @param seed the new value of {@code seed}
 	 * @return this object for chaining
 	 */
-	public GaussnoiseOptions seed(Integer seed) {
+	public GaussNoiseOptions seed(Integer seed) {
 		setSeed(seed);
 		return this;
 	}

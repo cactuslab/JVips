@@ -30,9 +30,8 @@ static jmethodID booleanValue_mid = NULL;
 static jmethodID intValue_mid = NULL;
 static jmethodID longValue_mid = NULL;
 static jmethodID doubleValue_mid = NULL;
-static jclass imageClass = NULL;
-static jclass pixelPacketClass = NULL;
-static jmethodID pixelPacket_ctor_mid = NULL;
+static jclass rectangleClass = NULL;
+static jmethodID rectangle_ctor_mid = NULL;
 
 JNIEXPORT void JNICALL
 Java_com_criteo_vips_AbstractVipsImage_initFieldIDs(JNIEnv *env, jobject cls)
@@ -40,10 +39,8 @@ Java_com_criteo_vips_AbstractVipsImage_initFieldIDs(JNIEnv *env, jobject cls)
 	handle_fid = (*env)->GetFieldID(env, cls, "vipsImageHandler", "J");
 	buffer_fid = (*env)->GetFieldID(env, cls, "bufferHandler", "J");
 	
-	imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 	ctor_mid = (*env)->GetMethodID(env, imageClass, "<init>", "(J)V");
-	pixelPacketClass = (*env)->FindClass(env, "com/criteo/vips/PixelPacket");
-	pixelPacket_ctor_mid = (*env)->GetMethodID(env, pixelPacketClass, "<init>", "([D)V");
 	
 	jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
 	booleanValue_mid = (*env)->GetMethodID(env, booleanClass, "booleanValue", "()Z");
@@ -53,6 +50,8 @@ Java_com_criteo_vips_AbstractVipsImage_initFieldIDs(JNIEnv *env, jobject cls)
 	longValue_mid = (*env)->GetMethodID(env, longClass, "longValue", "()J");
 	jclass doubleClass = (*env)->FindClass(env, "java/lang/Double");
 	doubleValue_mid = (*env)->GetMethodID(env, doubleClass, "doubleValue", "()D");
+	rectangleClass = (*env)->FindClass(env, "java/awt/Rectangle");
+	rectangle_ctor_mid = (*env)->GetMethodID(env, rectangleClass, "<init>", "(IIII)V");
 }
 
 JNIEXPORT void JNICALL
@@ -225,7 +224,143 @@ Java_com_criteo_vips_AbstractVipsImage_analyzeLoad(JNIEnv *env, jclass cls, jstr
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_arrayjoin(JNIEnv *env, jclass cls, jobjectArray in, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("arrayjoin");
+
+	// in
+	if (in != NULL) {
+		jint inLength = (*env)->GetArrayLength(env, in);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+		vips_value_set_array_image(&gvalue, inLength);
+		VipsImage **inImages = vips_value_get_array_image(&gvalue, NULL);
+		for (jint i = 0; i < inLength; i++) {
+			inImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, in, i), handle_fid);
+		}
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// across
+		jfieldID acrossFid = (*env)->GetFieldID(env, optionsCls, "across", "Ljava/lang/Integer;");
+		jobject acrossObjectValue = (*env)->GetObjectField(env, options, acrossFid);
+		if (acrossObjectValue != NULL) {
+			jint across = (*env)->CallIntMethod(env, acrossObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, across);
+			g_object_set_property(G_OBJECT(op), "across", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// shim
+		jfieldID shimFid = (*env)->GetFieldID(env, optionsCls, "shim", "Ljava/lang/Integer;");
+		jobject shimObjectValue = (*env)->GetObjectField(env, options, shimFid);
+		if (shimObjectValue != NULL) {
+			jint shim = (*env)->CallIntMethod(env, shimObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, shim);
+			g_object_set_property(G_OBJECT(op), "shim", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// background
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
+		if (background != NULL) {
+			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
+			jint backgroundLength = (*env)->GetArrayLength(env, background);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
+			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
+			g_object_set_property(G_OBJECT(op), "background", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// halign
+		jfieldID halignFid = (*env)->GetFieldID(env, optionsCls, "halign", "Lcom/criteo/vips/enums/VipsAlign;");
+		jobject halign = (*env)->GetObjectField(env, options, halignFid);
+		if (halign != NULL) {
+			jclass halignCls = (*env)->GetObjectClass(env, halign);
+			jfieldID halignValueFid = (*env)->GetFieldID(env, halignCls, "value", "I");
+			jint halignValue = (*env)->GetIntField(env, halign, halignValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, halignValue);
+			g_object_set_property(G_OBJECT(op), "halign", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// valign
+		jfieldID valignFid = (*env)->GetFieldID(env, optionsCls, "valign", "Lcom/criteo/vips/enums/VipsAlign;");
+		jobject valign = (*env)->GetObjectField(env, options, valignFid);
+		if (valign != NULL) {
+			jclass valignCls = (*env)->GetObjectClass(env, valign);
+			jfieldID valignValueFid = (*env)->GetFieldID(env, valignCls, "value", "I");
+			jint valignValue = (*env)->GetIntField(env, valign, valignValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, valignValue);
+			g_object_set_property(G_OBJECT(op), "valign", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// hspacing
+		jfieldID hspacingFid = (*env)->GetFieldID(env, optionsCls, "hspacing", "Ljava/lang/Integer;");
+		jobject hspacingObjectValue = (*env)->GetObjectField(env, options, hspacingFid);
+		if (hspacingObjectValue != NULL) {
+			jint hspacing = (*env)->CallIntMethod(env, hspacingObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, hspacing);
+			g_object_set_property(G_OBJECT(op), "hspacing", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// vspacing
+		jfieldID vspacingFid = (*env)->GetFieldID(env, optionsCls, "vspacing", "Ljava/lang/Integer;");
+		jobject vspacingObjectValue = (*env)->GetObjectField(env, options, vspacingFid);
+		if (vspacingObjectValue != NULL) {
+			jint vspacing = (*env)->CallIntMethod(env, vspacingObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, vspacing);
+			g_object_set_property(G_OBJECT(op), "vspacing", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "arrayjoin failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -415,8 +550,54 @@ Java_com_criteo_vips_AbstractVipsImage_bandfold(JNIEnv *env, jobject in, jobject
 
 }
 
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_bandjoin(JNIEnv *env, jclass cls, jobjectArray in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("bandjoin");
+
+	// in
+	if (in != NULL) {
+		jint inLength = (*env)->GetArrayLength(env, in);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+		vips_value_set_array_image(&gvalue, inLength);
+		VipsImage **inImages = vips_value_get_array_image(&gvalue, NULL);
+		for (jint i = 0; i < inLength; i++) {
+			inImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, in, i), handle_fid);
+		}
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "bandjoin failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_bandjoinConst(JNIEnv *env, jobject in, jobject c)
+Java_com_criteo_vips_AbstractVipsImage_bandjoinConst(JNIEnv *env, jobject in, jdoubleArray c)
 {
 	GValue gvalue = { 0 };
 
@@ -504,6 +685,69 @@ Java_com_criteo_vips_AbstractVipsImage_bandmean(JNIEnv *env, jobject in)
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
 	g_object_unref(op);
 
+}
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_bandrank(JNIEnv *env, jclass cls, jobjectArray in, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("bandrank");
+
+	// in
+	if (in != NULL) {
+		jint inLength = (*env)->GetArrayLength(env, in);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+		vips_value_set_array_image(&gvalue, inLength);
+		VipsImage **inImages = vips_value_get_array_image(&gvalue, NULL);
+		for (jint i = 0; i < inLength; i++) {
+			inImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, in, i), handle_fid);
+		}
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// index
+		jfieldID indexFid = (*env)->GetFieldID(env, optionsCls, "index", "Ljava/lang/Integer;");
+		jobject indexObjectValue = (*env)->GetObjectField(env, options, indexFid);
+		if (indexObjectValue != NULL) {
+			jint index = (*env)->CallIntMethod(env, indexObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, index);
+			g_object_set_property(G_OBJECT(op), "index", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "bandrank failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -621,7 +865,8 @@ Java_com_criteo_vips_AbstractVipsImage_black(JNIEnv *env, jclass cls, jint width
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -684,7 +929,7 @@ Java_com_criteo_vips_AbstractVipsImage_booleanOp(JNIEnv *env, jobject left, jobj
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_booleanConst(JNIEnv *env, jobject in, jobject boolean, jobject c)
+Java_com_criteo_vips_AbstractVipsImage_booleanConst(JNIEnv *env, jobject in, jobject boolean, jdoubleArray c)
 {
 	GValue gvalue = { 0 };
 
@@ -967,6 +1212,59 @@ Java_com_criteo_vips_AbstractVipsImage_canny(JNIEnv *env, jobject in, jobject op
 	g_value_unset(&gvalue);
 	g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
 	(*env)->SetLongField(env, in, handle_fid, (jlong) _out);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_caseOp(JNIEnv *env, jobject index, jobjectArray cases)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("case");
+
+	// index
+	if (index != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, index, handle_fid));
+		g_object_set_property(G_OBJECT(op), "index", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// cases
+	if (cases != NULL) {
+		jint casesLength = (*env)->GetArrayLength(env, cases);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+		vips_value_set_array_image(&gvalue, casesLength);
+		VipsImage **casesImages = vips_value_get_array_image(&gvalue, NULL);
+		for (jint i = 0; i < casesLength; i++) {
+			casesImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, cases, i), handle_fid);
+		}
+		g_object_set_property(G_OBJECT(op), "cases", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "case failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// Mutating image result
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *_out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(_out); 
+	g_value_unset(&gvalue);
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, index, handle_fid));
+	(*env)->SetLongField(env, index, handle_fid, (jlong) _out);
 
 	// Free the operation
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
@@ -1525,6 +1823,119 @@ Java_com_criteo_vips_AbstractVipsImage_complexget(JNIEnv *env, jobject in, jobje
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
 	g_object_unref(op);
 
+}
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_composite(JNIEnv *env, jclass cls, jobjectArray in, jintArray mode, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("composite");
+
+	// in
+	if (in != NULL) {
+		jint inLength = (*env)->GetArrayLength(env, in);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+		vips_value_set_array_image(&gvalue, inLength);
+		VipsImage **inImages = vips_value_get_array_image(&gvalue, NULL);
+		for (jint i = 0; i < inLength; i++) {
+			inImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, in, i), handle_fid);
+		}
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// mode
+	if (mode != NULL) {
+		jint *modeElements = (*env)->GetIntArrayElements(env, mode, NULL);
+		jint modeLength = (*env)->GetArrayLength(env, mode);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_INT);
+		vips_value_set_array_int(&gvalue, modeElements, modeLength);
+		(*env)->ReleaseIntArrayElements(env, mode, modeElements, 0);
+		g_object_set_property(G_OBJECT(op), "mode", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// x
+		jfieldID xFid = (*env)->GetFieldID(env, optionsCls, "x", "[I");
+		jintArray x = (jintArray) (*env)->GetObjectField(env, options, xFid);
+		if (x != NULL) {
+			jint *xElements = (*env)->GetIntArrayElements(env, x, NULL);
+			jint xLength = (*env)->GetArrayLength(env, x);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_INT);
+			vips_value_set_array_int(&gvalue, xElements, xLength);
+			(*env)->ReleaseIntArrayElements(env, x, xElements, 0);
+			g_object_set_property(G_OBJECT(op), "x", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// y
+		jfieldID yFid = (*env)->GetFieldID(env, optionsCls, "y", "[I");
+		jintArray y = (jintArray) (*env)->GetObjectField(env, options, yFid);
+		if (y != NULL) {
+			jint *yElements = (*env)->GetIntArrayElements(env, y, NULL);
+			jint yLength = (*env)->GetArrayLength(env, y);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_INT);
+			vips_value_set_array_int(&gvalue, yElements, yLength);
+			(*env)->ReleaseIntArrayElements(env, y, yElements, 0);
+			g_object_set_property(G_OBJECT(op), "y", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// compositing-space
+		jfieldID compositingSpaceFid = (*env)->GetFieldID(env, optionsCls, "compositingSpace", "Lcom/criteo/vips/enums/VipsInterpretation;");
+		jobject compositingSpace = (*env)->GetObjectField(env, options, compositingSpaceFid);
+		if (compositingSpace != NULL) {
+			jclass compositingSpaceCls = (*env)->GetObjectClass(env, compositingSpace);
+			jfieldID compositingSpaceValueFid = (*env)->GetFieldID(env, compositingSpaceCls, "value", "I");
+			jint compositingSpaceValue = (*env)->GetIntField(env, compositingSpace, compositingSpaceValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, compositingSpaceValue);
+			g_object_set_property(G_OBJECT(op), "compositing-space", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// premultiplied
+		jfieldID premultipliedFid = (*env)->GetFieldID(env, optionsCls, "premultiplied", "Ljava/lang/Boolean;");
+		jobject premultipliedObjectValue = (*env)->GetObjectField(env, options, premultipliedFid);
+		if (premultipliedObjectValue != NULL) {
+			jboolean premultiplied = (*env)->CallBooleanMethod(env, premultipliedObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, premultiplied);
+			g_object_set_property(G_OBJECT(op), "premultiplied", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "composite failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -2393,7 +2804,8 @@ Java_com_criteo_vips_AbstractVipsImage_csvLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -2449,8 +2861,8 @@ Java_com_criteo_vips_AbstractVipsImage_csvSave(JNIEnv *env, jobject in, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -2723,7 +3135,7 @@ Java_com_criteo_vips_AbstractVipsImage_divide(JNIEnv *env, jobject left, jobject
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_drawCircle(JNIEnv *env, jobject image, jobject ink, jint cx, jint cy, jint radius, jobject options)
+Java_com_criteo_vips_AbstractVipsImage_drawCircle(JNIEnv *env, jobject image, jdoubleArray ink, jint cx, jint cy, jint radius, jobject options)
 {
 	GValue gvalue = { 0 };
 
@@ -2788,6 +3200,88 @@ Java_com_criteo_vips_AbstractVipsImage_drawCircle(JNIEnv *env, jobject image, jo
 	if (!(new_op = vips_cache_operation_build(op))) {
 		g_object_unref(op);
 		throwVipsException(env, "draw_circle failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_drawFlood(JNIEnv *env, jobject image, jdoubleArray ink, jint x, jint y, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("draw_flood");
+
+	// image
+	if (image != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, image, handle_fid));
+		g_object_set_property(G_OBJECT(op), "image", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// ink
+	if (ink != NULL) {
+		jdouble *inkElements = (*env)->GetDoubleArrayElements(env, ink, NULL);
+		jint inkLength = (*env)->GetArrayLength(env, ink);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+		vips_value_set_array_double(&gvalue, inkElements, inkLength);
+		(*env)->ReleaseDoubleArrayElements(env, ink, inkElements, 0);
+		g_object_set_property(G_OBJECT(op), "ink", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// x
+	g_value_init(&gvalue, G_TYPE_INT);
+	g_value_set_int(&gvalue, x);
+	g_object_set_property(G_OBJECT(op), "x", &gvalue);
+	g_value_unset(&gvalue);
+
+	// y
+	g_value_init(&gvalue, G_TYPE_INT);
+	g_value_set_int(&gvalue, y);
+	g_object_set_property(G_OBJECT(op), "y", &gvalue);
+	g_value_unset(&gvalue);
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// test
+		jfieldID testFid = (*env)->GetFieldID(env, optionsCls, "test", "Lcom/criteo/vips/VipsImage;");
+		jobject test = (*env)->GetObjectField(env, options, testFid);
+		if (test != NULL) {
+			g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+			g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, test, handle_fid));
+			g_object_set_property(G_OBJECT(op), "test", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// equal
+		jfieldID equalFid = (*env)->GetFieldID(env, optionsCls, "equal", "Ljava/lang/Boolean;");
+		jobject equalObjectValue = (*env)->GetObjectField(env, options, equalFid);
+		if (equalObjectValue != NULL) {
+			jboolean equal = (*env)->CallBooleanMethod(env, equalObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, equal);
+			g_object_set_property(G_OBJECT(op), "equal", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "draw_flood failed");
 		return;
 	}
 	g_object_unref(op);
@@ -2872,7 +3366,7 @@ Java_com_criteo_vips_AbstractVipsImage_drawImage(JNIEnv *env, jobject image, job
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_drawLine(JNIEnv *env, jobject image, jobject ink, jint x1, jint y1, jint x2, jint y2)
+Java_com_criteo_vips_AbstractVipsImage_drawLine(JNIEnv *env, jobject image, jdoubleArray ink, jint x1, jint y1, jint x2, jint y2)
 {
 	GValue gvalue = { 0 };
 
@@ -2939,7 +3433,7 @@ Java_com_criteo_vips_AbstractVipsImage_drawLine(JNIEnv *env, jobject image, jobj
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_drawMask(JNIEnv *env, jobject image, jobject ink, jobject mask, jint x, jint y)
+Java_com_criteo_vips_AbstractVipsImage_drawMask(JNIEnv *env, jobject image, jdoubleArray ink, jobject mask, jint x, jint y)
 {
 	GValue gvalue = { 0 };
 
@@ -3002,7 +3496,7 @@ Java_com_criteo_vips_AbstractVipsImage_drawMask(JNIEnv *env, jobject image, jobj
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_drawRect(JNIEnv *env, jobject image, jobject ink, jint left, jint top, jint width, jint height, jobject options)
+Java_com_criteo_vips_AbstractVipsImage_drawRect(JNIEnv *env, jobject image, jdoubleArray ink, jint left, jint top, jint width, jint height, jobject options)
 {
 	GValue gvalue = { 0 };
 
@@ -3360,8 +3854,8 @@ Java_com_criteo_vips_AbstractVipsImage_dzSave(JNIEnv *env, jobject in, jstring f
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -3611,8 +4105,8 @@ Java_com_criteo_vips_AbstractVipsImage_dzSaveBuffer(JNIEnv *env, jobject in, job
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -3721,8 +4215,8 @@ Java_com_criteo_vips_AbstractVipsImage_embed(JNIEnv *env, jobject in, jint x, ji
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -3821,6 +4315,7 @@ Java_com_criteo_vips_AbstractVipsImage_extractArea(JNIEnv *env, jobject input, j
 	g_object_unref(op);
 
 	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
@@ -3884,6 +4379,7 @@ Java_com_criteo_vips_AbstractVipsImage_extractBand(JNIEnv *env, jobject in, jint
 	g_object_unref(op);
 
 	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
@@ -3956,7 +4452,8 @@ Java_com_criteo_vips_AbstractVipsImage_eye(JNIEnv *env, jclass cls, jint width, 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -4088,6 +4585,82 @@ Java_com_criteo_vips_AbstractVipsImage_fillNearest(JNIEnv *env, jobject in)
 }
 
 JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_findTrim(JNIEnv *env, jobject in, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("find_trim");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// threshold
+		jfieldID thresholdFid = (*env)->GetFieldID(env, optionsCls, "threshold", "Ljava/lang/Double;");
+		jobject thresholdObjectValue = (*env)->GetObjectField(env, options, thresholdFid);
+		if (thresholdObjectValue != NULL) {
+			jdouble threshold = (*env)->CallDoubleMethod(env, thresholdObjectValue, doubleValue_mid);
+			g_value_init(&gvalue, G_TYPE_DOUBLE);
+			g_value_set_double(&gvalue, threshold);
+			g_object_set_property(G_OBJECT(op), "threshold", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// background
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
+		if (background != NULL) {
+			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
+			jint backgroundLength = (*env)->GetArrayLength(env, background);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
+			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
+			g_object_set_property(G_OBJECT(op), "background", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "find_trim failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out
+		g_value_init(&gvalue, G_TYPE_INT);
+		g_object_get_property(G_OBJECT(op), "left", &gvalue);
+		jint outLeft = g_value_get_int(&gvalue);
+		g_object_get_property(G_OBJECT(op), "top", &gvalue);
+		jint outTop = g_value_get_int(&gvalue);
+		g_object_get_property(G_OBJECT(op), "width", &gvalue);
+		jint outWidth = g_value_get_int(&gvalue);
+		g_object_get_property(G_OBJECT(op), "height", &gvalue);
+		jint outHeight = g_value_get_int(&gvalue);
+		jobject out = (*env)->NewObject(env, rectangleClass, rectangle_ctor_mid, outLeft, outTop, outWidth, outHeight);
+		g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	return out;
+}
+
+JNIEXPORT jobject JNICALL
 Java_com_criteo_vips_AbstractVipsImage_fitsLoad(JNIEnv *env, jclass cls, jstring filename, jobject options)
 {
 	GValue gvalue = { 0 };
@@ -4169,7 +4742,8 @@ Java_com_criteo_vips_AbstractVipsImage_fitsLoad(JNIEnv *env, jclass cls, jstring
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -4213,8 +4787,8 @@ Java_com_criteo_vips_AbstractVipsImage_fitsSave(JNIEnv *env, jobject in, jstring
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -4275,8 +4849,8 @@ Java_com_criteo_vips_AbstractVipsImage_flatten(JNIEnv *env, jobject in, jobject 
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -4463,7 +5037,8 @@ Java_com_criteo_vips_AbstractVipsImage_fractsurf(JNIEnv *env, jclass cls, jint w
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -4612,7 +5187,7 @@ Java_com_criteo_vips_AbstractVipsImage_gamma(JNIEnv *env, jobject in, jobject op
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_gaussblur(JNIEnv *env, jobject in, jdouble sigma, jobject options)
+Java_com_criteo_vips_AbstractVipsImage_gaussBlur(JNIEnv *env, jobject in, jdouble sigma, jobject options)
 {
 	GValue gvalue = { 0 };
 
@@ -4688,7 +5263,7 @@ Java_com_criteo_vips_AbstractVipsImage_gaussblur(JNIEnv *env, jobject in, jdoubl
 }
 
 JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_gaussmat(JNIEnv *env, jclass cls, jdouble sigma, jdouble minAmpl, jobject options)
+Java_com_criteo_vips_AbstractVipsImage_gaussMat(JNIEnv *env, jclass cls, jdouble sigma, jdouble minAmpl, jobject options)
 {
 	GValue gvalue = { 0 };
 
@@ -4758,11 +5333,12 @@ Java_com_criteo_vips_AbstractVipsImage_gaussmat(JNIEnv *env, jclass cls, jdouble
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_gaussnoise(JNIEnv *env, jclass cls, jint width, jint height, jobject options)
+Java_com_criteo_vips_AbstractVipsImage_gaussNoise(JNIEnv *env, jclass cls, jint width, jint height, jobject options)
 {
 	GValue gvalue = { 0 };
 
@@ -4841,11 +5417,12 @@ Java_com_criteo_vips_AbstractVipsImage_gaussnoise(JNIEnv *env, jclass cls, jint 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
-JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_getpoint(JNIEnv *env, jobject in, jint x, jint y)
+JNIEXPORT jdoubleArray JNICALL
+Java_com_criteo_vips_AbstractVipsImage_getPoint(JNIEnv *env, jobject in, jint x, jint y)
 {
 	GValue gvalue = { 0 };
 
@@ -4886,10 +5463,8 @@ Java_com_criteo_vips_AbstractVipsImage_getpoint(JNIEnv *env, jobject in, jint x,
 	g_object_get_property(G_OBJECT(op), "out-array", &gvalue);
 	jint outArrayLength = 0;
 	jdouble *outArrayElements = vips_value_get_array_double(&gvalue, &outArrayLength);
-	jdoubleArray outArrayArray = (*env)->NewDoubleArray(env, outArrayLength);
-	(*env)->SetDoubleArrayRegion(env, outArrayArray, 0, outArrayLength, outArrayElements);
-	(*env)->ReleaseDoubleArrayElements(env, outArrayArray, outArrayElements, JNI_COMMIT);
-	jobject outArray = (*env)->NewObject(env, pixelPacketClass, pixelPacket_ctor_mid, outArrayArray);
+	jdoubleArray outArray = (*env)->NewDoubleArray(env, outArrayLength);
+	(*env)->SetDoubleArrayRegion(env, outArray, 0, outArrayLength, outArrayElements);
 	g_value_unset(&gvalue);
 
 	// Free the operation
@@ -5004,7 +5579,8 @@ Java_com_criteo_vips_AbstractVipsImage_gifLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -5117,7 +5693,8 @@ Java_com_criteo_vips_AbstractVipsImage_gifLoadBuffer(JNIEnv *env, jclass cls, jb
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -5194,8 +5771,8 @@ Java_com_criteo_vips_AbstractVipsImage_gifSave(JNIEnv *env, jobject in, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -5300,8 +5877,8 @@ Java_com_criteo_vips_AbstractVipsImage_gifSaveBuffer(JNIEnv *env, jobject in, jo
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -5477,8 +6054,8 @@ Java_com_criteo_vips_AbstractVipsImage_gravity(JNIEnv *env, jobject in, jobject 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -5574,7 +6151,8 @@ Java_com_criteo_vips_AbstractVipsImage_grey(JNIEnv *env, jclass cls, jint width,
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -5750,7 +6328,8 @@ Java_com_criteo_vips_AbstractVipsImage_heifLoad(JNIEnv *env, jclass cls, jstring
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -5874,7 +6453,8 @@ Java_com_criteo_vips_AbstractVipsImage_heifLoadBuffer(JNIEnv *env, jclass cls, j
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -5977,8 +6557,8 @@ Java_com_criteo_vips_AbstractVipsImage_heifSave(JNIEnv *env, jobject in, jstring
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -6109,8 +6689,8 @@ Java_com_criteo_vips_AbstractVipsImage_heifSaveBuffer(JNIEnv *env, jobject in, j
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -6477,6 +7057,45 @@ Java_com_criteo_vips_AbstractVipsImage_histFindNdim(JNIEnv *env, jobject in, job
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
 	g_object_unref(op);
 
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_criteo_vips_AbstractVipsImage_histIsmonotonic(JNIEnv *env, jobject in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("hist_ismonotonic");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "hist_ismonotonic failed");
+		return 0;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// monotonic
+	g_value_init(&gvalue, G_TYPE_BOOLEAN);
+	g_object_get_property(G_OBJECT(op), "monotonic", &gvalue);
+	jboolean monotonic = g_value_get_boolean(&gvalue);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	return monotonic;
 }
 
 JNIEXPORT void JNICALL
@@ -7270,7 +7889,8 @@ Java_com_criteo_vips_AbstractVipsImage_identity(JNIEnv *env, jclass cls, jobject
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -7397,8 +8017,8 @@ Java_com_criteo_vips_AbstractVipsImage_insert(JNIEnv *env, jobject main, jobject
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -7590,7 +8210,7 @@ Java_com_criteo_vips_AbstractVipsImage_invfft(JNIEnv *env, jobject in, jobject o
 
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jobject JNICALL
 Java_com_criteo_vips_AbstractVipsImage_join(JNIEnv *env, jobject in1, jobject in2, jobject direction, jobject options)
 {
 	GValue gvalue = { 0 };
@@ -7651,8 +8271,8 @@ Java_com_criteo_vips_AbstractVipsImage_join(JNIEnv *env, jobject in1, jobject in
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -7683,24 +8303,25 @@ Java_com_criteo_vips_AbstractVipsImage_join(JNIEnv *env, jobject in1, jobject in
 	if (!(new_op = vips_cache_operation_build(op))) {
 		g_object_unref(op);
 		throwVipsException(env, "join failed");
-		return;
+		return NULL;
 	}
 	g_object_unref(op);
 	op = new_op;
 
-	// Mutating image result
+	// out
 	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
 	g_object_get_property(G_OBJECT(op), "out", &gvalue);
-	VipsImage *_out = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(_out); 
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
 	g_value_unset(&gvalue);
-	g_object_unref((VipsImage *) (*env)->GetLongField(env, in1, handle_fid));
-	(*env)->SetLongField(env, in1, handle_fid, (jlong) _out);
 
 	// Free the operation
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
 	g_object_unref(op);
 
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -7796,7 +8417,8 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kLoad(JNIEnv *env, jclass cls, jstring
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -7898,7 +8520,8 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kLoadBuffer(JNIEnv *env, jclass cls, j
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -7999,8 +8622,8 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kSave(JNIEnv *env, jobject in, jstring
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -8129,8 +8752,8 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kSaveBuffer(JNIEnv *env, jobject in, j
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -8286,7 +8909,8 @@ Java_com_criteo_vips_AbstractVipsImage_jpegLoad(JNIEnv *env, jclass cls, jstring
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -8399,7 +9023,8 @@ Java_com_criteo_vips_AbstractVipsImage_jpegLoadBuffer(JNIEnv *env, jclass cls, j
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -8556,8 +9181,8 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSave(JNIEnv *env, jobject in, jstring
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -8742,8 +9367,8 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveBuffer(JNIEnv *env, jobject in, j
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -8939,8 +9564,8 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveMime(JNIEnv *env, jobject in, job
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -9063,7 +9688,8 @@ Java_com_criteo_vips_AbstractVipsImage_jxlLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -9154,7 +9780,8 @@ Java_com_criteo_vips_AbstractVipsImage_jxlLoadBuffer(JNIEnv *env, jclass cls, jb
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -9253,8 +9880,8 @@ Java_com_criteo_vips_AbstractVipsImage_jxlSave(JNIEnv *env, jobject in, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -9381,8 +10008,8 @@ Java_com_criteo_vips_AbstractVipsImage_jxlSaveBuffer(JNIEnv *env, jobject in, jo
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -9574,8 +10201,8 @@ Java_com_criteo_vips_AbstractVipsImage_lab2XYZ(JNIEnv *env, jobject in, jobject 
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
 		// temp
-		jfieldID tempFid = (*env)->GetFieldID(env, optionsCls, "temp", "Lcom/criteo/vips/PixelPacket;");
-		jobject temp = (*env)->GetObjectField(env, options, tempFid);
+		jfieldID tempFid = (*env)->GetFieldID(env, optionsCls, "temp", "[D");
+		jdoubleArray temp = (jdoubleArray) (*env)->GetObjectField(env, options, tempFid);
 		if (temp != NULL) {
 			jdouble *tempElements = (*env)->GetDoubleArrayElements(env, temp, NULL);
 			jint tempLength = (*env)->GetArrayLength(env, temp);
@@ -9934,7 +10561,7 @@ Java_com_criteo_vips_AbstractVipsImage_lCh2Lab(JNIEnv *env, jobject in)
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_linear(JNIEnv *env, jobject in, jobject a, jobject b, jobject options)
+Java_com_criteo_vips_AbstractVipsImage_linear(JNIEnv *env, jobject in, jdoubleArray a, jdoubleArray b, jobject options)
 {
 	GValue gvalue = { 0 };
 
@@ -10175,7 +10802,8 @@ Java_com_criteo_vips_AbstractVipsImage_logmat(JNIEnv *env, jclass cls, jdouble s
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -10294,7 +10922,8 @@ Java_com_criteo_vips_AbstractVipsImage_magickLoad(JNIEnv *env, jclass cls, jstri
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -10419,7 +11048,8 @@ Java_com_criteo_vips_AbstractVipsImage_magickLoadBuffer(JNIEnv *env, jclass cls,
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -10508,8 +11138,8 @@ Java_com_criteo_vips_AbstractVipsImage_magickSave(JNIEnv *env, jobject in, jstri
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -10626,8 +11256,8 @@ Java_com_criteo_vips_AbstractVipsImage_magickSaveBuffer(JNIEnv *env, jobject in,
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -10853,7 +11483,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskButterworth(JNIEnv *env, jclass cls, 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -10977,7 +11608,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskButterworthBand(JNIEnv *env, jclass c
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11095,7 +11727,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskButterworthRing(JNIEnv *env, jclass c
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11195,7 +11828,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskFractal(JNIEnv *env, jclass cls, jint
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11301,7 +11935,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskGaussian(JNIEnv *env, jclass cls, jin
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11419,7 +12054,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskGaussianBand(JNIEnv *env, jclass cls,
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11531,7 +12167,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskGaussianRing(JNIEnv *env, jclass cls,
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11631,7 +12268,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskIdeal(JNIEnv *env, jclass cls, jint w
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11743,7 +12381,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskIdealBand(JNIEnv *env, jclass cls, ji
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -11849,7 +12488,8 @@ Java_com_criteo_vips_AbstractVipsImage_maskIdealRing(JNIEnv *env, jclass cls, ji
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -11963,7 +12603,7 @@ Java_com_criteo_vips_AbstractVipsImage_math2(JNIEnv *env, jobject left, jobject 
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_math2Const(JNIEnv *env, jobject in, jobject math2, jobject c)
+Java_com_criteo_vips_AbstractVipsImage_math2Const(JNIEnv *env, jobject in, jobject math2, jdoubleArray c)
 {
 	GValue gvalue = { 0 };
 
@@ -12106,7 +12746,8 @@ Java_com_criteo_vips_AbstractVipsImage_matLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -12231,7 +12872,8 @@ Java_com_criteo_vips_AbstractVipsImage_matrixLoad(JNIEnv *env, jclass cls, jstri
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -12265,8 +12907,8 @@ Java_com_criteo_vips_AbstractVipsImage_matrixprint(JNIEnv *env, jobject in, jobj
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -12348,8 +12990,8 @@ Java_com_criteo_vips_AbstractVipsImage_matrixSave(JNIEnv *env, jobject in, jstri
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -13071,7 +13713,8 @@ Java_com_criteo_vips_AbstractVipsImage_openexrLoad(JNIEnv *env, jclass cls, jstr
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -13201,7 +13844,8 @@ Java_com_criteo_vips_AbstractVipsImage_openslideLoad(JNIEnv *env, jclass cls, js
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -13270,8 +13914,8 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoad(JNIEnv *env, jclass cls, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -13343,7 +13987,8 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -13418,8 +14063,8 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoadBuffer(JNIEnv *env, jclass cls, jb
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -13491,7 +14136,8 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoadBuffer(JNIEnv *env, jclass cls, jb
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jint JNICALL
@@ -13619,7 +14265,8 @@ Java_com_criteo_vips_AbstractVipsImage_perlin(JNIEnv *env, jclass cls, jint widt
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -13763,7 +14410,8 @@ Java_com_criteo_vips_AbstractVipsImage_pngLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -13865,7 +14513,8 @@ Java_com_criteo_vips_AbstractVipsImage_pngLoadBuffer(JNIEnv *env, jclass cls, jb
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -14011,8 +14660,8 @@ Java_com_criteo_vips_AbstractVipsImage_pngSave(JNIEnv *env, jobject in, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -14186,8 +14835,8 @@ Java_com_criteo_vips_AbstractVipsImage_pngSaveBuffer(JNIEnv *env, jobject in, jo
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -14321,7 +14970,8 @@ Java_com_criteo_vips_AbstractVipsImage_ppmLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -14400,8 +15050,8 @@ Java_com_criteo_vips_AbstractVipsImage_ppmSave(JNIEnv *env, jobject in, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -14544,6 +15194,7 @@ Java_com_criteo_vips_AbstractVipsImage_profile(JNIEnv *env, jobject in)
 	g_object_unref(op);
 
 	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) rows);
 }
 
@@ -14637,6 +15288,7 @@ Java_com_criteo_vips_AbstractVipsImage_project(JNIEnv *env, jobject in)
 	g_object_unref(op);
 
 	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) rows);
 }
 
@@ -14762,7 +15414,8 @@ Java_com_criteo_vips_AbstractVipsImage_radLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -14853,7 +15506,8 @@ Java_com_criteo_vips_AbstractVipsImage_radLoadBuffer(JNIEnv *env, jclass cls, jb
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -14897,8 +15551,8 @@ Java_com_criteo_vips_AbstractVipsImage_radSave(JNIEnv *env, jobject in, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -14970,8 +15624,8 @@ Java_com_criteo_vips_AbstractVipsImage_radSaveBuffer(JNIEnv *env, jobject in, jo
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -15218,7 +15872,8 @@ Java_com_criteo_vips_AbstractVipsImage_rawLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -15262,8 +15917,8 @@ Java_com_criteo_vips_AbstractVipsImage_rawSave(JNIEnv *env, jobject in, jstring 
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -15341,8 +15996,8 @@ Java_com_criteo_vips_AbstractVipsImage_rawSaveFd(JNIEnv *env, jobject in, jint f
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -15692,7 +16347,7 @@ Java_com_criteo_vips_AbstractVipsImage_relational(JNIEnv *env, jobject left, job
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_relationalConst(JNIEnv *env, jobject in, jobject relational, jobject c)
+Java_com_criteo_vips_AbstractVipsImage_relationalConst(JNIEnv *env, jobject in, jobject relational, jdoubleArray c)
 {
 	GValue gvalue = { 0 };
 
@@ -15802,7 +16457,7 @@ Java_com_criteo_vips_AbstractVipsImage_remainder(JNIEnv *env, jobject left, jobj
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_remainderConst(JNIEnv *env, jobject in, jobject c)
+Java_com_criteo_vips_AbstractVipsImage_remainderConst(JNIEnv *env, jobject in, jdoubleArray c)
 {
 	GValue gvalue = { 0 };
 
@@ -16796,7 +17451,8 @@ Java_com_criteo_vips_AbstractVipsImage_sines(JNIEnv *env, jclass cls, jint width
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -17338,6 +17994,52 @@ Java_com_criteo_vips_AbstractVipsImage_subtract(JNIEnv *env, jobject left, jobje
 }
 
 JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_sum(JNIEnv *env, jclass cls, jobjectArray in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("sum");
+
+	// in
+	if (in != NULL) {
+		jint inLength = (*env)->GetArrayLength(env, in);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+		vips_value_set_array_image(&gvalue, inLength);
+		VipsImage **inImages = vips_value_get_array_image(&gvalue, NULL);
+		for (jint i = 0; i < inLength; i++) {
+			inImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, in, i), handle_fid);
+		}
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "sum failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT jobject JNICALL
 Java_com_criteo_vips_AbstractVipsImage_svgLoad(JNIEnv *env, jclass cls, jstring filename, jobject options)
 {
 	GValue gvalue = { 0 };
@@ -17452,7 +18154,8 @@ Java_com_criteo_vips_AbstractVipsImage_svgLoad(JNIEnv *env, jclass cls, jstring 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -17576,7 +18279,133 @@ Java_com_criteo_vips_AbstractVipsImage_svgLoadBuffer(JNIEnv *env, jclass cls, jb
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_switchOp(JNIEnv *env, jclass cls, jobjectArray tests)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("switch");
+
+	// tests
+	if (tests != NULL) {
+		jint testsLength = (*env)->GetArrayLength(env, tests);
+		g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+		vips_value_set_array_image(&gvalue, testsLength);
+		VipsImage **testsImages = vips_value_get_array_image(&gvalue, NULL);
+		for (jint i = 0; i < testsLength; i++) {
+			testsImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, tests, i), handle_fid);
+		}
+		g_object_set_property(G_OBJECT(op), "tests", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "switch failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_system(JNIEnv *env, jclass cls, jstring cmdFormat, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("system");
+
+	// cmd-format
+	if (cmdFormat != NULL) {
+		const char *cmdFormatChars = (*env)->GetStringUTFChars(env, cmdFormat, NULL);
+		g_value_init(&gvalue, G_TYPE_STRING);
+		g_value_set_string(&gvalue, cmdFormatChars);
+		(*env)->ReleaseStringUTFChars(env, cmdFormat, cmdFormatChars);
+		g_object_set_property(G_OBJECT(op), "cmd-format", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// in
+		jfieldID inFid = (*env)->GetFieldID(env, optionsCls, "in", "[Lcom/criteo/vips/Image;");
+		jobjectArray in = (jobjectArray) (*env)->GetObjectField(env, options, inFid);
+		if (in != NULL) {
+			jint inLength = (*env)->GetArrayLength(env, in);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+			vips_value_set_array_image(&gvalue, inLength);
+			VipsImage **inImages = vips_value_get_array_image(&gvalue, NULL);
+			for (jint i = 0; i < inLength; i++) {
+				inImages[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, in, i), handle_fid);
+			}
+			g_object_set_property(G_OBJECT(op), "in", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// out-format
+		jfieldID outFormatFid = (*env)->GetFieldID(env, optionsCls, "outFormat", "Ljava/lang/String;");
+		jstring outFormat = (jstring) (*env)->GetObjectField(env, options, outFormatFid);
+		if (outFormat != NULL) {
+			const char *outFormatChars = (*env)->GetStringUTFChars(env, outFormat, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, outFormatChars);
+			(*env)->ReleaseStringUTFChars(env, outFormat, outFormatChars);
+			g_object_set_property(G_OBJECT(op), "out-format", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// in-format
+		jfieldID inFormatFid = (*env)->GetFieldID(env, optionsCls, "inFormat", "Ljava/lang/String;");
+		jstring inFormat = (jstring) (*env)->GetObjectField(env, options, inFormatFid);
+		if (inFormat != NULL) {
+			const char *inFormatChars = (*env)->GetStringUTFChars(env, inFormat, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, inFormatChars);
+			(*env)->ReleaseStringUTFChars(env, inFormat, inFormatChars);
+			g_object_set_property(G_OBJECT(op), "in-format", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "system failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
 }
 
 JNIEXPORT jobject JNICALL
@@ -17727,7 +18556,8 @@ Java_com_criteo_vips_AbstractVipsImage_text(JNIEnv *env, jclass cls, jstring tex
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -17877,7 +18707,8 @@ Java_com_criteo_vips_AbstractVipsImage_thumbnail(JNIEnv *env, jclass cls, jstrin
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -18045,7 +18876,8 @@ Java_com_criteo_vips_AbstractVipsImage_thumbnailBuffer(JNIEnv *env, jclass cls, 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -18322,7 +19154,8 @@ Java_com_criteo_vips_AbstractVipsImage_tiffLoad(JNIEnv *env, jclass cls, jstring
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -18457,7 +19290,8 @@ Java_com_criteo_vips_AbstractVipsImage_tiffLoadBuffer(JNIEnv *env, jclass cls, j
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -18743,8 +19577,8 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSave(JNIEnv *env, jobject in, jstring
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -19058,8 +19892,8 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSaveBuffer(JNIEnv *env, jobject in, j
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -19370,7 +20204,8 @@ Java_com_criteo_vips_AbstractVipsImage_tonelut(JNIEnv *env, jclass cls, jobject 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -19580,7 +20415,8 @@ Java_com_criteo_vips_AbstractVipsImage_vipsLoad(JNIEnv *env, jclass cls, jstring
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -19624,8 +20460,8 @@ Java_com_criteo_vips_AbstractVipsImage_vipsSave(JNIEnv *env, jobject in, jstring
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -19781,7 +20617,8 @@ Java_com_criteo_vips_AbstractVipsImage_webpLoad(JNIEnv *env, jclass cls, jstring
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT jobject JNICALL
@@ -19905,7 +20742,8 @@ Java_com_criteo_vips_AbstractVipsImage_webpLoadBuffer(JNIEnv *env, jclass cls, j
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -20073,8 +20911,8 @@ Java_com_criteo_vips_AbstractVipsImage_webpSave(JNIEnv *env, jobject in, jstring
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -20270,8 +21108,8 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 		}
 
 		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "Lcom/criteo/vips/PixelPacket;");
-		jobject background = (*env)->GetObjectField(env, options, backgroundFid);
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
@@ -20392,7 +21230,8 @@ Java_com_criteo_vips_AbstractVipsImage_worley(JNIEnv *env, jclass cls, jint widt
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -20543,7 +21382,8 @@ Java_com_criteo_vips_AbstractVipsImage_xyz(JNIEnv *env, jclass cls, jint width, 
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -20606,8 +21446,8 @@ Java_com_criteo_vips_AbstractVipsImage_xYZ2Lab(JNIEnv *env, jobject in, jobject 
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
 		// temp
-		jfieldID tempFid = (*env)->GetFieldID(env, optionsCls, "temp", "Lcom/criteo/vips/PixelPacket;");
-		jobject temp = (*env)->GetObjectField(env, options, tempFid);
+		jfieldID tempFid = (*env)->GetFieldID(env, optionsCls, "temp", "[D");
+		jdoubleArray temp = (jdoubleArray) (*env)->GetObjectField(env, options, tempFid);
 		if (temp != NULL) {
 			jdouble *tempElements = (*env)->GetDoubleArrayElements(env, temp, NULL);
 			jint tempLength = (*env)->GetArrayLength(env, temp);
@@ -20823,7 +21663,8 @@ Java_com_criteo_vips_AbstractVipsImage_zone(JNIEnv *env, jclass cls, jint width,
 	g_object_unref(op);
 
 	// Output
-	return (*env)->NewObject(env, cls, ctor_mid, (jlong) out);
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL

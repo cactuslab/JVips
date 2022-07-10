@@ -20,43 +20,43 @@ import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
 
 /**
- * Optional arguments for the "composite2" operation.
+ * Optional arguments for the "composite" operation.
  */
-public class Composite2Options {
+public class CompositeOptions {
 
-	private Integer x;
-	private Integer y;
+	private int[] x;
+	private int[] y;
 	private VipsInterpretation compositingSpace;
 	private Boolean premultiplied;
 
 	/**
 	 * Optional argument: x
 	 * <p>
-	 * x position of overlay
+	 * Array of x coordinates to join at
 	 * @return the value of {@code x}
 	 */
-	public Integer getX() {
+	public int[] getX() {
 		return this.x;
 	}
 
 	/**
 	 * Set the optional "x" argument.
 	 * <p>
-	 * x position of overlay
+	 * Array of x coordinates to join at
 	 * @param x the new value of {@code x}
 	 */
-	public void setX(Integer x) {
+	public void setX(int[] x) {
 		this.x = x;
 	}
 
 	/**
 	 * Set the optional "x" argument.
 	 * <p>
-	 * x position of overlay
+	 * Array of x coordinates to join at
 	 * @param x the new value of {@code x}
 	 * @return this object for chaining
 	 */
-	public Composite2Options x(Integer x) {
+	public CompositeOptions x(int[] x) {
 		setX(x);
 		return this;
 	}
@@ -64,31 +64,31 @@ public class Composite2Options {
 	/**
 	 * Optional argument: y
 	 * <p>
-	 * y position of overlay
+	 * Array of y coordinates to join at
 	 * @return the value of {@code y}
 	 */
-	public Integer getY() {
+	public int[] getY() {
 		return this.y;
 	}
 
 	/**
 	 * Set the optional "y" argument.
 	 * <p>
-	 * y position of overlay
+	 * Array of y coordinates to join at
 	 * @param y the new value of {@code y}
 	 */
-	public void setY(Integer y) {
+	public void setY(int[] y) {
 		this.y = y;
 	}
 
 	/**
 	 * Set the optional "y" argument.
 	 * <p>
-	 * y position of overlay
+	 * Array of y coordinates to join at
 	 * @param y the new value of {@code y}
 	 * @return this object for chaining
 	 */
-	public Composite2Options y(Integer y) {
+	public CompositeOptions y(int[] y) {
 		setY(y);
 		return this;
 	}
@@ -120,7 +120,7 @@ public class Composite2Options {
 	 * @param compositingSpace the new value of {@code compositingSpace}
 	 * @return this object for chaining
 	 */
-	public Composite2Options compositingSpace(VipsInterpretation compositingSpace) {
+	public CompositeOptions compositingSpace(VipsInterpretation compositingSpace) {
 		setCompositingSpace(compositingSpace);
 		return this;
 	}
@@ -152,7 +152,7 @@ public class Composite2Options {
 	 * @param premultiplied the new value of {@code premultiplied}
 	 * @return this object for chaining
 	 */
-	public Composite2Options premultiplied(Boolean premultiplied) {
+	public CompositeOptions premultiplied(Boolean premultiplied) {
 		setPremultiplied(premultiplied);
 		return this;
 	}

@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "find_trim" operation.
@@ -25,7 +25,7 @@ import com.criteo.vips.PixelPacket;
 public class FindTrimOptions {
 
 	private Double threshold;
-	private PixelPacket background;
+	private double[] background;
 
 	/**
 	 * Optional argument: threshold
@@ -65,7 +65,7 @@ public class FindTrimOptions {
 	 * Color for background pixels
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -75,7 +75,7 @@ public class FindTrimOptions {
 	 * Color for background pixels
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -86,7 +86,7 @@ public class FindTrimOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public FindTrimOptions background(PixelPacket background) {
+	public FindTrimOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

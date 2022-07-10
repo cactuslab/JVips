@@ -20,41 +20,41 @@ import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
 
 /**
- * Optional arguments for the "cast" operation.
+ * Optional arguments for the "bandrank" operation.
  */
-public class CastOptions {
+public class BandrankOptions {
 
-	private Boolean shift;
+	private Integer index;
 
 	/**
-	 * Optional argument: shift
+	 * Optional argument: index
 	 * <p>
-	 * Shift integer values up and down
-	 * @return the value of {@code shift}
+	 * Select this band element from sorted list
+	 * @return the value of {@code index}
 	 */
-	public Boolean getShift() {
-		return this.shift;
+	public Integer getIndex() {
+		return this.index;
 	}
 
 	/**
-	 * Set the optional "shift" argument.
+	 * Set the optional "index" argument.
 	 * <p>
-	 * Shift integer values up and down
-	 * @param shift the new value of {@code shift}
+	 * Select this band element from sorted list
+	 * @param index the new value of {@code index}
 	 */
-	public void setShift(Boolean shift) {
-		this.shift = shift;
+	public void setIndex(Integer index) {
+		this.index = index;
 	}
 
 	/**
-	 * Set the optional "shift" argument.
+	 * Set the optional "index" argument.
 	 * <p>
-	 * Shift integer values up and down
-	 * @param shift the new value of {@code shift}
+	 * Select this band element from sorted list
+	 * @param index the new value of {@code index}
 	 * @return this object for chaining
 	 */
-	public CastOptions shift(Boolean shift) {
-		setShift(shift);
+	public BandrankOptions index(Integer index) {
+		setIndex(index);
 		return this;
 	}
 

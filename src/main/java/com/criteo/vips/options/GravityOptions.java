@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "gravity" operation.
@@ -25,7 +25,7 @@ import com.criteo.vips.PixelPacket;
 public class GravityOptions {
 
 	private VipsExtend extend;
-	private PixelPacket background;
+	private double[] background;
 
 	/**
 	 * Optional argument: extend
@@ -65,7 +65,7 @@ public class GravityOptions {
 	 * Color for background pixels
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -75,7 +75,7 @@ public class GravityOptions {
 	 * Color for background pixels
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -86,7 +86,7 @@ public class GravityOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public GravityOptions background(PixelPacket background) {
+	public GravityOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "tiffsave" operation.
@@ -46,7 +46,7 @@ public class TIFFSaveOptions {
 	private Boolean subifd;
 	private Boolean premultiply;
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -759,7 +759,7 @@ public class TIFFSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -769,7 +769,7 @@ public class TIFFSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -780,7 +780,7 @@ public class TIFFSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public TIFFSaveOptions background(PixelPacket background) {
+	public TIFFSaveOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

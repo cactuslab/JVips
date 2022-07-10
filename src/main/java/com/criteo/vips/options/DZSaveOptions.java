@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "dzsave" operation.
@@ -40,7 +40,7 @@ public class DZSaveOptions {
 	private Boolean noStrip;
 	private String id;
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -561,7 +561,7 @@ public class DZSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -571,7 +571,7 @@ public class DZSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -582,7 +582,7 @@ public class DZSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public DZSaveOptions background(PixelPacket background) {
+	public DZSaveOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

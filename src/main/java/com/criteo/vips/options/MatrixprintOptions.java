@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "matrixprint" operation.
@@ -25,7 +25,7 @@ import com.criteo.vips.PixelPacket;
 public class MatrixprintOptions {
 
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -66,7 +66,7 @@ public class MatrixprintOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -76,7 +76,7 @@ public class MatrixprintOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -87,7 +87,7 @@ public class MatrixprintOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public MatrixprintOptions background(PixelPacket background) {
+	public MatrixprintOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

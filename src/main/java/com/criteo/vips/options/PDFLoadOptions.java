@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "pdfload" operation.
@@ -28,7 +28,7 @@ public class PDFLoadOptions {
 	private Integer n;
 	private Double dpi;
 	private Double scale;
-	private PixelPacket background;
+	private double[] background;
 	private Boolean memory;
 	private VipsAccess access;
 	private VipsFailOn failOn;
@@ -167,7 +167,7 @@ public class PDFLoadOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -177,7 +177,7 @@ public class PDFLoadOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -188,7 +188,7 @@ public class PDFLoadOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public PDFLoadOptions background(PixelPacket background) {
+	public PDFLoadOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

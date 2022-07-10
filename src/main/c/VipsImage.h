@@ -57,14 +57,6 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_newFromFile
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    blackNative
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_blackNative
-  (JNIEnv *, jobject, jint, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    newFromImageNative
  * Signature: (Lcom/criteo/vips/Image;[D)V
  */
@@ -81,91 +73,11 @@ JNIEXPORT jint JNICALL Java_com_criteo_vips_VipsImage_imageGetFormatNative
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    castUcharNative
- * Signature: (Z)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_castUcharNative
-  (JNIEnv *, jobject, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    castNative
- * Signature: (IZ)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_castNative
-  (JNIEnv *, jobject, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    imageGetInterpretationNative
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_com_criteo_vips_VipsImage_imageGetInterpretationNative
   (JNIEnv *, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    colourspaceNative
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_colourspaceNative__I
-  (JNIEnv *, jobject, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    colourspaceNative
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_colourspaceNative__II
-  (JNIEnv *, jobject, jint, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    histFindNdimNative
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_histFindNdimNative
-  (JNIEnv *, jobject, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    thumbnailImageNative
- * Signature: (IIZ)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_thumbnailImageNative
-  (JNIEnv *, jobject, jint, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    thumbnailImageWithOptionsNative
- * Signature: (ILcom/criteo/vips/options/ThumbnailOptions;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_thumbnailImageWithOptionsNative
-  (JNIEnv *, jobject, jint, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    thumbnailNative
- * Signature: (Ljava/lang/String;IIZ)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_VipsImage_thumbnailNative
-  (JNIEnv *, jclass, jstring, jint, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    thumbnailWithOptionsNative
- * Signature: (Ljava/lang/String;IILcom/criteo/vips/options/ThumbnailOptions;)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_VipsImage_thumbnailWithOptionsNative
-  (JNIEnv *, jclass, jstring, jint, jint, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    resizeNative
- * Signature: (DDI)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_resizeNative
-  (JNIEnv *, jobject, jdouble, jdouble, jint);
 
 /*
  * Class:     com_criteo_vips_VipsImage
@@ -177,14 +89,6 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_max1Native
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    padNative
- * Signature: (II[DI)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_padNative
-  (JNIEnv *, jobject, jint, jint, jdoubleArray, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    cropNative
  * Signature: (IIII)V
  */
@@ -193,43 +97,11 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_cropNative
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    findTrimNative
- * Signature: (D[D)[I
- */
-JNIEXPORT jintArray JNICALL Java_com_criteo_vips_VipsImage_findTrimNative
-  (JNIEnv *, jobject, jdouble, jdoubleArray);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    compose
- * Signature: (Lcom/criteo/vips/Image;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_compose
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    insert
- * Signature: (Lcom/criteo/vips/Image;II)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_insert
-  (JNIEnv *, jobject, jobject, jint, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    writeToArrayNative
  * Signature: (Ljava/lang/String;IZ)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_VipsImage_writeToArrayNative
   (JNIEnv *, jobject, jstring, jint, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    writeWEBPToArrayNative
- * Signature: (IZZ)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_VipsImage_writeWEBPToArrayNative
-  (JNIEnv *, jobject, jint, jboolean, jboolean);
 
 /*
  * Class:     com_criteo_vips_VipsImage
@@ -273,14 +145,6 @@ JNIEXPORT jint JNICALL Java_com_criteo_vips_VipsImage_getBands
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    getPoint
- * Signature: (II)[D
- */
-JNIEXPORT jdoubleArray JNICALL Java_com_criteo_vips_VipsImage_getPoint
-  (JNIEnv *, jobject, jint, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    getPointPixelPacketNative
  * Signature: (II)[D
  */
@@ -297,30 +161,6 @@ JNIEXPORT jboolean JNICALL Java_com_criteo_vips_VipsImage_hasAlpha
 
 /*
  * Class:     com_criteo_vips_VipsImage
- * Method:    linearNative
- * Signature: ([D[DZ)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_linearNative
-  (JNIEnv *, jobject, jdoubleArray, jdoubleArray, jboolean);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    gaussblur
- * Signature: (DD)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_gaussblur
-  (JNIEnv *, jobject, jdouble, jdouble);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    extractArea
- * Signature: (IIII)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_VipsImage_extractArea
-  (JNIEnv *, jobject, jint, jint, jint, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
  * Method:    convertTosRGB
  * Signature: ()V
  */
@@ -333,14 +173,6 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_convertTosRGB
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_com_criteo_vips_VipsImage_getNbFrame
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    autorot
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_autorot
   (JNIEnv *, jobject);
 
 /*
@@ -366,22 +198,6 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_VipsImage_clone
  */
 JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_release
   (JNIEnv *, jobject);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    joinNative
- * Signature: (Lcom/criteo/vips/VipsImage;Lcom/criteo/vips/VipsImage;I)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_VipsImage_joinNative
-  (JNIEnv *, jclass, jobject, jobject, jint);
-
-/*
- * Class:     com_criteo_vips_VipsImage
- * Method:    embed
- * Signature: (IIIILjava/lang/Object;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_embed
-  (JNIEnv *, jobject, jint, jint, jint, jint, jobject);
 
 #ifdef __cplusplus
 }

@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "webpsave_buffer" operation.
@@ -36,7 +36,7 @@ public class WebpSaveBufferOptions {
 	private Integer effort;
 	private String profile;
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -429,7 +429,7 @@ public class WebpSaveBufferOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -439,7 +439,7 @@ public class WebpSaveBufferOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -450,7 +450,7 @@ public class WebpSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions background(PixelPacket background) {
+	public WebpSaveBufferOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

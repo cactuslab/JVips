@@ -16,13 +16,13 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "gaussblur" operation.
  */
-public class GaussblurOptions {
+public class GaussBlurOptions {
 
 	private Double minAmpl;
 	private VipsPrecision precision;
@@ -54,7 +54,7 @@ public class GaussblurOptions {
 	 * @param minAmpl the new value of {@code minAmpl}
 	 * @return this object for chaining
 	 */
-	public GaussblurOptions minAmpl(Double minAmpl) {
+	public GaussBlurOptions minAmpl(Double minAmpl) {
 		setMinAmpl(minAmpl);
 		return this;
 	}
@@ -86,7 +86,7 @@ public class GaussblurOptions {
 	 * @param precision the new value of {@code precision}
 	 * @return this object for chaining
 	 */
-	public GaussblurOptions precision(VipsPrecision precision) {
+	public GaussBlurOptions precision(VipsPrecision precision) {
 		setPrecision(precision);
 		return this;
 	}

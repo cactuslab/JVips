@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "jp2ksave_buffer" operation.
@@ -30,7 +30,7 @@ public class JP2KSaveBufferOptions {
 	private Integer q;
 	private VipsForeignSubsample subsampleMode;
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -231,7 +231,7 @@ public class JP2KSaveBufferOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -241,7 +241,7 @@ public class JP2KSaveBufferOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -252,7 +252,7 @@ public class JP2KSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public JP2KSaveBufferOptions background(PixelPacket background) {
+	public JP2KSaveBufferOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}

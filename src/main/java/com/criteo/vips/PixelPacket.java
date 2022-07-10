@@ -21,20 +21,41 @@ public class PixelPacket extends Vips {
     double g;
     double b;
     double a;
+    boolean hasAlpha;
+    boolean monochrome;
 
     public PixelPacket(double r, double g, double b, double a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
+        this.hasAlpha = true;
     }
 
     public PixelPacket(double r, double g, double b) {
-        this(r, g, b, 255.0);
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = 255.0;
+        this.hasAlpha = false;
     }
 
-    public PixelPacket(double[] doublearray) {
-        this(doublearray[0], doublearray[1], doublearray[2], doublearray[3]);
+    public PixelPacket(double[] pixel) {
+        boolean isMonochrome = pixel.length < 3;
+        boolean hasAlpha = pixel.length == 2 || pixel.length == 4;
+        if (isMonochrome) {
+            this.r = pixel[0];
+            this.g = pixel[0];
+            this.b = pixel[0];
+            this.a = hasAlpha ? pixel[1] : 255.0;
+        } else {
+            this.r = pixel[0];
+            this.g = pixel[1];
+            this.b = pixel[2];
+            this.a = hasAlpha ? pixel[3] : 255.0;
+        }
+        this.monochrome = isMonochrome;
+        this.hasAlpha = hasAlpha;
     }
 
     public double getRed() {
@@ -69,8 +90,20 @@ public class PixelPacket extends Vips {
         this.a = a;
     }
 
+    public boolean isMonochrome() {
+        return this.monochrome;
+    }
+
+    public boolean hasAlpha() {
+        return this.hasAlpha;
+    }
+
     public double[] getComponents() {
         return new double[] { r, g, b, a };
+    }
+
+    public double[] getColorComponents() {
+        return new double[] { r, g, b };
     }
 
     @Override

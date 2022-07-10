@@ -17,13 +17,23 @@
 package com.criteo.vips;
 
 import com.criteo.vips.enums.*;
+import com.criteo.vips.options.CastOptions;
+import com.criteo.vips.options.ColourspaceOptions;
+import com.criteo.vips.options.FindTrimOptions;
 import com.criteo.vips.options.FlattenOptions;
+import com.criteo.vips.options.GaussBlurOptions;
+import com.criteo.vips.options.GravityOptions;
 import com.criteo.vips.options.HEIFSaveBufferOptions;
+import com.criteo.vips.options.HistFindNdimOptions;
 import com.criteo.vips.options.JPEGSaveBufferOptions;
 import com.criteo.vips.options.JPEGSaveOptions;
+import com.criteo.vips.options.LinearOptions;
 import com.criteo.vips.options.PNGSaveBufferOptions;
 import com.criteo.vips.options.PNGSaveOptions;
+import com.criteo.vips.options.ResizeOptions;
+import com.criteo.vips.options.ThumbnailImageOptions;
 import com.criteo.vips.options.ThumbnailOptions;
+import com.criteo.vips.options.WebpSaveBufferOptions;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
@@ -82,14 +92,6 @@ public class VipsImage extends AbstractVipsImage implements Image {
         this.vipsImageHandler = handle;
     }
 
-    public static VipsImage black(int width, int height) throws VipsException {
-        VipsImage im = new VipsImage();
-        im.blackNative(width, height);
-        return im;
-    }
-
-    private native void blackNative(int width, int height) throws VipsException;
-
     private void newFromImage(Image image, PixelPacket c) throws VipsException {
         double[] color = {c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()};
         newFromImageNative(image, color);
@@ -104,24 +106,16 @@ public class VipsImage extends AbstractVipsImage implements Image {
     private native int imageGetFormatNative();
 
     public void castUchar() throws VipsException {
-        castUchar(false);
+        cast(VipsBandFormat.FormatUchar);
     }
 
     public void castUchar(boolean shift) throws VipsException {
-        castUcharNative(shift);
-    }
-
-    private native void castUcharNative(boolean shift) throws VipsException;
-
-    public void cast(VipsBandFormat format) throws VipsException {
-        cast(format, false);
+        cast(VipsBandFormat.FormatUchar, new CastOptions().shift(shift));
     }
 
     public void cast(VipsBandFormat format, boolean shift) throws VipsException {
-        castNative(format.getValue(), shift);
+        cast(format, new CastOptions().shift(shift));
     }
-
-    private native void castNative(int format, boolean shift) throws VipsException;
 
     public VipsInterpretation imageGetInterpretation() {
         return VipsInterpretation.valueOf(imageGetInterpretationNative());
@@ -129,38 +123,24 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     private native int imageGetInterpretationNative();
 
-    public void colourspace(VipsInterpretation space) throws VipsException {
-        colourspaceNative(space.getValue());
-    }
-
-    private native void colourspaceNative(int space) throws VipsException;
-
     public void colourspace(VipsInterpretation space, VipsInterpretation source_space) throws VipsException {
-        colourspaceNative(space.getValue(), source_space.getValue());
+        colourspace(space, new ColourspaceOptions().sourceSpace(source_space));
     }
-
-    private native void colourspaceNative(int space, int source_space) throws VipsException;
 
     public void histFindNdim(int bins) throws VipsException {
-        histFindNdimNative(bins);
+        histFindNdim(new HistFindNdimOptions().bins(bins));
     }
 
-    private native void histFindNdimNative(int bins) throws VipsException;
-
     public void thumbnailImage(Dimension dimension, boolean scale) throws VipsException {
-        thumbnailImageNative(dimension.width, dimension.height, scale);
+        thumbnailImage(dimension.width, dimension.height, scale);
     }
 
     public void thumbnailImage(int width, int height, boolean scale) throws VipsException {
-        thumbnailImageNative(width, height, scale);
+        thumbnailImage(width, new ThumbnailImageOptions().height(height).size(scale ? VipsSize.Force : VipsSize.Both));
     }
 
     public static VipsImage thumbnail(String filename, Dimension dimension, boolean scale) throws VipsException {
-        return thumbnailNative(filename, dimension.width, dimension.height, scale);
-    }
-
-    public static VipsImage thumbnail(String filename, Dimension dimension, ThumbnailOptions options) throws VipsException {
-        return thumbnailWithOptionsNative(filename, dimension.width, dimension.height, options);
+        return thumbnail(filename, dimension.width, new ThumbnailOptions().height(dimension.height).size(scale ? VipsSize.Force : VipsSize.Both));
     }
 
     /**
@@ -173,11 +153,7 @@ public class VipsImage extends AbstractVipsImage implements Image {
      * @throws VipsException if error
      */
     public static VipsImage thumbnail(String filename, int width, int height, boolean scale) throws VipsException {
-        return thumbnailNative(filename, width, height, scale);
-    }
-
-    public static VipsImage thumbnail(String filename, int width, int height, ThumbnailOptions options) throws VipsException {
-        return thumbnailWithOptionsNative(filename, width, height, options);
+        return thumbnail(filename, width, new ThumbnailOptions().height(height).size(scale ? VipsSize.Force : VipsSize.Both));
     }
 
     /**
@@ -185,7 +161,7 @@ public class VipsImage extends AbstractVipsImage implements Image {
      */
     @Deprecated
     public void resize(Dimension dimension, boolean scale) throws VipsException {
-        thumbnailImageNative(dimension.width, dimension.height, scale);
+        thumbnailImage(dimension.width, dimension.height, scale);
     }
 
     /**
@@ -193,22 +169,12 @@ public class VipsImage extends AbstractVipsImage implements Image {
      */
     @Deprecated
     public void resize(int width, int height, boolean scale) throws VipsException {
-        thumbnailImageNative(width, height, scale);
+        thumbnailImage(width, height, scale);
     }
-
-    private native void thumbnailImageNative(int width, int height, boolean scale) throws VipsException;
-
-    private native void thumbnailImageWithOptionsNative(int width, ThumbnailOptions options) throws VipsException;
-
-    private static native VipsImage thumbnailNative(String filename, int width, int height, boolean scale) throws VipsException;
-
-    private static native VipsImage thumbnailWithOptionsNative(String filename, int width, int height, ThumbnailOptions options) throws VipsException;
 
     public void resize(double hscale, double vscale, VipsKernel kernel) throws VipsException {
-        resizeNative(hscale, vscale, kernel.getValue());
+        resize(hscale, new ResizeOptions().vscale(vscale).kernel(kernel));
     }
-
-    private native void resizeNative(double hscale, double vscale, int kernel) throws VipsException;
 
     public Max1Result max1() throws VipsException {
         Max1Result r = new Max1Result();
@@ -218,11 +184,25 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     private native void max1Native(Max1Result r) throws VipsException;
 
-    public void pad(Dimension dimension, PixelPacket background, VipsCompassDirection gravity) throws VipsException {
-        padNative(dimension.width, dimension.height, background.getComponents(), gravity.getValue());
+    /**
+     * Returns a double[] with 3 components if the image has no alpha, or with 4 components if it does.
+     * @param p
+     * @return
+     */
+    private double[] toVipsArrayDouble(PixelPacket p) {
+        if (p == null) {
+            return null;
+        }
+        if (hasAlpha()) {
+            return p.getComponents();
+        } else {
+            return p.getColorComponents();
+        }
     }
 
-    private native void padNative(int width, int height, double[] background, int gravity) throws VipsException;
+    public void pad(Dimension dimension, PixelPacket background, VipsCompassDirection gravity) throws VipsException {
+        gravity(gravity, dimension.width, dimension.height, new GravityOptions().background(toVipsArrayDouble(background)));
+    }
 
     public void crop(Rectangle rectangle) throws VipsException {
         cropNative(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
@@ -231,21 +211,16 @@ public class VipsImage extends AbstractVipsImage implements Image {
     private native void cropNative(int left, int top, int width, int height) throws VipsException;
 
     public Rectangle findTrim(double threshold, PixelPacket background) throws VipsException {
-        int[] ret = findTrimNative(threshold, background.getComponents());
-        return new Rectangle(ret[0], ret[1], ret[2], ret[3]);
+        return findTrim(new FindTrimOptions().threshold(threshold).background(background != null ? background.getColorComponents() : null));
     }
 
-    private native int[] findTrimNative(double threshold, double[] background) throws VipsException;
-
-    public native void compose(Image sub) throws VipsException;
-
-    public native void insert(Image sub, int x, int y) throws VipsException;
+    public void compose(Image sub) throws VipsException {
+        composite2(sub, VipsBlendMode.Over);
+    }
 
     public void flatten(PixelPacket background) throws VipsException {
-        flatten(new FlattenOptions().background(background));
+        flatten(new FlattenOptions().background(background != null ? background.getColorComponents() : null));
     }
-
-    // private native void flattenNative(double[] background) throws VipsException;
 
     public byte[] writeToArray(VipsImageFormat imageFormat, boolean strip) throws VipsException {
         // Set quality to -1 and let default vips value
@@ -295,15 +270,13 @@ public class VipsImage extends AbstractVipsImage implements Image {
     }
 
     public byte[] writeWEBPToArray(int Q, boolean lossless, boolean strip) throws VipsException {
-        return writeWEBPToArrayNative(Q, lossless, strip);
+        return webpSaveBuffer(new WebpSaveBufferOptions().q(Q).lossless(lossless).strip(strip));
     }
-
-    private native byte[] writeWEBPToArrayNative(int Q, boolean lossless, boolean strip) throws VipsException;
 
     public native void writeToFile(String name) throws VipsException;
 
     public void writeToFile(String name, boolean strip, PixelPacket background, int pageHeight) {
-        writeToFileNative(name, strip, background != null ? background.getComponents() : null, pageHeight);
+        writeToFileNative(name, strip, toVipsArrayDouble(background), pageHeight);
     }
 
     private native void writeToFileNative(String name, boolean strip, double[] background, int pageHeight);
@@ -314,20 +287,12 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     public native int getBands();
 
-    public native double[] getPoint(int x, int y) throws VipsException;
-
     public PixelPacket getPointPixelPacket(Point point) throws VipsException {
-        return getPointPixelPacket(point.x, point.y);
+        return new PixelPacket(getPointPixelPacketNative(point.x, point.y));
     }
 
     public PixelPacket getPointPixelPacket(int x, int y) throws VipsException {
-        double[] pixel = getPointPixelPacketNative(x, y);
-        boolean isMonochrome = pixel.length < 3;
-        boolean hasAlpha = pixel.length == 2 || pixel.length == 4;
-        if (isMonochrome)
-            return new PixelPacket(pixel[0], pixel[0], pixel[0], hasAlpha ? pixel[1] : 255.0);
-        else
-            return new PixelPacket(pixel[0], pixel[1], pixel[2], hasAlpha ? pixel[3] : 255.0);
+        return new PixelPacket(getPointPixelPacketNative(x, y));
     }
 
     private native double[] getPointPixelPacketNative(int x, int y) throws VipsException;
@@ -335,10 +300,8 @@ public class VipsImage extends AbstractVipsImage implements Image {
     public native boolean hasAlpha();
 
     public void linear(double[] a, double[] b, boolean uchar) throws VipsException {
-        linearNative(a, b, uchar);
+        linear(a, b, new LinearOptions().uchar(uchar));
     }
-
-    private native void linearNative(double[] a, double[] b, boolean uchar) throws VipsException;
 
     public void linear(double[] a, double[] b) throws VipsException {
         linear(a, b, false);
@@ -353,15 +316,14 @@ public class VipsImage extends AbstractVipsImage implements Image {
         return imageGetInterpretation();
     }
 
-    public native void gaussblur(double sigma, double minAmpl) throws VipsException;
-
-    public native VipsImage extractArea(int left, int top, int width, int height) throws VipsException;
+    @Override
+    public void gaussblur(double sigma, double minAmpl) throws VipsException {
+        gaussBlur(sigma, new GaussBlurOptions().minAmpl(minAmpl));
+    }
 
     public native void convertTosRGB() throws VipsException;
 
     public native int getNbFrame();
-
-    public native void autorot() throws VipsException;
 
     public native void removeAutorotAngle();
 
@@ -379,10 +341,7 @@ public class VipsImage extends AbstractVipsImage implements Image {
      * @throws VipsException
      */
     public static VipsImage join(VipsImage in1, VipsImage in2, VipsDirection direction) throws VipsException {
-        return joinNative(in1, in2, direction.getValue());
+        return in1.join(in2,  direction);
     }
 
-    public static native VipsImage joinNative(VipsImage in1, VipsImage in2, int direction) throws VipsException;
-
-    public native void embed(int x, int y, int width, int height, Object options);
 }

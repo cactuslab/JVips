@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
-import com.criteo.vips.PixelPacket;
 
 /**
  * Optional arguments for the "rawsave_fd" operation.
@@ -25,7 +25,7 @@ import com.criteo.vips.PixelPacket;
 public class RawSaveFdOptions {
 
 	private Boolean strip;
-	private PixelPacket background;
+	private double[] background;
 	private Integer pageHeight;
 
 	/**
@@ -66,7 +66,7 @@ public class RawSaveFdOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackground() {
+	public double[] getBackground() {
 		return this.background;
 	}
 
@@ -76,7 +76,7 @@ public class RawSaveFdOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackground(PixelPacket background) {
+	public void setBackground(double[] background) {
 		this.background = background;
 	}
 
@@ -87,7 +87,7 @@ public class RawSaveFdOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public RawSaveFdOptions background(PixelPacket background) {
+	public RawSaveFdOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}
