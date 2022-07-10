@@ -34,7 +34,7 @@ function wrappedJniTypeCodeForParameter(p: VipsOperationParameter): string {
 		case 'gdouble': return 'Ljava/lang/Double;'
 		case 'guint64': return 'Ljava/lang/Long;' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'Ljava/lang/String;'
-		case 'VipsImage': throw new Error(`VipsImage should be handled specially for parameter ${p.name}`)
+		case 'VipsImage': return 'Lcom/criteo/vips/VipsImage;'
 		case 'VipsArrayDouble': return '[D'
 	}
 	throw new Error(`Unsupported JNI wrapping parameter type '${p.type}' for parameter '${p.name}'`)

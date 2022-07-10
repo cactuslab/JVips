@@ -15,7 +15,7 @@ const RESERVED_WORDS = [
 	'true', 'try', 'void', 'volatile', 'while',
 ]
 
-function javaTypeForType(p: VipsOperationParameter, required: boolean = true): string {
+function javaTypeForType(p: VipsOperationParameter, purpose: 'return' | 'param', required: boolean = true): string {
 	if (isEnum(p)) {
 		return p.type
 	}
@@ -26,7 +26,7 @@ function javaTypeForType(p: VipsOperationParameter, required: boolean = true): s
 		case 'gdouble': return required ? 'double' : 'Double'
 		case 'guint64': return required ? 'long' : 'Long' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'String'
-		case 'VipsImage': return 'VipsImage'
+		case 'VipsImage': return purpose === 'return' ? 'VipsImage' : 'Image'
 		case 'VipsArrayDouble': return 'double[]'
 		case 'VipsBlob': return 'byte[]'
 		case 'Rectangle': return 'Rectangle'
@@ -119,7 +119,7 @@ export function javaNativeStub(op: VipsOperation): string {
 	function methodSignature(withOptionals: boolean) {
 		let result = ''
 		if (outs.length) {
-			result += `${javaTypeForType(outs[0])} `
+			result += `${javaTypeForType(outs[0], 'return')} `
 		} else {
 			result += 'void '
 		}
@@ -133,7 +133,7 @@ export function javaNativeStub(op: VipsOperation): string {
 				result += ', '
 			}
 
-			result += `${javaTypeForType(p)} ${javaParameterIdentifier(p)}`
+			result += `${javaTypeForType(p, 'param')} ${javaParameterIdentifier(p)}`
 		}
 
 		if (withOptionals && optionals.length) {
@@ -172,14 +172,14 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	
 	/* Fields */
 	for (const p of optionals) {
-		result += `\tprivate ${javaTypeForType(p, false)} ${javaParameterIdentifier(p)};\n`
+		result += `\tprivate ${javaTypeForType(p, 'param', false)} ${javaParameterIdentifier(p)};\n`
 	}
 
 	const className = `${javaOperationClassName(op)}Options`
 
 	/* Properties */
 	for (const p of optionals) {
-		const javaType = javaTypeForType(p, false)
+		const javaType = javaTypeForType(p, 'param', false)
 		const identifier = javaParameterIdentifier(p)
 		result += `
 	/**
@@ -263,6 +263,7 @@ function optionsFileHeader(op: VipsOperation): string {
 
 package com.criteo.vips.options;
 
+import com.criteo.vips.Image;
 import com.criteo.vips.enums.*;
 
 /**
