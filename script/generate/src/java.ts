@@ -27,7 +27,9 @@ function javaTypeForType(p: VipsOperationParameter, purpose: 'return' | 'param',
 		case 'guint64': return required ? 'long' : 'Long' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'String'
 		case 'VipsImage': return purpose === 'return' ? 'VipsImage' : 'Image'
+		case 'VipsArrayInt': return 'int[]'
 		case 'VipsArrayDouble': return 'double[]'
+		case 'VipsArrayImage': return purpose === 'return' ? 'VipsImage[]' : 'Image[]'
 		case 'VipsBlob': return 'byte[]'
 		case 'Rectangle': return 'Rectangle'
 	}

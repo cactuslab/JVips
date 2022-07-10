@@ -16,7 +16,9 @@ function jniTypeForParameter(p: VipsOperationParameter): string {
 		case 'guint64': return 'jlong' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'jstring'
 		case 'VipsImage': return 'jobject'
+		case 'VipsArrayInt': return 'jintArray'
 		case 'VipsArrayDouble': return 'jdoubleArray'
+		case 'VipsArrayImage': return 'jobjectArray'
 		case 'VipsBlob': return 'jbyteArray'
 		case 'Rectangle': return 'jobject' /* A special handling for find_trim, which returns a Rectangle */
 	}
@@ -35,7 +37,9 @@ function wrappedJniTypeCodeForParameter(p: VipsOperationParameter): string {
 		case 'guint64': return 'Ljava/lang/Long;' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'Ljava/lang/String;'
 		case 'VipsImage': return 'Lcom/criteo/vips/VipsImage;'
+		case 'VipsArrayInt': return '[I'
 		case 'VipsArrayDouble': return '[D'
+		case 'VipsArrayImage': return '[Lcom/criteo/vips/Image;'
 	}
 	throw new Error(`Unsupported JNI wrapping parameter type '${p.type}' for parameter '${p.name}'`)
 }
@@ -89,12 +93,30 @@ g_value_set_string(&gvalue, ${camelCase(p.name)}Chars);
 (*env)->ReleaseStringUTFChars(env, ${camelCase(p.name)}, ${camelCase(p.name)}Chars);
 g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);`
+			case 'VipsArrayInt':
+				return `jint *${camelCase(p.name)}Elements = (*env)->GetIntArrayElements(env, ${camelCase(p.name)}, NULL);
+jint ${camelCase(p.name)}Length = (*env)->GetArrayLength(env, ${camelCase(p.name)});
+g_value_init(&gvalue, VIPS_TYPE_ARRAY_INT);
+vips_value_set_array_int(&gvalue, ${camelCase(p.name)}Elements, ${camelCase(p.name)}Length);
+(*env)->ReleaseIntArrayElements(env, ${camelCase(p.name)}, ${camelCase(p.name)}Elements, 0);
+g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
+g_value_unset(&gvalue);`
 			case 'VipsArrayDouble':
 				return `jdouble *${camelCase(p.name)}Elements = (*env)->GetDoubleArrayElements(env, ${camelCase(p.name)}, NULL);
 jint ${camelCase(p.name)}Length = (*env)->GetArrayLength(env, ${camelCase(p.name)});
 g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 vips_value_set_array_double(&gvalue, ${camelCase(p.name)}Elements, ${camelCase(p.name)}Length);
 (*env)->ReleaseDoubleArrayElements(env, ${camelCase(p.name)}, ${camelCase(p.name)}Elements, 0);
+g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
+g_value_unset(&gvalue);`
+			case 'VipsArrayImage':
+				return `jint ${camelCase(p.name)}Length = (*env)->GetArrayLength(env, ${camelCase(p.name)});
+g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
+vips_value_set_array_image(&gvalue, ${camelCase(p.name)}Length);
+VipsImage **${camelCase(p.name)}Images = vips_value_get_array_image(&gvalue, NULL);
+for (jint i = 0; i < ${camelCase(p.name)}Length; i++) {
+	${camelCase(p.name)}Images[i] = (VipsImage *) (*env)->GetLongField(env, (*env)->GetObjectArrayElement(env, ${camelCase(p.name)}, i), handle_fid);
+}
 g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);`
 			case 'VipsBlob':
