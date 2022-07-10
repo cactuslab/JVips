@@ -42,10 +42,12 @@ export function javaParameterIdentifier(p: VipsOperationParameter): string {
 	}
 }
 
-const OPERATION_NAMES = ['Load', 'Save']
+const PREFIXES = /^(get|gauss)/
 
 export function javaOperationIdentifier(op: VipsOperation): string {
-	let result = camelCase(op.alias)
+	let result = op.alias
+	result = result.replace(PREFIXES, '$1_')
+	result = camelCase(result)
 	for (const opName of OPERATION_NAMES) {
 		result = result.replace(opName.toLowerCase(), opName)
 	}
@@ -57,6 +59,7 @@ export function javaOperationIdentifier(op: VipsOperation): string {
 }
 
 const FILE_TYPES = ['PNG', 'JPEG', 'TIFF', 'PDF', 'JXL', 'JP2K', 'ICC', 'HEIF', 'GIF', 'CSV', 'DZ', 'XYZ', 'FFT', 'LUT', 'PPM', 'FITS', 'LAB']
+const OPERATION_NAMES = ['Load', 'Save']
 
 /**
  * Create a Java class name for a Vips operation.
@@ -65,14 +68,14 @@ const FILE_TYPES = ['PNG', 'JPEG', 'TIFF', 'PDF', 'JXL', 'JP2K', 'ICC', 'HEIF', 
  * @returns 
  */
 export function javaOperationClassName(op: VipsOperation): string {
-	let alias = op.alias
+	let result = javaOperationIdentifier(op)
 	for(const allCap of FILE_TYPES) {
-		alias = alias.replace(allCap.toLowerCase(), `_${allCap}_`)
+		result = result.replace(allCap.toLowerCase(), `_${allCap}_`)
 	}
-	if (alias.endsWith('_')) {
-		alias = alias.substring(0, alias.length - 1)
+	if (result.endsWith('_')) {
+		result = result.substring(0, result.length - 1)
 	}
-	let result = pascalCase(alias)
+	result = pascalCase(result)
 	for (const opName of OPERATION_NAMES) {
 		result = result.replace(opName.toLowerCase(), opName)
 	}
