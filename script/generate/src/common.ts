@@ -2,6 +2,7 @@ import { VipsOperation, VipsOperationInfo } from "./type";
 
 interface Options {
 	dontRemoveInstanceMethodFromIns?: boolean
+	noMutatingInstanceMethods?: boolean
 }
 
 export function operationInfo(op: VipsOperation, options?: Options): VipsOperationInfo {
@@ -23,7 +24,7 @@ export function operationInfo(op: VipsOperation, options?: Options): VipsOperati
 	}
 
 	const instanceMethod = ins.length > 0 && ins[0].direction === 'input' && ins[0].type === 'VipsImage' ? ins[0] : undefined
-	const mutatingInstanceMethod = instanceMethod && outs.length && outs[0].type === 'VipsImage' && !op.alias.startsWith('extract') && !op.alias.startsWith('join') ? outs[0] : undefined
+	const mutatingInstanceMethod = !options?.noMutatingInstanceMethods && instanceMethod && outs.length && outs[0].type === 'VipsImage' && outs.filter(p => p.type === 'VipsImage').length === 1 ? outs[0] : undefined
 
 	if (instanceMethod && !options?.dontRemoveInstanceMethodFromIns) {
 		ins.splice(ins.indexOf(instanceMethod), 1)

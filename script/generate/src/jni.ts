@@ -1,7 +1,7 @@
 import { operationInfo } from "./common"
 import { COPYRIGHT } from "./constants"
 import { javaOperationIdentifier, javaParameterIdentifier } from "./java"
-import { VipsOperation, VipsOperationParameter } from "./type"
+import { VipsOperation, VipsOperationInfo, VipsOperationParameter } from "./type"
 import { indent, isEnum, camelCase } from "./utils"
 
 function jniTypeForParameter(p: VipsOperationParameter): string {
@@ -209,9 +209,95 @@ g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);`
 }
 
+function applyOutParameter(p: VipsOperationParameter): string {
+	switch (p.type) {
+		case 'VipsImage':
+			return `
+g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
+VipsImage *${camelCase(p.name)} = VIPS_IMAGE(g_value_get_object(&gvalue));
+g_object_ref(${camelCase(p.name)});
+g_value_unset(&gvalue);
+`
+		case 'gboolean':
+			return `
+g_value_init(&gvalue, G_TYPE_BOOLEAN);
+g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
+jboolean ${camelCase(p.name)} = g_value_get_boolean(&gvalue);
+g_value_unset(&gvalue);
+`
+		case 'gint':
+			return `
+g_value_init(&gvalue, G_TYPE_INT);
+g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
+jint ${camelCase(p.name)} = g_value_get_int(&gvalue);
+g_value_unset(&gvalue);
+`
+		case 'gdouble':
+			return `
+g_value_init(&gvalue, G_TYPE_DOUBLE);
+g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
+jdouble ${camelCase(p.name)} = g_value_get_double(&gvalue);
+g_value_unset(&gvalue);
+`
+		case 'VipsArrayDouble':
+			return `
+g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
+jint ${camelCase(p.name)}Length = 0;
+jdouble *${camelCase(p.name)}Elements = vips_value_get_array_double(&gvalue, &${camelCase(p.name)}Length);
+jdoubleArray ${camelCase(p.name)} = (*env)->NewDoubleArray(env, ${camelCase(p.name)}Length);
+(*env)->SetDoubleArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Elements);
+g_value_unset(&gvalue);
+`
+		case 'VipsBlob':
+			return `
+g_value_init(&gvalue, VIPS_TYPE_BLOB);
+g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
+size_t ${camelCase(p.name)}Size = 0;
+void *${camelCase(p.name)}Data = vips_value_get_blob(&gvalue, &${camelCase(p.name)}Size);
+jint ${camelCase(p.name)}Length = ${camelCase(p.name)}Size / sizeof(jbyte);
+jbyteArray ${camelCase(p.name)} = (*env)->NewByteArray(env, ${camelCase(p.name)}Length);
+(*env)->SetByteArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Data);
+g_value_unset(&gvalue);
+`
+		case 'Rectangle':
+			return `
+	g_value_init(&gvalue, G_TYPE_INT);
+	g_object_get_property(G_OBJECT(op), "left", &gvalue);
+	jint ${camelCase(p.name)}Left = g_value_get_int(&gvalue);
+	g_object_get_property(G_OBJECT(op), "top", &gvalue);
+	jint ${camelCase(p.name)}Top = g_value_get_int(&gvalue);
+	g_object_get_property(G_OBJECT(op), "width", &gvalue);
+	jint ${camelCase(p.name)}Width = g_value_get_int(&gvalue);
+	g_object_get_property(G_OBJECT(op), "height", &gvalue);
+	jint ${camelCase(p.name)}Height = g_value_get_int(&gvalue);
+	jobject ${camelCase(p.name)} = (*env)->NewObject(env, rectangleClass, rectangle_ctor_mid, ${camelCase(p.name)}Left, ${camelCase(p.name)}Top, ${camelCase(p.name)}Width, ${camelCase(p.name)}Height);
+	g_value_unset(&gvalue);
+`
+		default:
+			throw new Error(`Unsupported output parameter type '${p.type}'`)
+	}
+}
 export function nativeMethod(op: VipsOperation): string {
+	const info = operationInfo(op, { dontRemoveInstanceMethodFromIns: true })
+
 	let result = ''
-	const { ins, optionals, outs, instanceMethod, mutatingInstanceMethod } = operationInfo(op, { dontRemoveInstanceMethodFromIns: true })
+	if (info.mutatingInstanceMethod) {
+		result += internalNativeMethod(op, info, { mutating: true }) + '\n'
+
+		const nonMutatingInfo = operationInfo(op, { noMutatingInstanceMethods: true, dontRemoveInstanceMethodFromIns: true })
+		result += internalNativeMethod(op, nonMutatingInfo)
+	} else {
+		result += internalNativeMethod(op, info)
+	}
+
+	return result
+}
+
+function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, options?: { mutating?: boolean }): string {
+	let result = ''
+	const { ins, optionals, outs, instanceMethod, mutatingInstanceMethod } = info
 
 	if (outs.length > 1) {
 		throw new Error(`Multiple outputs for ${op.alias}: ${outs.map(p => p.name)}`)
@@ -223,9 +309,9 @@ export function nativeMethod(op: VipsOperation): string {
 	}
 
 	if (instanceMethod) {
-		result += `Java_com_criteo_vips_AbstractVipsImage_${javaOperationIdentifier(op)}(JNIEnv *env`
+		result += `Java_com_criteo_vips_AbstractVipsImage_${javaOperationIdentifier(op, options)}(JNIEnv *env`
 	} else {
-		result += `Java_com_criteo_vips_AbstractVipsImage_${javaOperationIdentifier(op)}(JNIEnv *env, jclass cls`
+		result += `Java_com_criteo_vips_AbstractVipsImage_${javaOperationIdentifier(op, options)}(JNIEnv *env, jclass cls`
 	}
 
 	for (const p of ins) {
@@ -291,104 +377,28 @@ export function nativeMethod(op: VipsOperation): string {
 
 `
 
-	if (instanceMethod && mutatingInstanceMethod) {
-		result += `\t// Mutating image result
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "${mutatingInstanceMethod.name}", &gvalue);
-	VipsImage *_${mutatingInstanceMethod.name} = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(_${mutatingInstanceMethod.name}); 
-	g_value_unset(&gvalue);
-	g_object_unref((VipsImage *) (*env)->GetLongField(env, ${instanceMethod.name}, handle_fid));
-	(*env)->SetLongField(env, ${instanceMethod.name}, handle_fid, (jlong) _${mutatingInstanceMethod.name});
-`
+	if (mutatingInstanceMethod) {
+		result += `\t// ${mutatingInstanceMethod.name}`
+		result += indent(applyOutParameter(mutatingInstanceMethod), '\t') + '\n'
 	}
 
 	for (const p of outs) {
 		result += `\t// ${p.name}`
-
-		switch (p.type) {
-			case 'VipsImage':
-				result += `
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
-	VipsImage *${camelCase(p.name)} = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(${camelCase(p.name)});
-	g_value_unset(&gvalue);
-`
-				break
-			case 'gboolean':
-				result += `
-	g_value_init(&gvalue, G_TYPE_BOOLEAN);
-	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
-	jboolean ${camelCase(p.name)} = g_value_get_boolean(&gvalue);
-	g_value_unset(&gvalue);
-`
-				break
-			case 'gint':
-				result += `
-	g_value_init(&gvalue, G_TYPE_INT);
-	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
-	jint ${camelCase(p.name)} = g_value_get_int(&gvalue);
-	g_value_unset(&gvalue);
-`
-				break
-			case 'gdouble':
-				result += `
-	g_value_init(&gvalue, G_TYPE_DOUBLE);
-	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
-	jdouble ${camelCase(p.name)} = g_value_get_double(&gvalue);
-	g_value_unset(&gvalue);
-`
-				break
-			case 'VipsArrayDouble':
-				result += `
-	g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
-	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
-	jint ${camelCase(p.name)}Length = 0;
-	jdouble *${camelCase(p.name)}Elements = vips_value_get_array_double(&gvalue, &${camelCase(p.name)}Length);
-	jdoubleArray ${camelCase(p.name)} = (*env)->NewDoubleArray(env, ${camelCase(p.name)}Length);
-	(*env)->SetDoubleArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Elements);
-	g_value_unset(&gvalue);
-`
-				break
-			case 'VipsBlob':
-				result += `
-	g_value_init(&gvalue, VIPS_TYPE_BLOB);
-	g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
-	size_t ${camelCase(p.name)}Size = 0;
-	void *${camelCase(p.name)}Data = vips_value_get_blob(&gvalue, &${camelCase(p.name)}Size);
-	jint ${camelCase(p.name)}Length = ${camelCase(p.name)}Size / sizeof(jbyte);
-	jbyteArray ${camelCase(p.name)} = (*env)->NewByteArray(env, ${camelCase(p.name)}Length);
-	(*env)->SetByteArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Data);
-	g_value_unset(&gvalue);
-`
-				break
-			case 'Rectangle':
-				result += `
-		g_value_init(&gvalue, G_TYPE_INT);
-		g_object_get_property(G_OBJECT(op), "left", &gvalue);
-		jint ${camelCase(p.name)}Left = g_value_get_int(&gvalue);
-		g_object_get_property(G_OBJECT(op), "top", &gvalue);
-		jint ${camelCase(p.name)}Top = g_value_get_int(&gvalue);
-		g_object_get_property(G_OBJECT(op), "width", &gvalue);
-		jint ${camelCase(p.name)}Width = g_value_get_int(&gvalue);
-		g_object_get_property(G_OBJECT(op), "height", &gvalue);
-		jint ${camelCase(p.name)}Height = g_value_get_int(&gvalue);
-		jobject ${camelCase(p.name)} = (*env)->NewObject(env, rectangleClass, rectangle_ctor_mid, ${camelCase(p.name)}Left, ${camelCase(p.name)}Top, ${camelCase(p.name)}Width, ${camelCase(p.name)}Height);
-		g_value_unset(&gvalue);
-`
-				break
-			default:
-				throw new Error(`Unsupported output parameter type '${p.type}' for operation '${op.alias}'`)
-		}
+		result += indent(applyOutParameter(p), '\t') + '\n'
 	}
 
-	result += `
-	// Free the operation
+	result += `\t// Free the operation
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
 	g_object_unref(op);
 
 `
+
+	if (instanceMethod && mutatingInstanceMethod) {
+		result += `\t// Mutating image result
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, ${instanceMethod.name}, handle_fid));
+	(*env)->SetLongField(env, ${instanceMethod.name}, handle_fid, (jlong) ${mutatingInstanceMethod.name});
+`
+	}
 
 	for (const p of outs) {
 		result += `\t// Output

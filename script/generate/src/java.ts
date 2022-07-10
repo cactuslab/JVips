@@ -1,6 +1,6 @@
 import { operationInfo } from "./common"
 import { COPYRIGHT } from "./constants"
-import { VipsOperation, VipsOperationParameter } from "./type"
+import { VipsOperation, VipsOperationInfo, VipsOperationParameter } from "./type"
 import { isEnum, camelCase, pascalCase, capitalize } from "./utils"
 
 const RESERVED_WORDS = [
@@ -47,9 +47,12 @@ export function javaParameterIdentifier(p: VipsOperationParameter): string {
 
 const PREFIXES = /^(get|gauss)/
 
-export function javaOperationIdentifier(op: VipsOperation): string {
+export function javaOperationIdentifier(op: VipsOperation, options?: { mutating?: boolean }): string {
 	let result = op.alias
 	result = result.replace(PREFIXES, '$1_')
+	if (options?.mutating) {
+		result = `apply_${result}`
+	}
 	result = camelCase(result)
 	for (const opName of OPERATION_NAMES) {
 		result = result.replace(opName.toLowerCase(), opName)
@@ -87,13 +90,28 @@ export function javaOperationClassName(op: VipsOperation): string {
 
 export function javaNativeStub(op: VipsOperation): string {
 	let result = ''
-	const { ins, optionals, outs, instanceMethod } = operationInfo(op)
+
+	const info = operationInfo(op)
+	if (info.mutatingInstanceMethod) {
+		result += internalJavaNativeStub(op, info, { mutating: true }) + '\n'
+
+		const nonMutatingInfo = operationInfo(op, { noMutatingInstanceMethods: true })
+		result += internalJavaNativeStub(op, nonMutatingInfo)
+	} else {
+		result += internalJavaNativeStub(op, info)
+	}
+
+	return result
+}
+
+function internalJavaNativeStub(op: VipsOperation, info: VipsOperationInfo, options?: { mutating?: boolean }) {
+	const { ins, optionals, outs, instanceMethod } = info
 
 	if (outs.length > 1) {
 		throw new Error(`Multiple outputs for ${op.alias}: ${outs.map(p => p.name)}`)
 	}
 
-	result += javadoc(true)
+	let result = javadoc(true)
 
 	result += `public `
 	if (!instanceMethod) {
@@ -112,7 +130,7 @@ export function javaNativeStub(op: VipsOperation): string {
 		}
 		result += methodSignature(false)
 		result += ` {
-	${outs.length ? 'return ' : ''}${javaOperationIdentifier(op)}(${ins.map(p => javaParameterIdentifier(p)).join(', ')}${ins.length ? ', ' : ''}null);
+	${outs.length ? 'return ' : ''}${javaOperationIdentifier(op, options)}(${ins.map(p => javaParameterIdentifier(p)).join(', ')}${ins.length ? ', ' : ''}null);
 }\n\n`
 	}
 
@@ -125,7 +143,7 @@ export function javaNativeStub(op: VipsOperation): string {
 		} else {
 			result += 'void '
 		}
-		result += `${javaOperationIdentifier(op)}(`
+		result += `${javaOperationIdentifier(op, options)}(`
 
 		let first = true
 		for (const p of ins) {
@@ -153,6 +171,9 @@ export function javaNativeStub(op: VipsOperation): string {
 		let result = `/**
  * ${op.name} (${op.alias}): ${op.description}
 `
+		if (options?.mutating) {
+			result += ` * Mutates the image inplace.\n`
+		}
 		for (const p of ins) {
 			result += ` * @param ${javaParameterIdentifier(p)} ${p.description}\n`
 		}
