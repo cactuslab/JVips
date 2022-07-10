@@ -179,7 +179,6 @@ static jmethodID booleanValue_mid = NULL;
 static jmethodID intValue_mid = NULL;
 static jmethodID longValue_mid = NULL;
 static jmethodID doubleValue_mid = NULL;
-static jclass imageClass = NULL;
 static jclass rectangleClass = NULL;
 static jmethodID rectangle_ctor_mid = NULL;`
 }
@@ -188,7 +187,7 @@ function initFields(): string {
 	return `handle_fid = (*env)->GetFieldID(env, cls, "vipsImageHandler", "J");
 buffer_fid = (*env)->GetFieldID(env, cls, "bufferHandler", "J");
 
-imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 ctor_mid = (*env)->GetMethodID(env, imageClass, "<init>", "(J)V");
 
 jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
@@ -396,7 +395,8 @@ export function nativeMethod(op: VipsOperation): string {
 `
 		switch (p.type) {
 			case 'VipsImage':
-				result += `\treturn (*env)->NewObject(env, ${instanceMethod ? 'imageClass' : 'cls'}, ctor_mid, (jlong) ${camelCase(p.name)});\n`
+				result += `\tjclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) ${camelCase(p.name)});\n`
 				break
 			default:
 				result += `\treturn ${camelCase(p.name)};\n`
