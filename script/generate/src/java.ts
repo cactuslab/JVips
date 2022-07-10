@@ -50,8 +50,8 @@ const PREFIXES = /^(get|gauss)/
 export function javaOperationIdentifier(op: VipsOperation, options?: VipsOperationOptions): string {
 	let result = op.alias
 	result = result.replace(PREFIXES, '$1_')
-	if (options?.mode === 'nonmutating') {
-		result = `new_image_using_${result}`
+	if (options?.mode === 'mutating') {
+		result = `apply_${result}`
 	}
 	result = camelCase(result)
 	for (const opName of OPERATION_NAMES) {
