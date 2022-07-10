@@ -139,7 +139,7 @@ export function javaNativeStub(op: VipsOperation): string {
 			result += `${javaOperationClassName(op)}Options options`
 		}
 
-		result += `)`
+		result += `) throws VipsException`
 		return result
 	}
 
