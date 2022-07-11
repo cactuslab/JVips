@@ -184,24 +184,11 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     private native void max1Native(Max1Result r) throws VipsException;
 
-    /**
-     * Returns a double[] with 3 components if the image has no alpha, or with 4 components if it does.
-     * @param p
-     * @return
-     */
-    private double[] toVipsArrayDouble(PixelPacket p) {
-        if (p == null) {
-            return null;
-        }
-        if (hasAlpha()) {
-            return p.getComponents();
-        } else {
-            return p.getColorComponents();
-        }
-    }
-
     public void applyPad(Dimension dimension, PixelPacket background, VipsCompassDirection gravity) throws VipsException {
-        applyGravity(gravity, dimension.width, dimension.height, new GravityOptions().background(toVipsArrayDouble(background)));
+        applyGravity(gravity, dimension.width, dimension.height, new GravityOptions()
+            .backgroundPixelPacket(background)
+            .extend(VipsExtend.Background)
+        );
     }
 
     public void applyCrop(Rectangle rectangle) throws VipsException {
@@ -209,7 +196,7 @@ public class VipsImage extends AbstractVipsImage implements Image {
     }
 
     public Rectangle findTrim(double threshold, PixelPacket background) throws VipsException {
-        return findTrim(new FindTrimOptions().threshold(threshold).background(background != null ? background.getColorComponents() : null));
+        return findTrim(new FindTrimOptions().threshold(threshold).backgroundPixelPacket(background));
     }
 
     public void applyCompose(Image sub) throws VipsException {
@@ -217,7 +204,7 @@ public class VipsImage extends AbstractVipsImage implements Image {
     }
 
     public void applyFlatten(PixelPacket background) throws VipsException {
-        applyFlatten(new FlattenOptions().background(background != null ? background.getColorComponents() : null));
+        applyFlatten(new FlattenOptions().backgroundPixelPacket(background));
     }
 
     public byte[] writeToArray(VipsImageFormat imageFormat, boolean strip) throws VipsException {
@@ -274,7 +261,7 @@ public class VipsImage extends AbstractVipsImage implements Image {
     public native void writeToFile(String name) throws VipsException;
 
     public void writeToFile(String name, boolean strip, PixelPacket background, int pageHeight) {
-        writeToFileNative(name, strip, toVipsArrayDouble(background), pageHeight);
+        writeToFileNative(name, strip, background != null ? background.getComponents() : null, pageHeight);
     }
 
     private native void writeToFileNative(String name, boolean strip, double[] background, int pageHeight);
