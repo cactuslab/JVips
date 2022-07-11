@@ -29,8 +29,7 @@
 jfieldID handle_fid = NULL;
 jfieldID buffer_fid = NULL;
 jmethodID ctor_mid = NULL;
-jmethodID booleanValue_mid = NULL;
-jmethodID intValue_mid = NULL;
+jfieldID vipsAccess_value_fid = NULL;
 
 static VipsImage *
 new_from_buffer(JNIEnv *env, void *buffer, int length)
@@ -99,10 +98,8 @@ Java_com_criteo_vips_VipsImage_initFieldIDs(JNIEnv *env, jobject cls)
     handle_fid = (*env)->GetFieldID(env, cls, "vipsImageHandler", "J");
     buffer_fid = (*env)->GetFieldID(env, cls, "bufferHandler", "J");
     ctor_mid = (*env)->GetMethodID(env, cls, "<init>", "(J)V");
-    jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
-    booleanValue_mid = (*env)->GetMethodID(env, booleanClass, "booleanValue", "()Z");
-    jclass integerClass = (*env)->FindClass(env, "java/lang/Integer");
-    intValue_mid = (*env)->GetMethodID(env, integerClass, "intValue", "()I");
+    jclass vipsAccessCls = (*env)->FindClass(env, "com/criteo/vips/enums/VipsAccess");
+    vipsAccess_value_fid = (*env)->GetFieldID(env, vipsAccessCls, "value", "I");
 }
 
 JNIEXPORT void JNICALL
@@ -164,10 +161,31 @@ Java_com_criteo_vips_VipsImage_newFromBuffer___3BILjava_lang_String_2(JNIEnv *en
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_VipsImage_newFromFile(JNIEnv *env, jobject obj, jstring filename)
+Java_com_criteo_vips_VipsImage_newFromFile__Ljava_lang_String_2(JNIEnv *env, jobject obj, jstring filename)
 {
     const char *str = (*env)->GetStringUTFChars(env, filename, NULL);
     VipsImage* im = vips_image_new_from_file(str, NULL);
+
+    if (im == NULL)
+    {
+        (*env)->SetLongField(env, obj, handle_fid, (jlong) NULL);
+        (*env)->SetLongField(env, obj, buffer_fid, (jlong) NULL);
+        (*env)->ReleaseStringUTFChars(env, filename, str);
+        throwVipsException(env, "Unable to create an image from file");
+        return;
+    }
+    (*env)->ReleaseStringUTFChars(env, filename, str);
+    (*env)->SetLongField(env, obj, handle_fid, (jlong) im);
+    (*env)->SetLongField(env, obj, buffer_fid, (jlong) NULL);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_newFromFile__Ljava_lang_String_2Lcom_criteo_vips_enums_VipsAccess_2(JNIEnv *env, jobject obj, jstring filename, jobject access)
+{
+    const char *str = (*env)->GetStringUTFChars(env, filename, NULL);
+
+    jint accessValue = access != NULL ? (*env)->GetIntField(env, access, vipsAccess_value_fid) : VIPS_ACCESS_RANDOM;
+    VipsImage* im = vips_image_new_from_file(str, "access", accessValue, NULL);
 
     if (im == NULL)
     {

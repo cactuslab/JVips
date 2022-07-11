@@ -60,6 +60,8 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     private native void newFromFile(String filename) throws VipsException;
 
+    private native void newFromFile(String filename, VipsAccess access) throws VipsException;
+
     public VipsImage(ByteBuffer buffer, int length) throws VipsException {
         newFromByteBuffer(buffer, length);
     }
@@ -82,6 +84,10 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     public VipsImage(String filename) throws VipsException {
         newFromFile(filename);
+    }
+
+    public VipsImage(String filename, VipsAccess access) throws VipsException {
+        newFromFile(filename, access);
     }
 
     private VipsImage() {

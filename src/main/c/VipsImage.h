@@ -52,8 +52,16 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_newFromBuffer___3BILjava_l
  * Method:    newFromFile
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_newFromFile
+JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_newFromFile__Ljava_lang_String_2
   (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     com_criteo_vips_VipsImage
+ * Method:    newFromFile
+ * Signature: (Ljava/lang/String;Lcom/criteo/vips/enums/VipsAccess;)V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_newFromFile__Ljava_lang_String_2Lcom_criteo_vips_enums_VipsAccess_2
+  (JNIEnv *, jobject, jstring, jobject);
 
 /*
  * Class:     com_criteo_vips_VipsImage
