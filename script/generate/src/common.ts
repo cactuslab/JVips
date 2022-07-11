@@ -35,11 +35,15 @@ export function operationInfo(op: VipsOperation, options?: Options): VipsOperati
 		outs.splice(outs.indexOf(mutatingInstanceMethod), 1)
 	}
 
+	/* Operations that require no alpha component in supplied pixels */
+	const requiresNoAlpha = op.alias === 'find_trim' || op.alias === 'flatten'
+
 	return {
 		ins,
 		optionals,
 		outs,
 		instanceMethod,
 		mutatingInstanceMethod,
+		requiresNoAlpha,
 	}
 }

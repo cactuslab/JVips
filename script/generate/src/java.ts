@@ -198,6 +198,9 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	/* Fields */
 	for (const p of optionals) {
 		result += `\tprivate ${javaTypeForType(p, 'param', false)} ${javaParameterIdentifier(p)};\n`
+		if (p.type === 'VipsArrayDouble') {
+			result += `\tprivate PixelPacket ${javaParameterIdentifier(p)}PixelPacket;\n`
+		}
 	}
 
 	const className = `${javaOperationClassName(op)}Options`
@@ -239,6 +242,74 @@ export function optionsClass(op: VipsOperation): string | undefined {
 		return this;
 	}
 `
+
+		if (p.type === 'VipsArrayDouble') {
+			result += `
+	/**
+	 * Optional argument: ${p.name}
+	 * <p>
+	 * ${p.description}
+	 * @return the value of {@code ${identifier}}
+	 */
+	public PixelPacket ${javaType === 'boolean' ? 'is' : 'get'}${capitalize(identifier)}PixelPacket() {
+		return this.${identifier}PixelPacket;
+	}
+
+	/**
+	 * Set the optional "${p.name}" argument.
+	 * <p>
+	 * ${p.description}
+	 * @param ${identifier} the new value of {@code ${identifier}}
+	 */
+	public void set${capitalize(identifier)}PixelPacket(PixelPacket ${identifier}) {
+		if (${identifier} != null) {
+			this.${identifier}PixelPacket = ${identifier};
+		} else {
+			this.${identifier}PixelPacket = null;
+		}
+	}
+
+	/**
+	 * Set the optional "${p.name}" argument.
+	 * <p>
+	 * ${p.description}
+	 * @param ${identifier} the new value of {@code ${identifier}}
+	 * @return this object for chaining
+	 */
+	public ${className} ${identifier}PixelPacket(PixelPacket ${identifier}) {
+		set${capitalize(identifier)}PixelPacket(${identifier});
+		return this;
+	}
+
+	/**
+	 * Set the optional "${p.name}" argument.
+	 * <p>
+	 * ${p.description}
+	 * @param ${identifier} the new value of {@code ${identifier}}
+	 */
+	public void set${capitalize(identifier)}(java.awt.Color ${identifier}) {
+		if (${identifier} != null) {
+			float[] components = ${identifier}.getComponents(new float[4]);
+			PixelPacket pixelPacket = new PixelPacket(components[0], components[1], components[2], components[3]);
+			set${capitalize(identifier)}PixelPacket(pixelPacket);
+		} else {
+			set${capitalize(identifier)}PixelPacket(null);
+		}
+	}
+
+	/**
+	 * Set the optional "${p.name}" argument.
+	 * <p>
+	 * ${p.description}
+	 * @param ${identifier} the new value of {@code ${identifier}}
+	 * @return this object for chaining
+	 */
+	public ${className} ${identifier}(java.awt.Color ${identifier}) {
+		set${capitalize(identifier)}(${identifier});
+		return this;
+	}
+`
+		}
 	}
 
 	result += '\n'
@@ -289,6 +360,7 @@ function optionsFileHeader(op: VipsOperation): string {
 package com.criteo.vips.options;
 
 import com.criteo.vips.Image;
+import com.criteo.vips.PixelPacket;
 import com.criteo.vips.enums.*;
 
 /**

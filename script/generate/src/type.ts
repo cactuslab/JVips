@@ -38,6 +38,10 @@ export interface VipsOperationInfo {
 	 * Set to the output parameter that represents the result.
 	 */
 	mutatingInstanceMethod: VipsOperationParameter | undefined
+	/**
+	 * Whether or not this operation requires no alpha component in any supplied pixels
+	 */
+	requiresNoAlpha?: boolean
 }
 
 export interface VipsOperationOptions {

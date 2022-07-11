@@ -49,7 +49,12 @@ function isObjectType(p: VipsOperationParameter) {
 	return jniType === 'jobject' || jniType === 'jstring' || jniType.endsWith('Array')
 }
 
-function applyParameter(p: VipsOperationParameter): string {
+interface ParameterOptions {
+	imageProperty?: VipsOperationParameter
+	operationRequiresNoAlpha?: boolean
+}
+
+function applyParameter(p: VipsOperationParameter, options: ParameterOptions): string {
 	if (isObjectType(p)) {
 		return `if (${camelCase(p.name)} != NULL) {
 ${indent(applyParameterInternal(), '\t')}
@@ -102,13 +107,33 @@ vips_value_set_array_int(&gvalue, ${camelCase(p.name)}Elements, ${camelCase(p.na
 g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);`
 			case 'VipsArrayDouble':
-				return `jdouble *${camelCase(p.name)}Elements = (*env)->GetDoubleArrayElements(env, ${camelCase(p.name)}, NULL);
-jint ${camelCase(p.name)}Length = (*env)->GetArrayLength(env, ${camelCase(p.name)});
+				let result = `jdouble *${camelCase(p.name)}Elements = (*env)->GetDoubleArrayElements(env, ${camelCase(p.name)}, NULL);
+jint ${camelCase(p.name)}Length = (*env)->GetArrayLength(env, ${camelCase(p.name)});`
+				if (!p.required) {
+					result += `
+if (${camelCase(p.name)}IsPixelPacket) {`
+					if (options.operationRequiresNoAlpha) {
+						result += `
+	/* Operation requires no alpha component */
+	if (${camelCase(p.name)}Length == 4) {
+		${camelCase(p.name)}Length = 3;
+	}`
+					} else if (options.imageProperty) {
+						result += `
+	/* Strip alpha component if the image doesn't have alpha */
+	if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, ${camelCase(options.imageProperty.name)}, handle_fid)) && ${camelCase(p.name)}Length == 4) {
+		${camelCase(p.name)}Length = 3;
+	}`
+					}
+					result += `\n}`
+				}
+				result += `
 g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 vips_value_set_array_double(&gvalue, ${camelCase(p.name)}Elements, ${camelCase(p.name)}Length);
 (*env)->ReleaseDoubleArrayElements(env, ${camelCase(p.name)}, ${camelCase(p.name)}Elements, 0);
 g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);`
+				return result
 			case 'VipsArrayImage':
 				return `jint ${camelCase(p.name)}Length = (*env)->GetArrayLength(env, ${camelCase(p.name)});
 g_value_init(&gvalue, VIPS_TYPE_ARRAY_IMAGE);
@@ -138,19 +163,33 @@ g_value_unset(&gvalue);
 	}
 }
 
-function applyOptionalParameter(p: VipsOperationParameter): string {
+function applyOptionalParameter(p: VipsOperationParameter, options: ParameterOptions): string {
 	/* All optional parameters must be nullable so we can tell if they're set or not */
 	let result = `jfieldID ${camelCase(p.name)}Fid = (*env)->GetFieldID(env, optionsCls, "${javaParameterIdentifier(p)}", "${wrappedJniTypeCodeForParameter(p)}");
 `
 	if (isObjectType(p)) {
 		const jniType = jniTypeForParameter(p)
-		result += `${jniType} ${camelCase(p.name)} = ${jniType !== 'jobject' ? `(${jniType}) `: ''}(*env)->GetObjectField(env, options, ${camelCase(p.name)}Fid);
-${applyParameter(p)}`
+		result += `${jniType} ${camelCase(p.name)} = ${jniType !== 'jobject' ? `(${jniType}) `: ''}(*env)->GetObjectField(env, options, ${camelCase(p.name)}Fid);`
+		if (p.type === 'VipsArrayDouble') {
+			/* Special support for fallback to PixelPacket property */
+			result += `
+jboolean ${camelCase(p.name)}IsPixelPacket = JNI_FALSE;
+if (${camelCase(p.name)} == NULL) {
+	jfieldID ${camelCase(p.name)}PixelPacketFid = (*env)->GetFieldID(env, optionsCls, "${javaParameterIdentifier(p)}PixelPacket", "Lcom/criteo/vips/PixelPacket;");
+	jobject ${camelCase(p.name)}PixelPacket = (*env)->GetObjectField(env, options, ${camelCase(p.name)}PixelPacketFid);
+	if (${camelCase(p.name)}PixelPacket != NULL) {
+		${camelCase(p.name)} = (jdoubleArray) (*env)->CallObjectMethod(env, ${camelCase(p.name)}PixelPacket, pixelPacket_getComponents_mid);
+		${camelCase(p.name)}IsPixelPacket = JNI_TRUE;
+	}
+}`
+		}
+		result += `
+${applyParameter(p, options)}`
 	} else {
 		result += `jobject ${camelCase(p.name)}ObjectValue = (*env)->GetObjectField(env, options, ${camelCase(p.name)}Fid);
 if (${camelCase(p.name)}ObjectValue != NULL) {
 	${extractWrappedValue()}
-${indent(applyParameter(p), '\t')}
+${indent(applyParameter(p, options), '\t')}
 }`
 	}
 	return result
@@ -180,7 +219,8 @@ static jmethodID intValue_mid = NULL;
 static jmethodID longValue_mid = NULL;
 static jmethodID doubleValue_mid = NULL;
 static jclass rectangleClass = NULL;
-static jmethodID rectangle_ctor_mid = NULL;`
+static jmethodID rectangle_ctor_mid = NULL;
+static jmethodID pixelPacket_getComponents_mid = NULL;`
 }
 
 function initFields(): string {
@@ -199,7 +239,10 @@ longValue_mid = (*env)->GetMethodID(env, longClass, "longValue", "()J");
 jclass doubleClass = (*env)->FindClass(env, "java/lang/Double");
 doubleValue_mid = (*env)->GetMethodID(env, doubleClass, "doubleValue", "()D");
 rectangleClass = (*env)->FindClass(env, "java/awt/Rectangle");
-rectangle_ctor_mid = (*env)->GetMethodID(env, rectangleClass, "<init>", "(IIII)V");`
+rectangle_ctor_mid = (*env)->GetMethodID(env, rectangleClass, "<init>", "(IIII)V");
+
+jclass pixelPacketClass = (*env)->FindClass(env, "com/criteo/vips/PixelPacket");
+pixelPacket_getComponents_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponents", "()[D");`
 }
 
 function applyPrimitiveParameter(p: VipsOperationParameter, vipsType: string, vipsValueSetFunction: string) {
@@ -329,9 +372,13 @@ function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, option
 
 	result += `\tVipsOperation *op = vips_operation_new("${op.alias}");\n\n`
 
+	const parameterOptions: ParameterOptions = {
+		imageProperty: instanceMethod,
+		operationRequiresNoAlpha: info.requiresNoAlpha
+	}
 	for (const p of ins) {
 		result += `\t// ${p.name}\n`
-		result += indent(applyParameter(p), '\t') + '\n\n'
+		result += indent(applyParameter(p, parameterOptions), '\t') + '\n\n'
 	}
 	if (optionals.length) {
 		result += `\t// Optionals
@@ -341,7 +388,7 @@ function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, option
 `
 		for (const p of optionals) {
 			result += `\t\t// ${p.name}\n`
-			result += indent(applyOptionalParameter(p), '\t\t') + '\n\n'
+			result += indent(applyOptionalParameter(p, parameterOptions), '\t\t') + '\n\n'
 		}
 		result += `\t}
 
