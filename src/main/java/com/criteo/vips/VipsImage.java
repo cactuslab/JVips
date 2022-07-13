@@ -17,23 +17,7 @@
 package com.criteo.vips;
 
 import com.criteo.vips.enums.*;
-import com.criteo.vips.options.CastOptions;
-import com.criteo.vips.options.ColourspaceOptions;
-import com.criteo.vips.options.FindTrimOptions;
-import com.criteo.vips.options.FlattenOptions;
-import com.criteo.vips.options.GaussBlurOptions;
-import com.criteo.vips.options.GravityOptions;
-import com.criteo.vips.options.HEIFSaveBufferOptions;
-import com.criteo.vips.options.HistFindNdimOptions;
-import com.criteo.vips.options.JPEGSaveBufferOptions;
-import com.criteo.vips.options.JPEGSaveOptions;
-import com.criteo.vips.options.LinearOptions;
-import com.criteo.vips.options.PNGSaveBufferOptions;
-import com.criteo.vips.options.PNGSaveOptions;
-import com.criteo.vips.options.ResizeOptions;
-import com.criteo.vips.options.ThumbnailImageOptions;
-import com.criteo.vips.options.ThumbnailOptions;
-import com.criteo.vips.options.WebpSaveBufferOptions;
+import com.criteo.vips.options.*;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
