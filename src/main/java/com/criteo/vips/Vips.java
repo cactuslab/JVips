@@ -118,4 +118,7 @@ public class Vips {
      * @throws VipsException
      */
     private static native void init() throws VipsException;
+
+    public static native String version();
+
 }
