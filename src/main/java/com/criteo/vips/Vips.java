@@ -17,6 +17,7 @@
 package com.criteo.vips;
 
 import java.io.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Vips {
@@ -53,20 +54,38 @@ public class Vips {
             "libimagequant"
     };
 
+    private static boolean available;
+
     static {
         try {
             if (tryLoadLibrariesFromJar())
-                LOGGER.info("JVips dependencies have been loaded from jar");
+                LOGGER.fine("JVips dependencies have been loaded from jar");
             else
-                LOGGER.info("Using JVips dependencies installed on system");
-            LOGGER.info("Trying to load JVips");
+                LOGGER.fine("Using JVips dependencies installed on system");
+            LOGGER.fine("Trying to load JVips");
             loadLibraryFromJar("JVips");
             init();
+            LOGGER.fine("Loaded JVips");
+            available = true;
         } catch (IOException e) {
-            throw new RuntimeException("Can't load JVips library and/or dependencies");
+            available = false;
+            LOGGER.warning("Can't load JVips library and/or dependencies: " + e.getMessage());
         } catch (VipsException e) {
-            throw new RuntimeException("Can't init JVips");
+            available = false;
+            LOGGER.log(Level.WARNING, "Failed to init JVips", e);
+        } catch (UnsatisfiedLinkError e) {
+            available = false;
+            /* We should be able to load the JVips native libraries, as they are always bundled in the jar */
+            LOGGER.log(Level.WARNING, "JVips native libraries are not available");
         }
+    }
+
+    /**
+     * Is VIPS initialised and available to be used?
+     * @return
+     */
+    public static boolean isAvailable() {
+        return available;
     }
 
     private static boolean tryLoadLibrariesFromJar() throws IOException {
@@ -74,13 +93,16 @@ public class Vips {
             return true;
         String[] libraries = !isWindows() ? LINUX_LIBRARIES : WINDOWS_LIBRARIES;
         try {
+            boolean loadedSome = false;
             for (String library : libraries) {
-                loadLibraryFromJar(library);
+                if (loadLibraryFromJar(library)) {
+                    loadedSome = true;
+                }
             }
-        } catch (NullPointerException e) {
+            return loadedSome;
+        } catch (RuntimeException e) {
             return false;
         }
-        return true;
     }
 
     private static boolean isWindows() {
@@ -91,13 +113,13 @@ public class Vips {
         return (SYSTEM_NAME.indexOf("mac") >= 0);
     }
 
-    private static void loadLibraryFromJar(String name) throws IOException {
+    private static boolean loadLibraryFromJar(String name) throws IOException {
         String libName = System.mapLibraryName(name);
         File temp;
         try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(libName)) {
             if (in == null) {
-                LOGGER.warning("Could not load lib '" + libName + "' via classloader");
-                return;
+                LOGGER.fine("Could not load lib '" + libName + "' via classloader");
+                return false;
             }
             byte[] buffer = new byte[1024];
             int read;
@@ -110,6 +132,7 @@ public class Vips {
             }
         }
         System.load(temp.getAbsolutePath());
+        return true;
     }
 
     /**
