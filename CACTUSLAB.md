@@ -4,22 +4,17 @@ Edit `pom.xml` to set the appropriate project version.
 
 ```shell
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-./build.sh --with-macos --without-linux
 docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t builder .
 docker run --rm -v $(pwd):/app -w /app -u root -it builder
-mvn package -DskipTests -Pminimal
+./build.sh --with-macos --without-linux
 ```
 
 The output files are `pom.xml` and `JVips.jar`.
 
-Deploy to a repository or install locally using:
-
 ```shell
-mvn install -DskipTests -Pminimal
+source lib/VERSIONS
+mvn -DnewVersion=${VIPS_VERSION}-CACTUSLAB versions:set
+mvn install:install-file -Dfile=JVips.jar -DgroupId=com.criteo -DartifactId=jvips -Dversion=${VIPS_VERSION}-CACTUSLAB -Dpackaging=jar -DpomFile=pom.xml
+mvn deploy:deploy-file -Durl=https://maven.cactuslab.com/thirdparty/ -DrepositoryId=cactuslab-thirdparty -DpomFile=pom.xml -Dfile=JVips.jar
+mvn versions:revert
 ```
-
-## Minimal
-
-We use the `minimal` profile when building the `JVips.jar` so we only include the JVips native code, rather than
-all of the Linux dependencies as well. This is because the Linux dependencies may not be compatible with all
-flavours of Linux, so we instead rely on locally installed dependencies.
