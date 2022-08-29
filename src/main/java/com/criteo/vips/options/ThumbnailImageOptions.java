@@ -33,6 +33,7 @@ public class ThumbnailImageOptions {
 	private String importProfile;
 	private String exportProfile;
 	private VipsIntent intent;
+	private VipsFailOn failOn;
 
 	/**
 	 * Optional argument: height
@@ -287,6 +288,38 @@ public class ThumbnailImageOptions {
 	 */
 	public ThumbnailImageOptions intent(VipsIntent intent) {
 		setIntent(intent);
+		return this;
+	}
+
+	/**
+	 * Optional argument: fail-on
+	 * <p>
+	 * Error level to fail on
+	 * @return the value of {@code failOn}
+	 */
+	public VipsFailOn getFailOn() {
+		return this.failOn;
+	}
+
+	/**
+	 * Set the optional "fail-on" argument.
+	 * <p>
+	 * Error level to fail on
+	 * @param failOn the new value of {@code failOn}
+	 */
+	public void setFailOn(VipsFailOn failOn) {
+		this.failOn = failOn;
+	}
+
+	/**
+	 * Set the optional "fail-on" argument.
+	 * <p>
+	 * Error level to fail on
+	 * @param failOn the new value of {@code failOn}
+	 * @return this object for chaining
+	 */
+	public ThumbnailImageOptions failOn(VipsFailOn failOn) {
+		setFailOn(failOn);
 		return this;
 	}
 

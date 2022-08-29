@@ -28,6 +28,9 @@ public class GIFSaveOptions {
 	private Double dither;
 	private Integer effort;
 	private Integer bitdepth;
+	private Double interframeMaxerror;
+	private Boolean reoptimise;
+	private Double interpaletteMaxerror;
 	private Boolean strip;
 	private double[] background;
 	private PixelPacket backgroundPixelPacket;
@@ -126,6 +129,102 @@ public class GIFSaveOptions {
 	 */
 	public GIFSaveOptions bitdepth(Integer bitdepth) {
 		setBitdepth(bitdepth);
+		return this;
+	}
+
+	/**
+	 * Optional argument: interframe-maxerror
+	 * <p>
+	 * Maximum inter-frame error for transparency
+	 * @return the value of {@code interframeMaxerror}
+	 */
+	public Double getInterframeMaxerror() {
+		return this.interframeMaxerror;
+	}
+
+	/**
+	 * Set the optional "interframe-maxerror" argument.
+	 * <p>
+	 * Maximum inter-frame error for transparency
+	 * @param interframeMaxerror the new value of {@code interframeMaxerror}
+	 */
+	public void setInterframeMaxerror(Double interframeMaxerror) {
+		this.interframeMaxerror = interframeMaxerror;
+	}
+
+	/**
+	 * Set the optional "interframe-maxerror" argument.
+	 * <p>
+	 * Maximum inter-frame error for transparency
+	 * @param interframeMaxerror the new value of {@code interframeMaxerror}
+	 * @return this object for chaining
+	 */
+	public GIFSaveOptions interframeMaxerror(Double interframeMaxerror) {
+		setInterframeMaxerror(interframeMaxerror);
+		return this;
+	}
+
+	/**
+	 * Optional argument: reoptimise
+	 * <p>
+	 * Reoptimise colour palettes
+	 * @return the value of {@code reoptimise}
+	 */
+	public Boolean getReoptimise() {
+		return this.reoptimise;
+	}
+
+	/**
+	 * Set the optional "reoptimise" argument.
+	 * <p>
+	 * Reoptimise colour palettes
+	 * @param reoptimise the new value of {@code reoptimise}
+	 */
+	public void setReoptimise(Boolean reoptimise) {
+		this.reoptimise = reoptimise;
+	}
+
+	/**
+	 * Set the optional "reoptimise" argument.
+	 * <p>
+	 * Reoptimise colour palettes
+	 * @param reoptimise the new value of {@code reoptimise}
+	 * @return this object for chaining
+	 */
+	public GIFSaveOptions reoptimise(Boolean reoptimise) {
+		setReoptimise(reoptimise);
+		return this;
+	}
+
+	/**
+	 * Optional argument: interpalette-maxerror
+	 * <p>
+	 * Maximum inter-palette error for palette reusage
+	 * @return the value of {@code interpaletteMaxerror}
+	 */
+	public Double getInterpaletteMaxerror() {
+		return this.interpaletteMaxerror;
+	}
+
+	/**
+	 * Set the optional "interpalette-maxerror" argument.
+	 * <p>
+	 * Maximum inter-palette error for palette reusage
+	 * @param interpaletteMaxerror the new value of {@code interpaletteMaxerror}
+	 */
+	public void setInterpaletteMaxerror(Double interpaletteMaxerror) {
+		this.interpaletteMaxerror = interpaletteMaxerror;
+	}
+
+	/**
+	 * Set the optional "interpalette-maxerror" argument.
+	 * <p>
+	 * Maximum inter-palette error for palette reusage
+	 * @param interpaletteMaxerror the new value of {@code interpaletteMaxerror}
+	 * @return this object for chaining
+	 */
+	public GIFSaveOptions interpaletteMaxerror(Double interpaletteMaxerror) {
+		setInterpaletteMaxerror(interpaletteMaxerror);
 		return this;
 	}
 

@@ -26,6 +26,7 @@ import com.criteo.vips.enums.*;
 public class ReduceOptions {
 
 	private VipsKernel kernel;
+	private Double gap;
 
 	/**
 	 * Optional argument: kernel
@@ -56,6 +57,38 @@ public class ReduceOptions {
 	 */
 	public ReduceOptions kernel(VipsKernel kernel) {
 		setKernel(kernel);
+		return this;
+	}
+
+	/**
+	 * Optional argument: gap
+	 * <p>
+	 * Reducing gap
+	 * @return the value of {@code gap}
+	 */
+	public Double getGap() {
+		return this.gap;
+	}
+
+	/**
+	 * Set the optional "gap" argument.
+	 * <p>
+	 * Reducing gap
+	 * @param gap the new value of {@code gap}
+	 */
+	public void setGap(Double gap) {
+		this.gap = gap;
+	}
+
+	/**
+	 * Set the optional "gap" argument.
+	 * <p>
+	 * Reducing gap
+	 * @param gap the new value of {@code gap}
+	 * @return this object for chaining
+	 */
+	public ReduceOptions gap(Double gap) {
+		setGap(gap);
 		return this;
 	}
 

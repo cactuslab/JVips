@@ -2706,50 +2706,50 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_sharpen
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    applyShrink
- * Signature: (DD)V
+ * Signature: (DDLcom/criteo/vips/options/ShrinkOptions;)V
  */
 JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyShrink
-  (JNIEnv *, jobject, jdouble, jdouble);
+  (JNIEnv *, jobject, jdouble, jdouble, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    shrink
- * Signature: (DD)Lcom/criteo/vips/VipsImage;
+ * Signature: (DDLcom/criteo/vips/options/ShrinkOptions;)Lcom/criteo/vips/VipsImage;
  */
 JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_shrink
-  (JNIEnv *, jobject, jdouble, jdouble);
+  (JNIEnv *, jobject, jdouble, jdouble, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    applyShrinkh
- * Signature: (I)V
+ * Signature: (ILcom/criteo/vips/options/ShrinkhOptions;)V
  */
 JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyShrinkh
-  (JNIEnv *, jobject, jint);
+  (JNIEnv *, jobject, jint, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    shrinkh
- * Signature: (I)Lcom/criteo/vips/VipsImage;
+ * Signature: (ILcom/criteo/vips/options/ShrinkhOptions;)Lcom/criteo/vips/VipsImage;
  */
 JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_shrinkh
-  (JNIEnv *, jobject, jint);
+  (JNIEnv *, jobject, jint, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    applyShrinkv
- * Signature: (I)V
+ * Signature: (ILcom/criteo/vips/options/ShrinkvOptions;)V
  */
 JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyShrinkv
-  (JNIEnv *, jobject, jint);
+  (JNIEnv *, jobject, jint, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    shrinkv
- * Signature: (I)Lcom/criteo/vips/VipsImage;
+ * Signature: (ILcom/criteo/vips/options/ShrinkvOptions;)Lcom/criteo/vips/VipsImage;
  */
 JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_shrinkv
-  (JNIEnv *, jobject, jint);
+  (JNIEnv *, jobject, jint, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage

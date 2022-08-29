@@ -28,6 +28,7 @@ public class HEIFLoadBufferOptions {
 	private Integer page;
 	private Integer n;
 	private Boolean thumbnail;
+	private Boolean unlimited;
 	private Boolean memory;
 	private VipsAccess access;
 	private VipsFailOn failOn;
@@ -125,6 +126,38 @@ public class HEIFLoadBufferOptions {
 	 */
 	public HEIFLoadBufferOptions thumbnail(Boolean thumbnail) {
 		setThumbnail(thumbnail);
+		return this;
+	}
+
+	/**
+	 * Optional argument: unlimited
+	 * <p>
+	 * Remove all denial of service limits
+	 * @return the value of {@code unlimited}
+	 */
+	public Boolean getUnlimited() {
+		return this.unlimited;
+	}
+
+	/**
+	 * Set the optional "unlimited" argument.
+	 * <p>
+	 * Remove all denial of service limits
+	 * @param unlimited the new value of {@code unlimited}
+	 */
+	public void setUnlimited(Boolean unlimited) {
+		this.unlimited = unlimited;
+	}
+
+	/**
+	 * Set the optional "unlimited" argument.
+	 * <p>
+	 * Remove all denial of service limits
+	 * @param unlimited the new value of {@code unlimited}
+	 * @return this object for chaining
+	 */
+	public HEIFLoadBufferOptions unlimited(Boolean unlimited) {
+		setUnlimited(unlimited);
 		return this;
 	}
 

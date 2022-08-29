@@ -29,6 +29,7 @@ public class MagickSaveBufferOptions {
 	private Integer quality;
 	private Boolean optimizeGifFrames;
 	private Boolean optimizeGifTransparency;
+	private Integer bitdepth;
 	private Boolean strip;
 	private double[] background;
 	private PixelPacket backgroundPixelPacket;
@@ -159,6 +160,38 @@ public class MagickSaveBufferOptions {
 	 */
 	public MagickSaveBufferOptions optimizeGifTransparency(Boolean optimizeGifTransparency) {
 		setOptimizeGifTransparency(optimizeGifTransparency);
+		return this;
+	}
+
+	/**
+	 * Optional argument: bitdepth
+	 * <p>
+	 * Number of bits per pixel
+	 * @return the value of {@code bitdepth}
+	 */
+	public Integer getBitdepth() {
+		return this.bitdepth;
+	}
+
+	/**
+	 * Set the optional "bitdepth" argument.
+	 * <p>
+	 * Number of bits per pixel
+	 * @param bitdepth the new value of {@code bitdepth}
+	 */
+	public void setBitdepth(Integer bitdepth) {
+		this.bitdepth = bitdepth;
+	}
+
+	/**
+	 * Set the optional "bitdepth" argument.
+	 * <p>
+	 * Number of bits per pixel
+	 * @param bitdepth the new value of {@code bitdepth}
+	 * @return this object for chaining
+	 */
+	public MagickSaveBufferOptions bitdepth(Integer bitdepth) {
+		setBitdepth(bitdepth);
 		return this;
 	}
 

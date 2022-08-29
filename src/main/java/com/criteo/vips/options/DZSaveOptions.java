@@ -34,7 +34,6 @@ public class DZSaveOptions {
 	private VipsForeignDzDepth depth;
 	private VipsAngle angle;
 	private VipsForeignDzContainer container;
-	private Boolean properties;
 	private Integer compression;
 	private VipsRegionShrink regionShrink;
 	private Integer skipBlanks;
@@ -330,38 +329,6 @@ public class DZSaveOptions {
 	 */
 	public DZSaveOptions container(VipsForeignDzContainer container) {
 		setContainer(container);
-		return this;
-	}
-
-	/**
-	 * Optional argument: properties
-	 * <p>
-	 * Write a properties file to the output directory
-	 * @return the value of {@code properties}
-	 */
-	public Boolean getProperties() {
-		return this.properties;
-	}
-
-	/**
-	 * Set the optional "properties" argument.
-	 * <p>
-	 * Write a properties file to the output directory
-	 * @param properties the new value of {@code properties}
-	 */
-	public void setProperties(Boolean properties) {
-		this.properties = properties;
-	}
-
-	/**
-	 * Set the optional "properties" argument.
-	 * <p>
-	 * Write a properties file to the output directory
-	 * @param properties the new value of {@code properties}
-	 * @return this object for chaining
-	 */
-	public DZSaveOptions properties(Boolean properties) {
-		setProperties(properties);
 		return this;
 	}
 

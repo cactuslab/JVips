@@ -31,7 +31,7 @@ public class HoughLineOptions {
 	/**
 	 * Optional argument: width
 	 * <p>
-	 * horizontal size of parameter space
+	 * Horizontal size of parameter space
 	 * @return the value of {@code width}
 	 */
 	public Integer getWidth() {
@@ -41,7 +41,7 @@ public class HoughLineOptions {
 	/**
 	 * Set the optional "width" argument.
 	 * <p>
-	 * horizontal size of parameter space
+	 * Horizontal size of parameter space
 	 * @param width the new value of {@code width}
 	 */
 	public void setWidth(Integer width) {
@@ -51,7 +51,7 @@ public class HoughLineOptions {
 	/**
 	 * Set the optional "width" argument.
 	 * <p>
-	 * horizontal size of parameter space
+	 * Horizontal size of parameter space
 	 * @param width the new value of {@code width}
 	 * @return this object for chaining
 	 */

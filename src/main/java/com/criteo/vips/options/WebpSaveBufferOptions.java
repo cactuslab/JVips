@@ -36,6 +36,7 @@ public class WebpSaveBufferOptions {
 	private Integer kmax;
 	private Integer effort;
 	private String profile;
+	private Boolean mixed;
 	private Boolean strip;
 	private double[] background;
 	private PixelPacket backgroundPixelPacket;
@@ -76,7 +77,7 @@ public class WebpSaveBufferOptions {
 	/**
 	 * Optional argument: lossless
 	 * <p>
-	 * enable lossless compression
+	 * Enable lossless compression
 	 * @return the value of {@code lossless}
 	 */
 	public Boolean getLossless() {
@@ -86,7 +87,7 @@ public class WebpSaveBufferOptions {
 	/**
 	 * Set the optional "lossless" argument.
 	 * <p>
-	 * enable lossless compression
+	 * Enable lossless compression
 	 * @param lossless the new value of {@code lossless}
 	 */
 	public void setLossless(Boolean lossless) {
@@ -96,7 +97,7 @@ public class WebpSaveBufferOptions {
 	/**
 	 * Set the optional "lossless" argument.
 	 * <p>
-	 * enable lossless compression
+	 * Enable lossless compression
 	 * @param lossless the new value of {@code lossless}
 	 * @return this object for chaining
 	 */
@@ -236,7 +237,7 @@ public class WebpSaveBufferOptions {
 	/**
 	 * Optional argument: min-size
 	 * <p>
-	 * Optimise for minium size
+	 * Optimise for minimum size
 	 * @return the value of {@code minSize}
 	 */
 	public Boolean getMinSize() {
@@ -246,7 +247,7 @@ public class WebpSaveBufferOptions {
 	/**
 	 * Set the optional "min-size" argument.
 	 * <p>
-	 * Optimise for minium size
+	 * Optimise for minimum size
 	 * @param minSize the new value of {@code minSize}
 	 */
 	public void setMinSize(Boolean minSize) {
@@ -256,7 +257,7 @@ public class WebpSaveBufferOptions {
 	/**
 	 * Set the optional "min-size" argument.
 	 * <p>
-	 * Optimise for minium size
+	 * Optimise for minimum size
 	 * @param minSize the new value of {@code minSize}
 	 * @return this object for chaining
 	 */
@@ -390,6 +391,38 @@ public class WebpSaveBufferOptions {
 	 */
 	public WebpSaveBufferOptions profile(String profile) {
 		setProfile(profile);
+		return this;
+	}
+
+	/**
+	 * Optional argument: mixed
+	 * <p>
+	 * Allow mixed encoding (might reduce file size)
+	 * @return the value of {@code mixed}
+	 */
+	public Boolean getMixed() {
+		return this.mixed;
+	}
+
+	/**
+	 * Set the optional "mixed" argument.
+	 * <p>
+	 * Allow mixed encoding (might reduce file size)
+	 * @param mixed the new value of {@code mixed}
+	 */
+	public void setMixed(Boolean mixed) {
+		this.mixed = mixed;
+	}
+
+	/**
+	 * Set the optional "mixed" argument.
+	 * <p>
+	 * Allow mixed encoding (might reduce file size)
+	 * @param mixed the new value of {@code mixed}
+	 * @return this object for chaining
+	 */
+	public WebpSaveBufferOptions mixed(Boolean mixed) {
+		setMixed(mixed);
 		return this;
 	}
 

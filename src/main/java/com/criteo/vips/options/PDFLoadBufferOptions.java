@@ -31,6 +31,7 @@ public class PDFLoadBufferOptions {
 	private Double scale;
 	private double[] background;
 	private PixelPacket backgroundPixelPacket;
+	private String password;
 	private Boolean memory;
 	private VipsAccess access;
 	private VipsFailOn failOn;
@@ -256,6 +257,38 @@ public class PDFLoadBufferOptions {
 	 */
 	public PDFLoadBufferOptions background(java.awt.Color background) {
 		setBackground(background);
+		return this;
+	}
+
+	/**
+	 * Optional argument: password
+	 * <p>
+	 * Decrypt with this password
+	 * @return the value of {@code password}
+	 */
+	public String getPassword() {
+		return this.password;
+	}
+
+	/**
+	 * Set the optional "password" argument.
+	 * <p>
+	 * Decrypt with this password
+	 * @param password the new value of {@code password}
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * Set the optional "password" argument.
+	 * <p>
+	 * Decrypt with this password
+	 * @param password the new value of {@code password}
+	 * @return this object for chaining
+	 */
+	public PDFLoadBufferOptions password(String password) {
+		setPassword(password);
 		return this;
 	}
 

@@ -26,6 +26,7 @@ import com.criteo.vips.enums.*;
 public class ResizeOptions {
 
 	private VipsKernel kernel;
+	private Double gap;
 	private Double vscale;
 
 	/**
@@ -57,6 +58,38 @@ public class ResizeOptions {
 	 */
 	public ResizeOptions kernel(VipsKernel kernel) {
 		setKernel(kernel);
+		return this;
+	}
+
+	/**
+	 * Optional argument: gap
+	 * <p>
+	 * Reducing gap
+	 * @return the value of {@code gap}
+	 */
+	public Double getGap() {
+		return this.gap;
+	}
+
+	/**
+	 * Set the optional "gap" argument.
+	 * <p>
+	 * Reducing gap
+	 * @param gap the new value of {@code gap}
+	 */
+	public void setGap(Double gap) {
+		this.gap = gap;
+	}
+
+	/**
+	 * Set the optional "gap" argument.
+	 * <p>
+	 * Reducing gap
+	 * @param gap the new value of {@code gap}
+	 * @return this object for chaining
+	 */
+	public ResizeOptions gap(Double gap) {
+		setGap(gap);
 		return this;
 	}
 

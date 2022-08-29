@@ -68,7 +68,7 @@ public class PPMSaveOptions {
 	/**
 	 * Optional argument: ascii
 	 * <p>
-	 * save as ascii
+	 * Save as ascii
 	 * @return the value of {@code ascii}
 	 */
 	public Boolean getAscii() {
@@ -78,7 +78,7 @@ public class PPMSaveOptions {
 	/**
 	 * Set the optional "ascii" argument.
 	 * <p>
-	 * save as ascii
+	 * Save as ascii
 	 * @param ascii the new value of {@code ascii}
 	 */
 	public void setAscii(Boolean ascii) {
@@ -88,7 +88,7 @@ public class PPMSaveOptions {
 	/**
 	 * Set the optional "ascii" argument.
 	 * <p>
-	 * save as ascii
+	 * Save as ascii
 	 * @param ascii the new value of {@code ascii}
 	 * @return this object for chaining
 	 */
@@ -100,7 +100,7 @@ public class PPMSaveOptions {
 	/**
 	 * Optional argument: bitdepth
 	 * <p>
-	 * set to 1 to write as a 1 bit image
+	 * Set to 1 to write as a 1 bit image
 	 * @return the value of {@code bitdepth}
 	 */
 	public Integer getBitdepth() {
@@ -110,7 +110,7 @@ public class PPMSaveOptions {
 	/**
 	 * Set the optional "bitdepth" argument.
 	 * <p>
-	 * set to 1 to write as a 1 bit image
+	 * Set to 1 to write as a 1 bit image
 	 * @param bitdepth the new value of {@code bitdepth}
 	 */
 	public void setBitdepth(Integer bitdepth) {
@@ -120,7 +120,7 @@ public class PPMSaveOptions {
 	/**
 	 * Set the optional "bitdepth" argument.
 	 * <p>
-	 * set to 1 to write as a 1 bit image
+	 * Set to 1 to write as a 1 bit image
 	 * @param bitdepth the new value of {@code bitdepth}
 	 * @return this object for chaining
 	 */

@@ -21,41 +21,41 @@ import com.criteo.vips.PixelPacket;
 import com.criteo.vips.enums.*;
 
 /**
- * Optional arguments for the "maplut" operation.
+ * Optional arguments for the "shrinkh" operation.
  */
-public class MapLUTOptions {
+public class ShrinkhOptions {
 
-	private Integer band;
+	private Boolean ceil;
 
 	/**
-	 * Optional argument: band
+	 * Optional argument: ceil
 	 * <p>
-	 * Apply one-band lut to this band of in
-	 * @return the value of {@code band}
+	 * Round-up output dimensions
+	 * @return the value of {@code ceil}
 	 */
-	public Integer getBand() {
-		return this.band;
+	public Boolean getCeil() {
+		return this.ceil;
 	}
 
 	/**
-	 * Set the optional "band" argument.
+	 * Set the optional "ceil" argument.
 	 * <p>
-	 * Apply one-band lut to this band of in
-	 * @param band the new value of {@code band}
+	 * Round-up output dimensions
+	 * @param ceil the new value of {@code ceil}
 	 */
-	public void setBand(Integer band) {
-		this.band = band;
+	public void setCeil(Boolean ceil) {
+		this.ceil = ceil;
 	}
 
 	/**
-	 * Set the optional "band" argument.
+	 * Set the optional "ceil" argument.
 	 * <p>
-	 * Apply one-band lut to this band of in
-	 * @param band the new value of {@code band}
+	 * Round-up output dimensions
+	 * @param ceil the new value of {@code ceil}
 	 * @return this object for chaining
 	 */
-	public MapLUTOptions band(Integer band) {
-		setBand(band);
+	public ShrinkhOptions ceil(Boolean ceil) {
+		setCeil(ceil);
 		return this;
 	}
 
