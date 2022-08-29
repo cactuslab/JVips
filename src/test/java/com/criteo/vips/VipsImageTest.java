@@ -22,7 +22,6 @@ import com.criteo.vips.options.PNGSaveOptions;
 import com.criteo.vips.options.ThumbnailImageOptions;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Ignore;		
 import org.junit.Rule;
@@ -159,7 +158,6 @@ public class VipsImageTest {
     public void TestWriteFromDirectByteBufferShouldNotThrows(@FromDataPoints("filenames") String filename,
                                                              VipsImageFormat output,
                                                              boolean strip) throws IOException, VipsException {
-        Assume.assumeTrue(output != VipsImageFormat.GIF);
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
             byte[] out = img.writeToArray(output, JPGQuality, strip);
@@ -171,7 +169,6 @@ public class VipsImageTest {
     public void TestWriteFromByteArrayShouldNotThrows(@FromDataPoints("filenames") String filename,
                                                       VipsImageFormat output,
                                                       boolean strip) throws IOException, VipsException {
-        Assume.assumeTrue(output != VipsImageFormat.GIF);
         byte[] buffer = VipsTestUtils.getByteArray(filename);
         try (VipsImage img = new VipsImage(buffer, buffer.length)) {
             byte[] out = img.writeToArray(output, JPGQuality, strip);
@@ -554,8 +551,6 @@ public class VipsImageTest {
 
     @Theory
     public void TestShouldWriteToArrayHasCorrectHeaderSignature(String filename, VipsImageFormat vipsImageFormat) throws IOException, VipsException {
-        // libvips can't save into gif format
-        Assume.assumeTrue(vipsImageFormat != VipsImageFormat.GIF);
         ArrayList<Byte[]> expectedSignatures = SignaturesByExtension.get(vipsImageFormat.getFileExtension());
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
@@ -599,8 +594,6 @@ public class VipsImageTest {
 
     @Theory
     public void TestSimplePipelineShouldNotThrow(String filename, VipsImageFormat vipsImageFormat) throws IOException, VipsException {
-        // libvips can't save into gif format
-        Assume.assumeTrue(vipsImageFormat != VipsImageFormat.GIF);
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
         PixelPacket pixel = new PixelPacket(5.0, 255.0, 25.0);
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
@@ -618,9 +611,29 @@ public class VipsImageTest {
     }
 
     @Theory
+    public void TestSaveToGif(String filename, VipsImageFormat vipsImageFormat) throws IOException, VipsException {
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
+        PixelPacket pixel = new PixelPacket(5.0, 255.0, 25.0);
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            img.applyThumbnailImage(new Dimension(400, 400), false);
+            int width = img.getWidth();
+            int height = img.getHeight();
+            img.applyCrop(new Rectangle(10, 10, width - 10, height - 10));
+            width = img.getWidth();
+            height = img.getHeight();
+            img.applyPad(new Dimension(width + 10, height + 10), pixel, VipsCompassDirection.Centre);
+
+            Path path = Paths.get(System.getProperty("java.io.tmpdir"));
+            path = path.resolve(filename + ".gif");
+            File file = path.toFile();
+            img.gifSave(file.getAbsolutePath());
+            assertTrue(file.exists());
+            assertTrue(file.delete());
+        }
+    }
+
+    @Theory
     public void TestShouldThrowAnExceptionOnCorruptedPng(VipsImageFormat vipsImageFormat) throws IOException, VipsException {
-        // libvips can't save into gif format
-        Assume.assumeTrue(vipsImageFormat != VipsImageFormat.GIF);
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("olin.png");
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
             byte[] out = img.writeToArray(vipsImageFormat, JPGQuality, true);
