@@ -32,7 +32,7 @@ public enum VipsOperationFlags {
     Blocked(32);
 
     private int value;
-    private static Map map = new HashMap<VipsOperationFlags, Integer>();
+    private static Map<Integer, VipsOperationFlags> map = new HashMap<>();
 
     private VipsOperationFlags(int i) {
       value = i;
