@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.yml": "yaml",
+		"vips.h": "c"
+	},
+	"java.configuration.updateBuildConfiguration": "disabled"
+}
