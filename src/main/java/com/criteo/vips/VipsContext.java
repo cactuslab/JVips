@@ -77,4 +77,6 @@ public class VipsContext extends Vips {
      */
     public static native void setBlockUntrusted(boolean blockUntrusted);
 
+    public static native String version();
+
 }

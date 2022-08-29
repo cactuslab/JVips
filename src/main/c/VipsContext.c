@@ -72,3 +72,8 @@ Java_com_criteo_vips_VipsContext_setBlockUntrusted(__attribute__((unused))JNIEnv
 {
     vips_block_untrusted_set(enable);
 }
+
+JNIEXPORT jstring JNICALL Java_com_criteo_vips_VipsContext_version (JNIEnv *env, jclass clazz)
+{
+  return (*env)->NewStringUTF(env, vips_version_string());
+}

@@ -15,14 +15,6 @@ extern "C" {
 JNIEXPORT void JNICALL Java_com_criteo_vips_Vips_init
   (JNIEnv *, jclass);
 
-/*
- * Class:     com_criteo_vips_Vips
- * Method:    version
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_com_criteo_vips_Vips_version
-  (JNIEnv *, jclass);
-
 #ifdef __cplusplus
 }
 #endif

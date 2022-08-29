@@ -79,6 +79,14 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsContext_shutdown
 JNIEXPORT void JNICALL Java_com_criteo_vips_VipsContext_setBlockUntrusted
   (JNIEnv *, jclass, jboolean);
 
+/*
+ * Class:     com_criteo_vips_VipsContext
+ * Method:    version
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_criteo_vips_VipsContext_version
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

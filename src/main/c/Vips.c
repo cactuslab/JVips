@@ -26,8 +26,3 @@ Java_com_criteo_vips_Vips_init(__attribute__((unused)) JNIEnv *env, __attribute_
   if (VIPS_INIT("java") != 0)
     throwVipsException(env, "Unable to init vips");
 }
-
-JNIEXPORT jstring JNICALL Java_com_criteo_vips_Vips_version (JNIEnv *env, jclass clazz)
-{
-  return (*env)->NewStringUTF(env, vips_version_string());
-}
