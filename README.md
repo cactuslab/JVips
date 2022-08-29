@@ -30,7 +30,14 @@ Look at the hello world program in [SimpleExample.java](src/test/java/com/criteo
 
 ## From prebuilt packages
 
-You can download the latest JVips build from [GitHub Releases](https://github.com/criteo/JVips/releases). We currently don't release to Maven Central.
+You can download the latest JVips build from [GitHub Releases](https://github.com/criteo/JVips/releases) or from [Maven Central](https://search.maven.org/artifact/com.criteo/jvips):
+
+```xml
+<dependency>
+  <groupId>com.criteo</groupId>
+  <artifactId>jvips</artifactId>
+</dependency>
+```
 
 Then, ensure your `libvips` and its dependencies are available on your system.
 
@@ -73,7 +80,7 @@ The `build.sh` script will download and build a subset of `JVips` dependencies f
 Additionally, `build.sh` accepts the following options:
 - `--with-w64`, `--without-w64`: enable/disable Windows 64 build (default: disable)
 - `--with-linux`, `--without-linux`: enable/disable Linux build (default: enable)
-- `--with-macos`, `--without-macos`: enable/disable Linux build (default: disable)
+- `--with-macos`, `--without-macos`: enable/disable macOS build (default: disable)
 - `--skip-test`: disable unit tests (default: enable)
 - `--run-benchmark`: launch benchmark suite (default: disable)
 - `--dist`: build a `.tar.gz` archive containing all the build artifacts (default: disable)
@@ -211,15 +218,21 @@ Java_com_criteo_vips_VipsImageImpl_hasAlpha(JNIEnv *env, jobject obj)
 
 To debug the Docker image, you should build, run, and enter it as root:
 ```
-$ docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t builder .
-$ docker run --rm -v $(pwd):/app -w /app -u root -it builder bash
+$ docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
+$ docker run --rm -v $(pwd):/app -w /app -u root -it jvips-builder-linux bash
+```
+
+Once the Docker container is running and you have a prompt:
+
+```
+$ ./build.sh
 ```
 
 ## TODO
 
 - [ ] Add the missing operations
 - [ ] Adapt the binding design for calling function by operation name (see also: https://libvips.github.io/libvips/API/current/binding.md.html)
-- [ ] Publish artifacts to Maven Central
+- [X] Publish artifacts to Maven Central
 
 # Contact
 
