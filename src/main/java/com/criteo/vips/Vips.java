@@ -17,11 +17,12 @@
 package com.criteo.vips;
 
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Vips {
-    private static final Logger LOGGER = Logger.getLogger("com.criteo.vips.Vips");
+    private static final Logger LOGGER = LoggerFactory.getLogger("com.criteo.vips.Vips");
     private static final String SYSTEM_NAME = System.getProperty("os.name").toLowerCase();
 
     private static final String[] LINUX_LIBRARIES = {
@@ -60,24 +61,24 @@ public class Vips {
     static {
         try {
             if (tryLoadLibrariesFromJar())
-                LOGGER.fine("JVips dependencies have been loaded from jar");
+                LOGGER.debug("JVips dependencies have been loaded from jar");
             else
-                LOGGER.fine("Using JVips dependencies installed on system");
-            LOGGER.fine("Trying to load JVips");
+                LOGGER.debug("Using JVips dependencies installed on system");
+            LOGGER.debug("Trying to load JVips");
             loadLibraryFromJar("JVips");
             init();
-            LOGGER.fine("Loaded JVips");
+            LOGGER.debug("Loaded JVips");
             available = true;
         } catch (IOException e) {
             available = false;
-            LOGGER.warning("Can't load JVips library and/or dependencies: " + e.getMessage());
+            LOGGER.warn("Can't load JVips library and/or dependencies: {}", e.getMessage());
         } catch (VipsException e) {
             available = false;
-            LOGGER.log(Level.WARNING, "Failed to init JVips", e);
+            LOGGER.warn("Failed to init JVips", e);
         } catch (UnsatisfiedLinkError e) {
             available = false;
             /* We should be able to load the JVips native libraries, as they are always bundled in the jar */
-            LOGGER.log(Level.WARNING, "JVips native libraries are not available: " + e.getMessage());
+            LOGGER.warn("JVips native libraries are not available: {}", e.getMessage());
         }
     }
 
@@ -119,7 +120,7 @@ public class Vips {
         File temp;
         try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(libName)) {
             if (in == null) {
-                LOGGER.fine("Could not load lib '" + libName + "' via classloader");
+                LOGGER.debug("Could not load lib '{}' via classloader", libName);
                 return false;
             }
             byte[] buffer = new byte[1024];

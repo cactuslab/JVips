@@ -54,6 +54,7 @@
         <!-- Runtime dependencies -->
         <jmh.version>1.21</jmh.version>
         <junit.version>4.13.1</junit.version>
+		<slf4j.version>1.7.36</slf4j.version>
     </properties>
 
     <profiles>
@@ -318,6 +319,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
