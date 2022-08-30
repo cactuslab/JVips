@@ -31,6 +31,7 @@ public class Vips {
             "png16",
             "spng",
             "gif",
+            "cgif",
             "jpeg",
             "turbojpeg",
             "webp",
@@ -76,7 +77,7 @@ public class Vips {
         } catch (UnsatisfiedLinkError e) {
             available = false;
             /* We should be able to load the JVips native libraries, as they are always bundled in the jar */
-            LOGGER.log(Level.WARNING, "JVips native libraries are not available");
+            LOGGER.log(Level.WARNING, "JVips native libraries are not available: " + e.getMessage());
         }
     }
 
