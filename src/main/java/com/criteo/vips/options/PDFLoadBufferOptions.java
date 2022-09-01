@@ -240,8 +240,7 @@ public class PDFLoadBufferOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			float[] components = background.getComponents(new float[4]);
-			PixelPacket pixelPacket = new PixelPacket(components[0], components[1], components[2], components[3]);
+			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

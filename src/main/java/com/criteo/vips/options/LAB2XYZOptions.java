@@ -104,8 +104,7 @@ public class LAB2XYZOptions {
 	 */
 	public void setTemp(java.awt.Color temp) {
 		if (temp != null) {
-			float[] components = temp.getComponents(new float[4]);
-			PixelPacket pixelPacket = new PixelPacket(components[0], components[1], components[2], components[3]);
+			PixelPacket pixelPacket = new PixelPacket(temp.getRed(), temp.getGreen(), temp.getBlue(), temp.getAlpha());
 			setTempPixelPacket(pixelPacket);
 		} else {
 			setTempPixelPacket(null);
