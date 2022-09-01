@@ -274,6 +274,8 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     public native boolean hasAlpha();
 
+    public native void applyAddAlpha();
+
     public void applyLinear(double[] a, double[] b, boolean uchar) throws VipsException {
         applyLinear(a, b, new LinearOptions().uchar(uchar));
     }

@@ -339,6 +339,19 @@ Java_com_criteo_vips_VipsImage_hasAlpha(JNIEnv *env, jobject obj)
 }
 
 JNIEXPORT void JNICALL
+Java_com_criteo_vips_VipsImage_applyAddAlpha(JNIEnv *env, jobject obj)
+{
+    VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);
+    VipsImage *out = NULL;
+    if (vips_addalpha(im, &out, NULL)) {
+        throwVipsException(env, "Unable to add alpha to image");
+        return;
+    }
+    (*env)->SetLongField(env, obj, handle_fid, (jlong) out);
+    g_object_unref(im);
+}
+
+JNIEXPORT void JNICALL
 Java_com_criteo_vips_VipsImage_convertTosRGB(JNIEnv *env, jobject obj)
 {
     VipsImage *im = (VipsImage *) (*env)->GetLongField(env, obj, handle_fid);

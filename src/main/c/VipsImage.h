@@ -161,6 +161,14 @@ JNIEXPORT jboolean JNICALL Java_com_criteo_vips_VipsImage_hasAlpha
 
 /*
  * Class:     com_criteo_vips_VipsImage
+ * Method:    applyAddAlpha
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_applyAddAlpha
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_criteo_vips_VipsImage
  * Method:    applyConvertTosRGB
  * Signature: ()V
  */
