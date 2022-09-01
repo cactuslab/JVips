@@ -289,8 +289,7 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	 */
 	public void set${capitalize(identifier)}(java.awt.Color ${identifier}) {
 		if (${identifier} != null) {
-			float[] components = ${identifier}.getComponents(new float[4]);
-			PixelPacket pixelPacket = new PixelPacket(components[0], components[1], components[2], components[3]);
+			PixelPacket pixelPacket = new PixelPacket(${identifier}.getRed(), ${identifier}.getGreen(), ${identifier}.getBlue(), ${identifier}.getAlpha());
 			set${capitalize(identifier)}PixelPacket(pixelPacket);
 		} else {
 			set${capitalize(identifier)}PixelPacket(null);
