@@ -1,7 +1,5 @@
 # Cactuslab build instructions
 
-Edit `pom.xml` to set the appropriate project version.
-
 ```shell
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
