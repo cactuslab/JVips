@@ -18,7 +18,7 @@
 #include <vips/vips.h>
 
 #include "VipsException.h"
-#include "VipsEnumTest.h"
+#include "com_criteo_vips_VipsEnumTest.h"
 
 #define BUF_SIZE 4096
 

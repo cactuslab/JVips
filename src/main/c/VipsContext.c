@@ -17,7 +17,7 @@
 #include <jni.h>
 #include <vips/vips.h>
 
-#include "VipsContext.h"
+#include "com_criteo_vips_VipsContext.h"
 
 JNIEXPORT void JNICALL
 Java_com_criteo_vips_VipsContext_setLeak(__attribute__((unused))JNIEnv *env, __attribute__((unused)) jclass obj, jboolean enable)

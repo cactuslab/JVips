@@ -17,7 +17,7 @@
 #include <jni.h>
 #include <vips/vips.h>
 
-#include "Vips.h"
+#include "com_criteo_vips_Vips.h"
 #include "VipsException.h"
 
 JNIEXPORT void JNICALL

@@ -20,7 +20,7 @@
 #include <jni.h>
 #include <vips/vips.h>
 
-#include "VipsImage.h"
+#include "com_criteo_vips_VipsImage.h"
 #include "VipsException.h"
 #include "JniFieldsIDs.h"
 

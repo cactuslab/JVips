@@ -475,7 +475,7 @@ export function nativeFileHeader(): string {
 #include <jni.h>
 #include <vips/vips.h>
 
-#include "AbstractVipsImage.h"
+#include "com_criteo_vips_AbstractVipsImage.h"
 #include "VipsException.h"
 
 ${declareFields()}
