@@ -17,6 +17,7 @@
 package com.criteo.vips;
 
 import java.io.*;
+import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,6 +116,18 @@ public class Vips {
         return (SYSTEM_NAME.indexOf("mac") >= 0);
     }
 
+    private static File tempExtractionDir;
+    
+    private static File tempExtractionDir() throws IOException {
+        if (tempExtractionDir != null) {
+            return tempExtractionDir;
+        }
+
+        tempExtractionDir = Files.createTempDirectory("jvips").toFile();
+        tempExtractionDir.deleteOnExit();
+        return tempExtractionDir;
+    }
+
     private static boolean loadLibraryFromJar(String name) throws IOException {
         String libName = System.mapLibraryName(name);
         File temp;
@@ -125,7 +138,7 @@ public class Vips {
             }
             byte[] buffer = new byte[1024];
             int read;
-            temp = File.createTempFile(libName, "");
+            temp = new File(tempExtractionDir(), libName);
             temp.deleteOnExit();
             try (FileOutputStream fos = new FileOutputStream(temp)) {
                 while ((read = in.read(buffer)) != -1) {
