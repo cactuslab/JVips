@@ -180,6 +180,52 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
         cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/
     done
 
+    # Convert a path to a basename and simplify the library name to remove version numbers
+    simple_lib_basename() {
+        local result="$(basename "$1")"
+        result="${result/-0*/}"
+        result="${result/-1*/}"
+        result="${result/-2*/}"
+        result="${result/-3*/}"
+        result="${result/-4*/}"
+        result="${result/-5*/}"
+        result="${result/-6*/}"
+        result="${result/-7*/}"
+        result="${result/-8*/}"
+        result="${result/-9*/}"
+        result="${result/.*/}"
+        echo "${result}.dylib"
+    }
+
+    collect_dylib_deps() {
+        local lib="$1"
+        local originallib="${2:-$lib}"
+
+        for deplib in $(otool -L "$lib" | grep '\t' | awk '{ print $1 }' | grep -v '^/usr' | grep -v '^/System/'); do
+            # Attempt to fix rpath libs
+            deplib=${deplib/@rpath/$(dirname $originallib)}
+
+            local targetdeplib="${BUILDDIR}"/all/"$(simple_lib_basename "$deplib")"
+
+            if [ ! -f "$targetdeplib" ]; then
+                echo "Collecting macOS dependency: $deplib"
+                cp "$deplib" "$targetdeplib"
+
+                collect_dylib_deps "$targetdeplib" "$deplib"
+            fi
+        done
+
+        # Fix dependencies to be relative to the library
+        install_name_tool -id "@loader_path/$(basename "$lib")" "$lib"
+        for deplib in $(otool -L "$lib" | grep '\t' | awk '{ print $1 }' | grep -v '^/usr' | grep -v '^/System/' | grep -v '@loader_path'); do
+            install_name_tool -change "$deplib" "@loader_path/$(simple_lib_basename "$deplib")" "$lib"
+        done
+        codesign --remove-signature "$lib"
+        codesign -s - "$lib"
+    }
+
+    # Accumulate dylib dependencies
+    collect_dylib_deps "${BUILDDIR}"/all/libJVips.dylib
 fi
 
 mvn ${MAVEN_ARGS} -DnewVersion=${VERSION} versions:set

@@ -44,6 +44,63 @@ public class Vips {
             "vips"
     };
 
+    private static final String[] MACOS_LIBRARIES = {
+        "intl",
+        "pcre2",
+        "glib",
+        "gobject",
+        "gmodule",
+        "gio",
+        "gsf",
+        "fftw3",
+        "cfitsio",
+        "imagequant",
+        "cgif",
+        "exif",
+        "jpeg",
+        "spng",
+        "sharpyuv",
+        "webp",
+        "webpmux",
+        "webpdemux",
+        "fribidi",
+        "png16",
+        "freetype",
+        "graphite2",
+        "harfbuzz",
+        "pango",
+        "fontconfig",
+        "pangoft2",
+        "pixman",
+        "Xau",
+        "Xdmcp",
+        "xcb",
+        "xcb-shm",
+        "xcb-render",
+        "X11",
+        "Xrender",
+        "Xext",
+        "cairo",
+        "pangocairo",
+        "jpeg",
+        "zstd",
+        "tiff",
+        "cairo-gobject",
+        "gdk_pixbuf",
+        "rsvg",
+        "sz",
+        "hdf5",
+        "matio",
+        "lcms2",
+        "Imath",
+        "Iex",
+        "IlmThread",
+        "OpenEXR",
+        "openjp2",
+        "orc",
+        "vips"
+    };
+
     /**
      * Actually, loading embedded libraries doesn't work on Windows 64.
      * An UnsatisfiedLinkError exception is thrown with embedded dll:
@@ -92,9 +149,7 @@ public class Vips {
     }
 
     private static boolean tryLoadLibrariesFromJar() throws IOException {
-        if (isMacOS())
-            return true;
-        String[] libraries = !isWindows() ? LINUX_LIBRARIES : WINDOWS_LIBRARIES;
+        String[] libraries = isMacOS() ? MACOS_LIBRARIES : isWindows() ? WINDOWS_LIBRARIES : LINUX_LIBRARIES;
         try {
             boolean loadedSome = false;
             for (String library : libraries) {
