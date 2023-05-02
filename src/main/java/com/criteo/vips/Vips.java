@@ -136,7 +136,7 @@ public class Vips {
                 LOGGER.debug("Could not load lib '{}' via classloader", libName);
                 return false;
             }
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[65536];
             int read;
             temp = new File(tempExtractionDir(), libName);
             temp.deleteOnExit();
