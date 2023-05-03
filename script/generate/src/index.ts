@@ -4,23 +4,38 @@ import { javaFileFooter, javaFileHeader, javaNativeStub, javaOperationClassName,
 import { indent } from "./utils"
 import { promises as fs } from 'fs'
 import path from "path"
+import { inspectEnums } from "./inspect-enums"
+import { javaEnum } from "./java-enum"
+import { nativeEnumTest } from "./native-enum"
 
 interface Files {
 	nativeFile: string
+	nativeEnumTestFile: string
 	javaFile: string
 	optionsPath: string
+	enumsPath: string
 }
 
 async function run (files: Files) {
 	let nativeFileContents = nativeFileHeader()
 	let javaFileContents = javaFileHeader()
 
+	const enums = await inspectEnums()
 	const ops = await inspectOperations()
 	// const ops = await testOperations()
 
 	const successes = new Set<string>()
 	const filePromises: Promise<void>[] = []
 	let failures = 0
+
+	for (const anEnum of enums) {
+		const java = javaEnum(anEnum)
+		filePromises.push(fs.writeFile(path.resolve(files.enumsPath, `${anEnum.name}.java`), java))
+	}
+
+	const enumTest = nativeEnumTest(enums)
+	filePromises.push(fs.writeFile(files.nativeEnumTestFile, enumTest))
+
 	for (const op of ops) {
 		if (successes.has(op.alias)) {
 			/* Skip any duplicates, e.g. extract_area */
@@ -57,6 +72,8 @@ async function run (files: Files) {
 
 run({
 	nativeFile: '../../src/main/c/AbstractVipsImage.c',
+	nativeEnumTestFile: '../../src/test/c/VipsEnumTest.c',
 	javaFile: '../../src/main/java/com/criteo/vips/AbstractVipsImage.java',
 	optionsPath: '../../src/main/java/com/criteo/vips/options',
+	enumsPath: '../../src/main/java/com/criteo/vips/enums',
 })

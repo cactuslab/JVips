@@ -50,3 +50,15 @@ export interface VipsOperationOptions {
 	 */
 	mode?: 'mutating' | 'nonmutating'
 }
+
+export interface VipsEnum {
+	name: string
+	members: VipsEnumMember[]
+}
+
+export interface VipsEnumMember {
+	name: string
+	nativeName: string
+	value: number
+	comment?: string
+}

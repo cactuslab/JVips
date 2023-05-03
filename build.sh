@@ -66,12 +66,6 @@ mkdir -p "${BUILDDIR}"/all/
 source lib/VERSIONS
 VERSION="${VIPS_VERSION}-$(git rev-parse --short HEAD)"
 
-(
-    cd script/enum-generator
-    ${PIP_BIN} install --user -r requirements.txt
-    ${PYTHON_BIN} EnumGenerator.py "${VIPS_VERSION}"
-)
-
 ##########################
 ###### Build Linux #######
 ##########################

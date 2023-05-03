@@ -1,4 +1,8 @@
-$license
+import { COPYRIGHT } from "./constants"
+import { VipsEnum } from "./type"
+
+export function nativeEnumTest(enums: VipsEnum[]): string {
+	let result = `${COPYRIGHT}
 
 #include <stdlib.h>
 #include <string.h>
@@ -37,5 +41,17 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
     if (VIPS_INIT("java") != 0) {
         throwVipsException(env, "Unable to init vips");
     }
-$tests
+`
+	for (const anEnum of enums) {
+		result += `
+	// ${anEnum.name}
+`
+		for (const member of anEnum.members) {
+			result += `\tassertEqualsNativeEnumValue(env, ${member.nativeName}, "com/criteo/vips/enums/${anEnum.name}", "${member.name}");\n`
+		}
+	}
+	result += `
+}
+`
+	return result
 }
