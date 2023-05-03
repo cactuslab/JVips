@@ -201,7 +201,7 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
         local lib="$1"
         local originallib="${2:-$lib}"
 
-        for deplib in $(otool -L "$lib" | grep '\t' | awk '{ print $1 }' | grep -v '^/usr' | grep -v '^/System/'); do
+        for deplib in $(otool -L "$lib" | grep '\t' | awk '{ print $1 }' | grep -v '^/usr/lib' | grep -v '^/System/'); do
             # Attempt to fix rpath libs
             deplib=${deplib/@rpath/$(dirname $originallib)}
 
@@ -217,7 +217,7 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
 
         # Fix dependencies to be relative to the library
         install_name_tool -id "@loader_path/$(basename "$lib")" "$lib"
-        for deplib in $(otool -L "$lib" | grep '\t' | awk '{ print $1 }' | grep -v '^/usr' | grep -v '^/System/' | grep -v '@loader_path'); do
+        for deplib in $(otool -L "$lib" | grep '\t' | awk '{ print $1 }' | grep -v '^/usr/lib' | grep -v '^/System/' | grep -v '@loader_path'); do
             install_name_tool -change "$deplib" "@loader_path/$(simple_lib_basename "$deplib")" "$lib"
         done
         codesign --remove-signature "$lib"
