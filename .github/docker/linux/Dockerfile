@@ -1,7 +1,7 @@
-FROM centos:7.2.1511
+FROM ubuntu:20.04
 
 # Set default build arguments.
-ARG NODE_VERSION=10.x
+ARG NODE_VERSION=18.x
 
 # Set default user (overriden in the command line with Jenkins' actual user).
 ARG UNAME=jenkins
@@ -9,51 +9,52 @@ ARG UID=1000
 ARG GID=1000
 
 # Set default environment variables.
-ENV JAVA_HOME=/usr/lib/jvm/java-openjdk
 ENV PATH="${OSX_CROSS_HOME}/bin:${PATH}"
-ENV YUM_OPTIONS="-y --setopt=skip_missing_names_on_install=False"
-
-RUN yum install ${YUM_OPTIONS} \
-    centos-release-scl \
-    https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+ENV APT_OPTIONS="-y --no-install-recommends"
+ENV DEBIAN_FRONTEND noninteractive
 
 # Install system dependencies.
-RUN yum install ${YUM_OPTIONS} \
+RUN apt-get update && \
+    apt-get install ${APT_OPTIONS} \
     wget \
+    curl \
     git \
-    cmake3 \
-    rh-maven35 \
+    cmake \
     meson \
     ninja-build \
     patch \
     clang \
-    devtoolset-7-toolchain \
     nasm \
     yasm \
     autoconf \
     automake \
     libtool \
     diffutils \
-    openssl-devel \
-    expat-devel \
-    zlib-devel \
-    libxml2-devel \
-    xz xz-devel \
-    mpfr-devel \
-    gmp-devel \
-    libmpc-devel \
-    gtk-doc \
-    gobject-introspection gobject-introspection-devel \
-    glib2.x86_64 glib2-devel.x86_64 \
-    java-1.8.0-openjdk
+    libssl-dev \
+    libexpat1-dev \
+    zlib1g-dev \
+    libxml2-dev \
+    liblzma5 liblzma-dev \
+    libmpfr-dev \
+    libgmp3-dev \
+    libmpc-dev \
+    gtk-doc-tools \
+    gobject-introspection \
+    openjdk-17-jdk \
+    python3-pip \
+    libglib2.0-dev
 
-RUN ln -s /usr/bin/cmake3 /usr/bin/cmake
+RUN apt-get install ${APT_OPTIONS} curl && \
+    cd /opt && \
+    curl -OL https://dlcdn.apache.org/maven/maven-3/3.9.1/binaries/apache-maven-3.9.1-bin.tar.gz && \
+    tar -zxf apache-maven-3.9.1-bin.tar.gz
+ENV PATH="/opt/apache-maven-3.9.1/bin:${PATH}"
+
+ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
 
 # Switch to a non-root user.
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -l -m -u $UID -g $GID -o -s /bin/bash -d /home/$UNAME $UNAME
-
-RUN echo 'for scl in /opt/rh/*/enable; do source $scl; done' >> /etc/profile.d/rhscl.sh
 
 USER $UNAME
 
