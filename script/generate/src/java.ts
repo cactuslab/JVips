@@ -17,7 +17,7 @@ const RESERVED_WORDS = [
 
 function javaTypeForType(p: VipsOperationParameter, purpose: 'return' | 'param', required: boolean = true): string {
 	if (isEnum(p)) {
-		return p.type
+		return `com.criteo.vips.enums.${p.type}`
 	}
 
 	switch (p.type) {
@@ -26,10 +26,10 @@ function javaTypeForType(p: VipsOperationParameter, purpose: 'return' | 'param',
 		case 'gdouble': return required ? 'double' : 'Double'
 		case 'guint64': return required ? 'long' : 'Long' // TODO longs are uint64 they're int64
 		case 'gchararray': return 'String'
-		case 'VipsImage': return purpose === 'return' ? 'VipsImage' : 'Image'
+		case 'VipsImage': return purpose === 'return' ? 'VipsImage' : 'com.criteo.vips.Image'
 		case 'VipsArrayInt': return 'int[]'
 		case 'VipsArrayDouble': return 'double[]'
-		case 'VipsArrayImage': return purpose === 'return' ? 'VipsImage[]' : 'Image[]'
+		case 'VipsArrayImage': return purpose === 'return' ? 'VipsImage[]' : 'com.criteo.vips.Image[]'
 		case 'VipsBlob': return 'byte[]'
 		case 'Rectangle': return 'Rectangle'
 	}
@@ -160,7 +160,7 @@ function internalJavaNativeStub(op: VipsOperation, info: VipsOperationInfo, opti
 			if (!first) {
 				result += ', '
 			}
-			result += `${javaOperationClassName(op)}Options options`
+			result += `com.criteo.vips.options.${javaOperationClassName(op)}Options options`
 		}
 
 		result += `) throws VipsException`
@@ -199,7 +199,7 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	for (const p of optionals) {
 		result += `\tprivate ${javaTypeForType(p, 'param', false)} ${javaParameterIdentifier(p)};\n`
 		if (p.type === 'VipsArrayDouble') {
-			result += `\tprivate PixelPacket ${javaParameterIdentifier(p)}PixelPacket;\n`
+			result += `\tprivate com.criteo.vips.PixelPacket ${javaParameterIdentifier(p)}PixelPacket;\n`
 		}
 	}
 
@@ -251,7 +251,7 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	 * ${p.description}
 	 * @return the value of {@code ${identifier}}
 	 */
-	public PixelPacket ${javaType === 'boolean' ? 'is' : 'get'}${capitalize(identifier)}PixelPacket() {
+	public com.criteo.vips.PixelPacket ${javaType === 'boolean' ? 'is' : 'get'}${capitalize(identifier)}PixelPacket() {
 		return this.${identifier}PixelPacket;
 	}
 
@@ -261,7 +261,7 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	 * ${p.description}
 	 * @param ${identifier} the new value of {@code ${identifier}}
 	 */
-	public void set${capitalize(identifier)}PixelPacket(PixelPacket ${identifier}) {
+	public void set${capitalize(identifier)}PixelPacket(com.criteo.vips.PixelPacket ${identifier}) {
 		if (${identifier} != null) {
 			this.${identifier}PixelPacket = ${identifier};
 		} else {
@@ -276,7 +276,7 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	 * @param ${identifier} the new value of {@code ${identifier}}
 	 * @return this object for chaining
 	 */
-	public ${className} ${identifier}PixelPacket(PixelPacket ${identifier}) {
+	public ${className} ${identifier}PixelPacket(com.criteo.vips.PixelPacket ${identifier}) {
 		set${capitalize(identifier)}PixelPacket(${identifier});
 		return this;
 	}
@@ -289,7 +289,7 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	 */
 	public void set${capitalize(identifier)}(java.awt.Color ${identifier}) {
 		if (${identifier} != null) {
-			PixelPacket pixelPacket = new PixelPacket(${identifier}.getRed(), ${identifier}.getGreen(), ${identifier}.getBlue(), ${identifier}.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(${identifier}.getRed(), ${identifier}.getGreen(), ${identifier}.getBlue(), ${identifier}.getAlpha());
 			set${capitalize(identifier)}PixelPacket(pixelPacket);
 		} else {
 			set${capitalize(identifier)}PixelPacket(null);
@@ -325,9 +325,6 @@ import java.awt.Rectangle;
 
 import javax.annotation.Generated;
 
-import com.criteo.vips.enums.*;
-import com.criteo.vips.options.*;
-
 @Generated(value = "")
 abstract class AbstractVipsImage extends Vips {
 
@@ -357,10 +354,6 @@ function optionsFileHeader(op: VipsOperation): string {
 	return `${COPYRIGHT}
 
 package com.criteo.vips.options;
-
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
 
 /**
  * Optional arguments for the "${op.alias}" operation.
