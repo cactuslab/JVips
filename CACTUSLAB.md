@@ -1,10 +1,32 @@
 # Cactuslab build instructions
 
 ```shell
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
 docker run --rm -v $(pwd):/app -w /app -u root -it jvips-builder-linux
 ./build.sh --with-macos --without-linux
+```
+
+For macOS:
+
+* Build on an Intel machine and an Apple Silicon machine
+* Copy the `JVips.jar` from one to the other
+
+```shell
+# In this folder
+mkdir combine
+cd combine
+jar xf ../JVips.jar
+
+mkdir apple
+cd apple
+# Extract the jar from the other machine
+jar xf ~Desktop/JVips.jar
+cd ..
+
+mkdir universal
+for i in *.dylib; do lipo $i apple/$i -create -output universal/$i ; done
+cp -f universal/* ../build/all
 ```
 
 The output files are `pom.xml` and `JVips.jar`.
