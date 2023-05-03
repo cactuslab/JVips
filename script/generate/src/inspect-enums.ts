@@ -11,6 +11,10 @@ export async function inspectEnums(): Promise<VipsEnum[]> {
 	const includePath = '/usr/local/include/vips'
 	const files = await fs.readdir(includePath)
 	for (const file of files) {
+		if ('almostdeprecated.h' === file) {
+			continue
+		}
+
 		const contents = await fs.readFile(path.join(includePath, file))
 		const string = contents.toString()
 		const lines = string.split(/\n/)
