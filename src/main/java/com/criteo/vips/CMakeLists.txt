@@ -24,8 +24,4 @@ add_jar(JVipsWrapper ${JAVA_ENUM_SOURCE_FILES} ${JAVA_OPTIONS_SOURCE_FILES} ${JA
 
 if(NOT ${BUILD_TARGET} STREQUAL "macOS")
     add_dependencies(Vips_header libvips)
-    add_dependencies(VipsContext_header libvips)
-    add_dependencies(VipsImage_header libvips)
-    add_dependencies(AbstractVipsImage_header libvips)
-    add_dependencies(Max1Result_header libvips)
 endif()
