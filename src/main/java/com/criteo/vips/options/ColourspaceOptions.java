@@ -16,45 +16,41 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "colourspace" operation.
  */
 public class ColourspaceOptions {
 
-	private VipsInterpretation sourceSpace;
+	private com.criteo.vips.enums.VipsInterpretation sourceSpace;
 
 	/**
 	 * Optional argument: source-space
 	 * <p>
-	 * Source colour space
+	 * Source color space
 	 * @return the value of {@code sourceSpace}
 	 */
-	public VipsInterpretation getSourceSpace() {
+	public com.criteo.vips.enums.VipsInterpretation getSourceSpace() {
 		return this.sourceSpace;
 	}
 
 	/**
 	 * Set the optional "source-space" argument.
 	 * <p>
-	 * Source colour space
+	 * Source color space
 	 * @param sourceSpace the new value of {@code sourceSpace}
 	 */
-	public void setSourceSpace(VipsInterpretation sourceSpace) {
+	public void setSourceSpace(com.criteo.vips.enums.VipsInterpretation sourceSpace) {
 		this.sourceSpace = sourceSpace;
 	}
 
 	/**
 	 * Set the optional "source-space" argument.
 	 * <p>
-	 * Source colour space
+	 * Source color space
 	 * @param sourceSpace the new value of {@code sourceSpace}
 	 * @return this object for chaining
 	 */
-	public ColourspaceOptions sourceSpace(VipsInterpretation sourceSpace) {
+	public ColourspaceOptions sourceSpace(com.criteo.vips.enums.VipsInterpretation sourceSpace) {
 		setSourceSpace(sourceSpace);
 		return this;
 	}

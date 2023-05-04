@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "composite" operation.
  */
@@ -27,7 +23,7 @@ public class CompositeOptions {
 
 	private int[] x;
 	private int[] y;
-	private VipsInterpretation compositingSpace;
+	private com.criteo.vips.enums.VipsInterpretation compositingSpace;
 	private Boolean premultiplied;
 
 	/**
@@ -100,7 +96,7 @@ public class CompositeOptions {
 	 * Composite images in this colour space
 	 * @return the value of {@code compositingSpace}
 	 */
-	public VipsInterpretation getCompositingSpace() {
+	public com.criteo.vips.enums.VipsInterpretation getCompositingSpace() {
 		return this.compositingSpace;
 	}
 
@@ -110,7 +106,7 @@ public class CompositeOptions {
 	 * Composite images in this colour space
 	 * @param compositingSpace the new value of {@code compositingSpace}
 	 */
-	public void setCompositingSpace(VipsInterpretation compositingSpace) {
+	public void setCompositingSpace(com.criteo.vips.enums.VipsInterpretation compositingSpace) {
 		this.compositingSpace = compositingSpace;
 	}
 
@@ -121,7 +117,7 @@ public class CompositeOptions {
 	 * @param compositingSpace the new value of {@code compositingSpace}
 	 * @return this object for chaining
 	 */
-	public CompositeOptions compositingSpace(VipsInterpretation compositingSpace) {
+	public CompositeOptions compositingSpace(com.criteo.vips.enums.VipsInterpretation compositingSpace) {
 		setCompositingSpace(compositingSpace);
 		return this;
 	}

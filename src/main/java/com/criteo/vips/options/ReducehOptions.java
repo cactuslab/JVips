@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "reduceh" operation.
  */
 public class ReducehOptions {
 
-	private VipsKernel kernel;
+	private com.criteo.vips.enums.VipsKernel kernel;
 	private Double gap;
 
 	/**
@@ -34,7 +30,7 @@ public class ReducehOptions {
 	 * Resampling kernel
 	 * @return the value of {@code kernel}
 	 */
-	public VipsKernel getKernel() {
+	public com.criteo.vips.enums.VipsKernel getKernel() {
 		return this.kernel;
 	}
 
@@ -44,7 +40,7 @@ public class ReducehOptions {
 	 * Resampling kernel
 	 * @param kernel the new value of {@code kernel}
 	 */
-	public void setKernel(VipsKernel kernel) {
+	public void setKernel(com.criteo.vips.enums.VipsKernel kernel) {
 		this.kernel = kernel;
 	}
 
@@ -55,7 +51,7 @@ public class ReducehOptions {
 	 * @param kernel the new value of {@code kernel}
 	 * @return this object for chaining
 	 */
-	public ReducehOptions kernel(VipsKernel kernel) {
+	public ReducehOptions kernel(com.criteo.vips.enums.VipsKernel kernel) {
 		setKernel(kernel);
 		return this;
 	}

@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "thumbnail_buffer" operation.
  */
@@ -27,14 +23,14 @@ public class ThumbnailBufferOptions {
 
 	private String optionString;
 	private Integer height;
-	private VipsSize size;
+	private com.criteo.vips.enums.VipsSize size;
 	private Boolean noRotate;
-	private VipsInteresting crop;
+	private com.criteo.vips.enums.VipsInteresting crop;
 	private Boolean linear;
 	private String importProfile;
 	private String exportProfile;
-	private VipsIntent intent;
-	private VipsFailOn failOn;
+	private com.criteo.vips.enums.VipsIntent intent;
+	private com.criteo.vips.enums.VipsFailOn failOn;
 
 	/**
 	 * Optional argument: option-string
@@ -106,7 +102,7 @@ public class ThumbnailBufferOptions {
 	 * Only upsize, only downsize, or both
 	 * @return the value of {@code size}
 	 */
-	public VipsSize getSize() {
+	public com.criteo.vips.enums.VipsSize getSize() {
 		return this.size;
 	}
 
@@ -116,7 +112,7 @@ public class ThumbnailBufferOptions {
 	 * Only upsize, only downsize, or both
 	 * @param size the new value of {@code size}
 	 */
-	public void setSize(VipsSize size) {
+	public void setSize(com.criteo.vips.enums.VipsSize size) {
 		this.size = size;
 	}
 
@@ -127,7 +123,7 @@ public class ThumbnailBufferOptions {
 	 * @param size the new value of {@code size}
 	 * @return this object for chaining
 	 */
-	public ThumbnailBufferOptions size(VipsSize size) {
+	public ThumbnailBufferOptions size(com.criteo.vips.enums.VipsSize size) {
 		setSize(size);
 		return this;
 	}
@@ -170,7 +166,7 @@ public class ThumbnailBufferOptions {
 	 * Reduce to fill target rectangle, then crop
 	 * @return the value of {@code crop}
 	 */
-	public VipsInteresting getCrop() {
+	public com.criteo.vips.enums.VipsInteresting getCrop() {
 		return this.crop;
 	}
 
@@ -180,7 +176,7 @@ public class ThumbnailBufferOptions {
 	 * Reduce to fill target rectangle, then crop
 	 * @param crop the new value of {@code crop}
 	 */
-	public void setCrop(VipsInteresting crop) {
+	public void setCrop(com.criteo.vips.enums.VipsInteresting crop) {
 		this.crop = crop;
 	}
 
@@ -191,7 +187,7 @@ public class ThumbnailBufferOptions {
 	 * @param crop the new value of {@code crop}
 	 * @return this object for chaining
 	 */
-	public ThumbnailBufferOptions crop(VipsInteresting crop) {
+	public ThumbnailBufferOptions crop(com.criteo.vips.enums.VipsInteresting crop) {
 		setCrop(crop);
 		return this;
 	}
@@ -298,7 +294,7 @@ public class ThumbnailBufferOptions {
 	 * Rendering intent
 	 * @return the value of {@code intent}
 	 */
-	public VipsIntent getIntent() {
+	public com.criteo.vips.enums.VipsIntent getIntent() {
 		return this.intent;
 	}
 
@@ -308,7 +304,7 @@ public class ThumbnailBufferOptions {
 	 * Rendering intent
 	 * @param intent the new value of {@code intent}
 	 */
-	public void setIntent(VipsIntent intent) {
+	public void setIntent(com.criteo.vips.enums.VipsIntent intent) {
 		this.intent = intent;
 	}
 
@@ -319,7 +315,7 @@ public class ThumbnailBufferOptions {
 	 * @param intent the new value of {@code intent}
 	 * @return this object for chaining
 	 */
-	public ThumbnailBufferOptions intent(VipsIntent intent) {
+	public ThumbnailBufferOptions intent(com.criteo.vips.enums.VipsIntent intent) {
 		setIntent(intent);
 		return this;
 	}
@@ -330,7 +326,7 @@ public class ThumbnailBufferOptions {
 	 * Error level to fail on
 	 * @return the value of {@code failOn}
 	 */
-	public VipsFailOn getFailOn() {
+	public com.criteo.vips.enums.VipsFailOn getFailOn() {
 		return this.failOn;
 	}
 
@@ -340,7 +336,7 @@ public class ThumbnailBufferOptions {
 	 * Error level to fail on
 	 * @param failOn the new value of {@code failOn}
 	 */
-	public void setFailOn(VipsFailOn failOn) {
+	public void setFailOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		this.failOn = failOn;
 	}
 
@@ -351,7 +347,7 @@ public class ThumbnailBufferOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public ThumbnailBufferOptions failOn(VipsFailOn failOn) {
+	public ThumbnailBufferOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}

@@ -16,21 +16,17 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "ppmsave" operation.
  */
 public class PPMSaveOptions {
 
-	private VipsForeignPpmFormat format;
+	private com.criteo.vips.enums.VipsForeignPpmFormat format;
 	private Boolean ascii;
 	private Integer bitdepth;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -39,7 +35,7 @@ public class PPMSaveOptions {
 	 * Format to save in
 	 * @return the value of {@code format}
 	 */
-	public VipsForeignPpmFormat getFormat() {
+	public com.criteo.vips.enums.VipsForeignPpmFormat getFormat() {
 		return this.format;
 	}
 
@@ -49,7 +45,7 @@ public class PPMSaveOptions {
 	 * Format to save in
 	 * @param format the new value of {@code format}
 	 */
-	public void setFormat(VipsForeignPpmFormat format) {
+	public void setFormat(com.criteo.vips.enums.VipsForeignPpmFormat format) {
 		this.format = format;
 	}
 
@@ -60,7 +56,7 @@ public class PPMSaveOptions {
 	 * @param format the new value of {@code format}
 	 * @return this object for chaining
 	 */
-	public PPMSaveOptions format(VipsForeignPpmFormat format) {
+	public PPMSaveOptions format(com.criteo.vips.enums.VipsForeignPpmFormat format) {
 		setFormat(format);
 		return this;
 	}
@@ -199,7 +195,7 @@ public class PPMSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -209,7 +205,7 @@ public class PPMSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -224,7 +220,7 @@ public class PPMSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public PPMSaveOptions backgroundPixelPacket(PixelPacket background) {
+	public PPMSaveOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -237,7 +233,7 @@ public class PPMSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

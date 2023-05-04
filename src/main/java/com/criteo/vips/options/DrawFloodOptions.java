@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "draw_flood" operation.
  */
 public class DrawFloodOptions {
 
-	private Image test;
+	private com.criteo.vips.Image test;
 	private Boolean equal;
 
 	/**
@@ -34,7 +30,7 @@ public class DrawFloodOptions {
 	 * Test pixels in this image
 	 * @return the value of {@code test}
 	 */
-	public Image getTest() {
+	public com.criteo.vips.Image getTest() {
 		return this.test;
 	}
 
@@ -44,7 +40,7 @@ public class DrawFloodOptions {
 	 * Test pixels in this image
 	 * @param test the new value of {@code test}
 	 */
-	public void setTest(Image test) {
+	public void setTest(com.criteo.vips.Image test) {
 		this.test = test;
 	}
 
@@ -55,7 +51,7 @@ public class DrawFloodOptions {
 	 * @param test the new value of {@code test}
 	 * @return this object for chaining
 	 */
-	public DrawFloodOptions test(Image test) {
+	public DrawFloodOptions test(com.criteo.vips.Image test) {
 		setTest(test);
 		return this;
 	}

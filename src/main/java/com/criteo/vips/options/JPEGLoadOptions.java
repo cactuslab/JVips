@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "jpegload" operation.
  */
@@ -27,9 +23,10 @@ public class JPEGLoadOptions {
 
 	private Integer shrink;
 	private Boolean autorotate;
+	private Boolean unlimited;
 	private Boolean memory;
-	private VipsAccess access;
-	private VipsFailOn failOn;
+	private com.criteo.vips.enums.VipsAccess access;
+	private com.criteo.vips.enums.VipsFailOn failOn;
 
 	/**
 	 * Optional argument: shrink
@@ -96,6 +93,38 @@ public class JPEGLoadOptions {
 	}
 
 	/**
+	 * Optional argument: unlimited
+	 * <p>
+	 * Remove all denial of service limits
+	 * @return the value of {@code unlimited}
+	 */
+	public Boolean getUnlimited() {
+		return this.unlimited;
+	}
+
+	/**
+	 * Set the optional "unlimited" argument.
+	 * <p>
+	 * Remove all denial of service limits
+	 * @param unlimited the new value of {@code unlimited}
+	 */
+	public void setUnlimited(Boolean unlimited) {
+		this.unlimited = unlimited;
+	}
+
+	/**
+	 * Set the optional "unlimited" argument.
+	 * <p>
+	 * Remove all denial of service limits
+	 * @param unlimited the new value of {@code unlimited}
+	 * @return this object for chaining
+	 */
+	public JPEGLoadOptions unlimited(Boolean unlimited) {
+		setUnlimited(unlimited);
+		return this;
+	}
+
+	/**
 	 * Optional argument: memory
 	 * <p>
 	 * Force open via memory
@@ -133,7 +162,7 @@ public class JPEGLoadOptions {
 	 * Required access pattern for this file
 	 * @return the value of {@code access}
 	 */
-	public VipsAccess getAccess() {
+	public com.criteo.vips.enums.VipsAccess getAccess() {
 		return this.access;
 	}
 
@@ -143,7 +172,7 @@ public class JPEGLoadOptions {
 	 * Required access pattern for this file
 	 * @param access the new value of {@code access}
 	 */
-	public void setAccess(VipsAccess access) {
+	public void setAccess(com.criteo.vips.enums.VipsAccess access) {
 		this.access = access;
 	}
 
@@ -154,7 +183,7 @@ public class JPEGLoadOptions {
 	 * @param access the new value of {@code access}
 	 * @return this object for chaining
 	 */
-	public JPEGLoadOptions access(VipsAccess access) {
+	public JPEGLoadOptions access(com.criteo.vips.enums.VipsAccess access) {
 		setAccess(access);
 		return this;
 	}
@@ -165,7 +194,7 @@ public class JPEGLoadOptions {
 	 * Error level to fail on
 	 * @return the value of {@code failOn}
 	 */
-	public VipsFailOn getFailOn() {
+	public com.criteo.vips.enums.VipsFailOn getFailOn() {
 		return this.failOn;
 	}
 
@@ -175,7 +204,7 @@ public class JPEGLoadOptions {
 	 * Error level to fail on
 	 * @param failOn the new value of {@code failOn}
 	 */
-	public void setFailOn(VipsFailOn failOn) {
+	public void setFailOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		this.failOn = failOn;
 	}
 
@@ -186,7 +215,7 @@ public class JPEGLoadOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public JPEGLoadOptions failOn(VipsFailOn failOn) {
+	public JPEGLoadOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}

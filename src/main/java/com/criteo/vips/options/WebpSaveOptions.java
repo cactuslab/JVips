@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "webpsave" operation.
  */
@@ -27,7 +23,7 @@ public class WebpSaveOptions {
 
 	private Integer q;
 	private Boolean lossless;
-	private VipsForeignWebpPreset preset;
+	private com.criteo.vips.enums.VipsForeignWebpPreset preset;
 	private Boolean smartSubsample;
 	private Boolean nearLossless;
 	private Integer alphaQ;
@@ -39,7 +35,7 @@ public class WebpSaveOptions {
 	private Boolean mixed;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -112,7 +108,7 @@ public class WebpSaveOptions {
 	 * Preset for lossy compression
 	 * @return the value of {@code preset}
 	 */
-	public VipsForeignWebpPreset getPreset() {
+	public com.criteo.vips.enums.VipsForeignWebpPreset getPreset() {
 		return this.preset;
 	}
 
@@ -122,7 +118,7 @@ public class WebpSaveOptions {
 	 * Preset for lossy compression
 	 * @param preset the new value of {@code preset}
 	 */
-	public void setPreset(VipsForeignWebpPreset preset) {
+	public void setPreset(com.criteo.vips.enums.VipsForeignWebpPreset preset) {
 		this.preset = preset;
 	}
 
@@ -133,7 +129,7 @@ public class WebpSaveOptions {
 	 * @param preset the new value of {@code preset}
 	 * @return this object for chaining
 	 */
-	public WebpSaveOptions preset(VipsForeignWebpPreset preset) {
+	public WebpSaveOptions preset(com.criteo.vips.enums.VipsForeignWebpPreset preset) {
 		setPreset(preset);
 		return this;
 	}
@@ -496,7 +492,7 @@ public class WebpSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -506,7 +502,7 @@ public class WebpSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -521,7 +517,7 @@ public class WebpSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public WebpSaveOptions backgroundPixelPacket(PixelPacket background) {
+	public WebpSaveOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -534,7 +530,7 @@ public class WebpSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

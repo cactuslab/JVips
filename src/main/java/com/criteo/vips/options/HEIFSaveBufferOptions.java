@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "heifsave_buffer" operation.
  */
@@ -28,12 +24,13 @@ public class HEIFSaveBufferOptions {
 	private Integer q;
 	private Integer bitdepth;
 	private Boolean lossless;
-	private VipsForeignHeifCompression compression;
+	private com.criteo.vips.enums.VipsForeignHeifCompression compression;
 	private Integer effort;
-	private VipsForeignSubsample subsampleMode;
+	private com.criteo.vips.enums.VipsForeignSubsample subsampleMode;
+	private com.criteo.vips.enums.VipsForeignHeifEncoder encoder;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -138,7 +135,7 @@ public class HEIFSaveBufferOptions {
 	 * Compression format
 	 * @return the value of {@code compression}
 	 */
-	public VipsForeignHeifCompression getCompression() {
+	public com.criteo.vips.enums.VipsForeignHeifCompression getCompression() {
 		return this.compression;
 	}
 
@@ -148,7 +145,7 @@ public class HEIFSaveBufferOptions {
 	 * Compression format
 	 * @param compression the new value of {@code compression}
 	 */
-	public void setCompression(VipsForeignHeifCompression compression) {
+	public void setCompression(com.criteo.vips.enums.VipsForeignHeifCompression compression) {
 		this.compression = compression;
 	}
 
@@ -159,7 +156,7 @@ public class HEIFSaveBufferOptions {
 	 * @param compression the new value of {@code compression}
 	 * @return this object for chaining
 	 */
-	public HEIFSaveBufferOptions compression(VipsForeignHeifCompression compression) {
+	public HEIFSaveBufferOptions compression(com.criteo.vips.enums.VipsForeignHeifCompression compression) {
 		setCompression(compression);
 		return this;
 	}
@@ -202,7 +199,7 @@ public class HEIFSaveBufferOptions {
 	 * Select chroma subsample operation mode
 	 * @return the value of {@code subsampleMode}
 	 */
-	public VipsForeignSubsample getSubsampleMode() {
+	public com.criteo.vips.enums.VipsForeignSubsample getSubsampleMode() {
 		return this.subsampleMode;
 	}
 
@@ -212,7 +209,7 @@ public class HEIFSaveBufferOptions {
 	 * Select chroma subsample operation mode
 	 * @param subsampleMode the new value of {@code subsampleMode}
 	 */
-	public void setSubsampleMode(VipsForeignSubsample subsampleMode) {
+	public void setSubsampleMode(com.criteo.vips.enums.VipsForeignSubsample subsampleMode) {
 		this.subsampleMode = subsampleMode;
 	}
 
@@ -223,8 +220,40 @@ public class HEIFSaveBufferOptions {
 	 * @param subsampleMode the new value of {@code subsampleMode}
 	 * @return this object for chaining
 	 */
-	public HEIFSaveBufferOptions subsampleMode(VipsForeignSubsample subsampleMode) {
+	public HEIFSaveBufferOptions subsampleMode(com.criteo.vips.enums.VipsForeignSubsample subsampleMode) {
 		setSubsampleMode(subsampleMode);
+		return this;
+	}
+
+	/**
+	 * Optional argument: encoder
+	 * <p>
+	 * Select encoder to use
+	 * @return the value of {@code encoder}
+	 */
+	public com.criteo.vips.enums.VipsForeignHeifEncoder getEncoder() {
+		return this.encoder;
+	}
+
+	/**
+	 * Set the optional "encoder" argument.
+	 * <p>
+	 * Select encoder to use
+	 * @param encoder the new value of {@code encoder}
+	 */
+	public void setEncoder(com.criteo.vips.enums.VipsForeignHeifEncoder encoder) {
+		this.encoder = encoder;
+	}
+
+	/**
+	 * Set the optional "encoder" argument.
+	 * <p>
+	 * Select encoder to use
+	 * @param encoder the new value of {@code encoder}
+	 * @return this object for chaining
+	 */
+	public HEIFSaveBufferOptions encoder(com.criteo.vips.enums.VipsForeignHeifEncoder encoder) {
+		setEncoder(encoder);
 		return this;
 	}
 
@@ -298,7 +327,7 @@ public class HEIFSaveBufferOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -308,7 +337,7 @@ public class HEIFSaveBufferOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -323,7 +352,7 @@ public class HEIFSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public HEIFSaveBufferOptions backgroundPixelPacket(PixelPacket background) {
+	public HEIFSaveBufferOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -336,7 +365,7 @@ public class HEIFSaveBufferOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

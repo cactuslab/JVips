@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "draw_image" operation.
  */
 public class DrawImageOptions {
 
-	private VipsCombineMode mode;
+	private com.criteo.vips.enums.VipsCombineMode mode;
 
 	/**
 	 * Optional argument: mode
@@ -33,7 +29,7 @@ public class DrawImageOptions {
 	 * Combining mode
 	 * @return the value of {@code mode}
 	 */
-	public VipsCombineMode getMode() {
+	public com.criteo.vips.enums.VipsCombineMode getMode() {
 		return this.mode;
 	}
 
@@ -43,7 +39,7 @@ public class DrawImageOptions {
 	 * Combining mode
 	 * @param mode the new value of {@code mode}
 	 */
-	public void setMode(VipsCombineMode mode) {
+	public void setMode(com.criteo.vips.enums.VipsCombineMode mode) {
 		this.mode = mode;
 	}
 
@@ -54,7 +50,7 @@ public class DrawImageOptions {
 	 * @param mode the new value of {@code mode}
 	 * @return this object for chaining
 	 */
-	public DrawImageOptions mode(VipsCombineMode mode) {
+	public DrawImageOptions mode(com.criteo.vips.enums.VipsCombineMode mode) {
 		setMode(mode);
 		return this;
 	}

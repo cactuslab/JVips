@@ -16,18 +16,14 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "gravity" operation.
  */
 public class GravityOptions {
 
-	private VipsExtend extend;
+	private com.criteo.vips.enums.VipsExtend extend;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 
 	/**
 	 * Optional argument: extend
@@ -35,7 +31,7 @@ public class GravityOptions {
 	 * How to generate the extra pixels
 	 * @return the value of {@code extend}
 	 */
-	public VipsExtend getExtend() {
+	public com.criteo.vips.enums.VipsExtend getExtend() {
 		return this.extend;
 	}
 
@@ -45,7 +41,7 @@ public class GravityOptions {
 	 * How to generate the extra pixels
 	 * @param extend the new value of {@code extend}
 	 */
-	public void setExtend(VipsExtend extend) {
+	public void setExtend(com.criteo.vips.enums.VipsExtend extend) {
 		this.extend = extend;
 	}
 
@@ -56,7 +52,7 @@ public class GravityOptions {
 	 * @param extend the new value of {@code extend}
 	 * @return this object for chaining
 	 */
-	public GravityOptions extend(VipsExtend extend) {
+	public GravityOptions extend(com.criteo.vips.enums.VipsExtend extend) {
 		setExtend(extend);
 		return this;
 	}
@@ -99,7 +95,7 @@ public class GravityOptions {
 	 * Color for background pixels
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -109,7 +105,7 @@ public class GravityOptions {
 	 * Color for background pixels
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -124,7 +120,7 @@ public class GravityOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public GravityOptions backgroundPixelPacket(PixelPacket background) {
+	public GravityOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -137,7 +133,7 @@ public class GravityOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

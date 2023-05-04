@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "smartcrop" operation.
  */
 public class SmartcropOptions {
 
-	private VipsInteresting interesting;
+	private com.criteo.vips.enums.VipsInteresting interesting;
 
 	/**
 	 * Optional argument: interesting
@@ -33,7 +29,7 @@ public class SmartcropOptions {
 	 * How to measure interestingness
 	 * @return the value of {@code interesting}
 	 */
-	public VipsInteresting getInteresting() {
+	public com.criteo.vips.enums.VipsInteresting getInteresting() {
 		return this.interesting;
 	}
 
@@ -43,7 +39,7 @@ public class SmartcropOptions {
 	 * How to measure interestingness
 	 * @param interesting the new value of {@code interesting}
 	 */
-	public void setInteresting(VipsInteresting interesting) {
+	public void setInteresting(com.criteo.vips.enums.VipsInteresting interesting) {
 		this.interesting = interesting;
 	}
 
@@ -54,7 +50,7 @@ public class SmartcropOptions {
 	 * @param interesting the new value of {@code interesting}
 	 * @return this object for chaining
 	 */
-	public SmartcropOptions interesting(VipsInteresting interesting) {
+	public SmartcropOptions interesting(com.criteo.vips.enums.VipsInteresting interesting) {
 		setInteresting(interesting);
 		return this;
 	}

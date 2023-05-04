@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "pngsave" operation.
  */
@@ -28,7 +24,7 @@ public class PNGSaveOptions {
 	private Integer compression;
 	private Boolean interlace;
 	private String profile;
-	private VipsForeignPngFilter filter;
+	private com.criteo.vips.enums.VipsForeignPngFilter filter;
 	private Boolean palette;
 	private Integer q;
 	private Double dither;
@@ -36,7 +32,7 @@ public class PNGSaveOptions {
 	private Integer effort;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -141,7 +137,7 @@ public class PNGSaveOptions {
 	 * libspng row filter flag(s)
 	 * @return the value of {@code filter}
 	 */
-	public VipsForeignPngFilter getFilter() {
+	public com.criteo.vips.enums.VipsForeignPngFilter getFilter() {
 		return this.filter;
 	}
 
@@ -151,7 +147,7 @@ public class PNGSaveOptions {
 	 * libspng row filter flag(s)
 	 * @param filter the new value of {@code filter}
 	 */
-	public void setFilter(VipsForeignPngFilter filter) {
+	public void setFilter(com.criteo.vips.enums.VipsForeignPngFilter filter) {
 		this.filter = filter;
 	}
 
@@ -162,7 +158,7 @@ public class PNGSaveOptions {
 	 * @param filter the new value of {@code filter}
 	 * @return this object for chaining
 	 */
-	public PNGSaveOptions filter(VipsForeignPngFilter filter) {
+	public PNGSaveOptions filter(com.criteo.vips.enums.VipsForeignPngFilter filter) {
 		setFilter(filter);
 		return this;
 	}
@@ -397,7 +393,7 @@ public class PNGSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -407,7 +403,7 @@ public class PNGSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -422,7 +418,7 @@ public class PNGSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public PNGSaveOptions backgroundPixelPacket(PixelPacket background) {
+	public PNGSaveOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -435,7 +431,7 @@ public class PNGSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

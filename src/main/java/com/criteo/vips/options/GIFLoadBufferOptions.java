@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "gifload_buffer" operation.
  */
@@ -28,13 +24,13 @@ public class GIFLoadBufferOptions {
 	private Integer n;
 	private Integer page;
 	private Boolean memory;
-	private VipsAccess access;
-	private VipsFailOn failOn;
+	private com.criteo.vips.enums.VipsAccess access;
+	private com.criteo.vips.enums.VipsFailOn failOn;
 
 	/**
 	 * Optional argument: n
 	 * <p>
-	 * Load this many pages
+	 * Number of pages to load, -1 for all
 	 * @return the value of {@code n}
 	 */
 	public Integer getN() {
@@ -44,7 +40,7 @@ public class GIFLoadBufferOptions {
 	/**
 	 * Set the optional "n" argument.
 	 * <p>
-	 * Load this many pages
+	 * Number of pages to load, -1 for all
 	 * @param n the new value of {@code n}
 	 */
 	public void setN(Integer n) {
@@ -54,7 +50,7 @@ public class GIFLoadBufferOptions {
 	/**
 	 * Set the optional "n" argument.
 	 * <p>
-	 * Load this many pages
+	 * Number of pages to load, -1 for all
 	 * @param n the new value of {@code n}
 	 * @return this object for chaining
 	 */
@@ -66,7 +62,7 @@ public class GIFLoadBufferOptions {
 	/**
 	 * Optional argument: page
 	 * <p>
-	 * Load this page from the file
+	 * First page to load
 	 * @return the value of {@code page}
 	 */
 	public Integer getPage() {
@@ -76,7 +72,7 @@ public class GIFLoadBufferOptions {
 	/**
 	 * Set the optional "page" argument.
 	 * <p>
-	 * Load this page from the file
+	 * First page to load
 	 * @param page the new value of {@code page}
 	 */
 	public void setPage(Integer page) {
@@ -86,7 +82,7 @@ public class GIFLoadBufferOptions {
 	/**
 	 * Set the optional "page" argument.
 	 * <p>
-	 * Load this page from the file
+	 * First page to load
 	 * @param page the new value of {@code page}
 	 * @return this object for chaining
 	 */
@@ -133,7 +129,7 @@ public class GIFLoadBufferOptions {
 	 * Required access pattern for this file
 	 * @return the value of {@code access}
 	 */
-	public VipsAccess getAccess() {
+	public com.criteo.vips.enums.VipsAccess getAccess() {
 		return this.access;
 	}
 
@@ -143,7 +139,7 @@ public class GIFLoadBufferOptions {
 	 * Required access pattern for this file
 	 * @param access the new value of {@code access}
 	 */
-	public void setAccess(VipsAccess access) {
+	public void setAccess(com.criteo.vips.enums.VipsAccess access) {
 		this.access = access;
 	}
 
@@ -154,7 +150,7 @@ public class GIFLoadBufferOptions {
 	 * @param access the new value of {@code access}
 	 * @return this object for chaining
 	 */
-	public GIFLoadBufferOptions access(VipsAccess access) {
+	public GIFLoadBufferOptions access(com.criteo.vips.enums.VipsAccess access) {
 		setAccess(access);
 		return this;
 	}
@@ -165,7 +161,7 @@ public class GIFLoadBufferOptions {
 	 * Error level to fail on
 	 * @return the value of {@code failOn}
 	 */
-	public VipsFailOn getFailOn() {
+	public com.criteo.vips.enums.VipsFailOn getFailOn() {
 		return this.failOn;
 	}
 
@@ -175,7 +171,7 @@ public class GIFLoadBufferOptions {
 	 * Error level to fail on
 	 * @param failOn the new value of {@code failOn}
 	 */
-	public void setFailOn(VipsFailOn failOn) {
+	public void setFailOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		this.failOn = failOn;
 	}
 
@@ -186,7 +182,7 @@ public class GIFLoadBufferOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public GIFLoadBufferOptions failOn(VipsFailOn failOn) {
+	public GIFLoadBufferOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}

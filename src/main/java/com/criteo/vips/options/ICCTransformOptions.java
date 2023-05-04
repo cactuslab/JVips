@@ -16,17 +16,13 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "icc_transform" operation.
  */
 public class ICCTransformOptions {
 
-	private VipsPCS pcs;
-	private VipsIntent intent;
+	private com.criteo.vips.enums.VipsPCS pcs;
+	private com.criteo.vips.enums.VipsIntent intent;
 	private Boolean blackPointCompensation;
 	private Boolean embedded;
 	private String inputProfile;
@@ -38,7 +34,7 @@ public class ICCTransformOptions {
 	 * Set Profile Connection Space
 	 * @return the value of {@code pcs}
 	 */
-	public VipsPCS getPcs() {
+	public com.criteo.vips.enums.VipsPCS getPcs() {
 		return this.pcs;
 	}
 
@@ -48,7 +44,7 @@ public class ICCTransformOptions {
 	 * Set Profile Connection Space
 	 * @param pcs the new value of {@code pcs}
 	 */
-	public void setPcs(VipsPCS pcs) {
+	public void setPcs(com.criteo.vips.enums.VipsPCS pcs) {
 		this.pcs = pcs;
 	}
 
@@ -59,7 +55,7 @@ public class ICCTransformOptions {
 	 * @param pcs the new value of {@code pcs}
 	 * @return this object for chaining
 	 */
-	public ICCTransformOptions pcs(VipsPCS pcs) {
+	public ICCTransformOptions pcs(com.criteo.vips.enums.VipsPCS pcs) {
 		setPcs(pcs);
 		return this;
 	}
@@ -70,7 +66,7 @@ public class ICCTransformOptions {
 	 * Rendering intent
 	 * @return the value of {@code intent}
 	 */
-	public VipsIntent getIntent() {
+	public com.criteo.vips.enums.VipsIntent getIntent() {
 		return this.intent;
 	}
 
@@ -80,7 +76,7 @@ public class ICCTransformOptions {
 	 * Rendering intent
 	 * @param intent the new value of {@code intent}
 	 */
-	public void setIntent(VipsIntent intent) {
+	public void setIntent(com.criteo.vips.enums.VipsIntent intent) {
 		this.intent = intent;
 	}
 
@@ -91,7 +87,7 @@ public class ICCTransformOptions {
 	 * @param intent the new value of {@code intent}
 	 * @return this object for chaining
 	 */
-	public ICCTransformOptions intent(VipsIntent intent) {
+	public ICCTransformOptions intent(com.criteo.vips.enums.VipsIntent intent) {
 		setIntent(intent);
 		return this;
 	}

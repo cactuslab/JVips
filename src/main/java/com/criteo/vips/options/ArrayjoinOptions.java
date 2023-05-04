@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "arrayjoin" operation.
  */
@@ -28,9 +24,9 @@ public class ArrayjoinOptions {
 	private Integer across;
 	private Integer shim;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
-	private VipsAlign halign;
-	private VipsAlign valign;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.enums.VipsAlign halign;
+	private com.criteo.vips.enums.VipsAlign valign;
 	private Integer hspacing;
 	private Integer vspacing;
 
@@ -136,7 +132,7 @@ public class ArrayjoinOptions {
 	 * Colour for new pixels
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -146,7 +142,7 @@ public class ArrayjoinOptions {
 	 * Colour for new pixels
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -161,7 +157,7 @@ public class ArrayjoinOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public ArrayjoinOptions backgroundPixelPacket(PixelPacket background) {
+	public ArrayjoinOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -174,7 +170,7 @@ public class ArrayjoinOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);
@@ -199,7 +195,7 @@ public class ArrayjoinOptions {
 	 * Align on the left, centre or right
 	 * @return the value of {@code halign}
 	 */
-	public VipsAlign getHalign() {
+	public com.criteo.vips.enums.VipsAlign getHalign() {
 		return this.halign;
 	}
 
@@ -209,7 +205,7 @@ public class ArrayjoinOptions {
 	 * Align on the left, centre or right
 	 * @param halign the new value of {@code halign}
 	 */
-	public void setHalign(VipsAlign halign) {
+	public void setHalign(com.criteo.vips.enums.VipsAlign halign) {
 		this.halign = halign;
 	}
 
@@ -220,7 +216,7 @@ public class ArrayjoinOptions {
 	 * @param halign the new value of {@code halign}
 	 * @return this object for chaining
 	 */
-	public ArrayjoinOptions halign(VipsAlign halign) {
+	public ArrayjoinOptions halign(com.criteo.vips.enums.VipsAlign halign) {
 		setHalign(halign);
 		return this;
 	}
@@ -231,7 +227,7 @@ public class ArrayjoinOptions {
 	 * Align on the top, centre or bottom
 	 * @return the value of {@code valign}
 	 */
-	public VipsAlign getValign() {
+	public com.criteo.vips.enums.VipsAlign getValign() {
 		return this.valign;
 	}
 
@@ -241,7 +237,7 @@ public class ArrayjoinOptions {
 	 * Align on the top, centre or bottom
 	 * @param valign the new value of {@code valign}
 	 */
-	public void setValign(VipsAlign valign) {
+	public void setValign(com.criteo.vips.enums.VipsAlign valign) {
 		this.valign = valign;
 	}
 
@@ -252,7 +248,7 @@ public class ArrayjoinOptions {
 	 * @param valign the new value of {@code valign}
 	 * @return this object for chaining
 	 */
-	public ArrayjoinOptions valign(VipsAlign valign) {
+	public ArrayjoinOptions valign(com.criteo.vips.enums.VipsAlign valign) {
 		setValign(valign);
 		return this;
 	}

@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "hist_find_indexed" operation.
  */
 public class HistFindIndexedOptions {
 
-	private VipsCombine combine;
+	private com.criteo.vips.enums.VipsCombine combine;
 
 	/**
 	 * Optional argument: combine
@@ -33,7 +29,7 @@ public class HistFindIndexedOptions {
 	 * Combine bins like this
 	 * @return the value of {@code combine}
 	 */
-	public VipsCombine getCombine() {
+	public com.criteo.vips.enums.VipsCombine getCombine() {
 		return this.combine;
 	}
 
@@ -43,7 +39,7 @@ public class HistFindIndexedOptions {
 	 * Combine bins like this
 	 * @param combine the new value of {@code combine}
 	 */
-	public void setCombine(VipsCombine combine) {
+	public void setCombine(com.criteo.vips.enums.VipsCombine combine) {
 		this.combine = combine;
 	}
 
@@ -54,7 +50,7 @@ public class HistFindIndexedOptions {
 	 * @param combine the new value of {@code combine}
 	 * @return this object for chaining
 	 */
-	public HistFindIndexedOptions combine(VipsCombine combine) {
+	public HistFindIndexedOptions combine(com.criteo.vips.enums.VipsCombine combine) {
 		setCombine(combine);
 		return this;
 	}

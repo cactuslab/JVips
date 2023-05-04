@@ -16,17 +16,13 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "gaussmat" operation.
  */
 public class GaussMatOptions {
 
 	private Boolean separable;
-	private VipsPrecision precision;
+	private com.criteo.vips.enums.VipsPrecision precision;
 
 	/**
 	 * Optional argument: separable
@@ -66,7 +62,7 @@ public class GaussMatOptions {
 	 * Generate with this precision
 	 * @return the value of {@code precision}
 	 */
-	public VipsPrecision getPrecision() {
+	public com.criteo.vips.enums.VipsPrecision getPrecision() {
 		return this.precision;
 	}
 
@@ -76,7 +72,7 @@ public class GaussMatOptions {
 	 * Generate with this precision
 	 * @param precision the new value of {@code precision}
 	 */
-	public void setPrecision(VipsPrecision precision) {
+	public void setPrecision(com.criteo.vips.enums.VipsPrecision precision) {
 		this.precision = precision;
 	}
 
@@ -87,7 +83,7 @@ public class GaussMatOptions {
 	 * @param precision the new value of {@code precision}
 	 * @return this object for chaining
 	 */
-	public GaussMatOptions precision(VipsPrecision precision) {
+	public GaussMatOptions precision(com.criteo.vips.enums.VipsPrecision precision) {
 		setPrecision(precision);
 		return this;
 	}

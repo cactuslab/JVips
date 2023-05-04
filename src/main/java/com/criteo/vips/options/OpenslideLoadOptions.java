@@ -16,54 +16,19 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "openslideload" operation.
  */
 public class OpenslideLoadOptions {
 
-	private Boolean attachAssociated;
 	private Integer level;
 	private Boolean autocrop;
 	private String associated;
+	private Boolean attachAssociated;
+	private Boolean rgb;
 	private Boolean memory;
-	private VipsAccess access;
-	private VipsFailOn failOn;
-
-	/**
-	 * Optional argument: attach-associated
-	 * <p>
-	 * Attach all associated images
-	 * @return the value of {@code attachAssociated}
-	 */
-	public Boolean getAttachAssociated() {
-		return this.attachAssociated;
-	}
-
-	/**
-	 * Set the optional "attach-associated" argument.
-	 * <p>
-	 * Attach all associated images
-	 * @param attachAssociated the new value of {@code attachAssociated}
-	 */
-	public void setAttachAssociated(Boolean attachAssociated) {
-		this.attachAssociated = attachAssociated;
-	}
-
-	/**
-	 * Set the optional "attach-associated" argument.
-	 * <p>
-	 * Attach all associated images
-	 * @param attachAssociated the new value of {@code attachAssociated}
-	 * @return this object for chaining
-	 */
-	public OpenslideLoadOptions attachAssociated(Boolean attachAssociated) {
-		setAttachAssociated(attachAssociated);
-		return this;
-	}
+	private com.criteo.vips.enums.VipsAccess access;
+	private com.criteo.vips.enums.VipsFailOn failOn;
 
 	/**
 	 * Optional argument: level
@@ -162,6 +127,70 @@ public class OpenslideLoadOptions {
 	}
 
 	/**
+	 * Optional argument: attach-associated
+	 * <p>
+	 * Attach all associated images
+	 * @return the value of {@code attachAssociated}
+	 */
+	public Boolean getAttachAssociated() {
+		return this.attachAssociated;
+	}
+
+	/**
+	 * Set the optional "attach-associated" argument.
+	 * <p>
+	 * Attach all associated images
+	 * @param attachAssociated the new value of {@code attachAssociated}
+	 */
+	public void setAttachAssociated(Boolean attachAssociated) {
+		this.attachAssociated = attachAssociated;
+	}
+
+	/**
+	 * Set the optional "attach-associated" argument.
+	 * <p>
+	 * Attach all associated images
+	 * @param attachAssociated the new value of {@code attachAssociated}
+	 * @return this object for chaining
+	 */
+	public OpenslideLoadOptions attachAssociated(Boolean attachAssociated) {
+		setAttachAssociated(attachAssociated);
+		return this;
+	}
+
+	/**
+	 * Optional argument: rgb
+	 * <p>
+	 * Output RGB (not RGBA)
+	 * @return the value of {@code rgb}
+	 */
+	public Boolean getRgb() {
+		return this.rgb;
+	}
+
+	/**
+	 * Set the optional "rgb" argument.
+	 * <p>
+	 * Output RGB (not RGBA)
+	 * @param rgb the new value of {@code rgb}
+	 */
+	public void setRgb(Boolean rgb) {
+		this.rgb = rgb;
+	}
+
+	/**
+	 * Set the optional "rgb" argument.
+	 * <p>
+	 * Output RGB (not RGBA)
+	 * @param rgb the new value of {@code rgb}
+	 * @return this object for chaining
+	 */
+	public OpenslideLoadOptions rgb(Boolean rgb) {
+		setRgb(rgb);
+		return this;
+	}
+
+	/**
 	 * Optional argument: memory
 	 * <p>
 	 * Force open via memory
@@ -199,7 +228,7 @@ public class OpenslideLoadOptions {
 	 * Required access pattern for this file
 	 * @return the value of {@code access}
 	 */
-	public VipsAccess getAccess() {
+	public com.criteo.vips.enums.VipsAccess getAccess() {
 		return this.access;
 	}
 
@@ -209,7 +238,7 @@ public class OpenslideLoadOptions {
 	 * Required access pattern for this file
 	 * @param access the new value of {@code access}
 	 */
-	public void setAccess(VipsAccess access) {
+	public void setAccess(com.criteo.vips.enums.VipsAccess access) {
 		this.access = access;
 	}
 
@@ -220,7 +249,7 @@ public class OpenslideLoadOptions {
 	 * @param access the new value of {@code access}
 	 * @return this object for chaining
 	 */
-	public OpenslideLoadOptions access(VipsAccess access) {
+	public OpenslideLoadOptions access(com.criteo.vips.enums.VipsAccess access) {
 		setAccess(access);
 		return this;
 	}
@@ -231,7 +260,7 @@ public class OpenslideLoadOptions {
 	 * Error level to fail on
 	 * @return the value of {@code failOn}
 	 */
-	public VipsFailOn getFailOn() {
+	public com.criteo.vips.enums.VipsFailOn getFailOn() {
 		return this.failOn;
 	}
 
@@ -241,7 +270,7 @@ public class OpenslideLoadOptions {
 	 * Error level to fail on
 	 * @param failOn the new value of {@code failOn}
 	 */
-	public void setFailOn(VipsFailOn failOn) {
+	public void setFailOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		this.failOn = failOn;
 	}
 
@@ -252,7 +281,7 @@ public class OpenslideLoadOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public OpenslideLoadOptions failOn(VipsFailOn failOn) {
+	public OpenslideLoadOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}

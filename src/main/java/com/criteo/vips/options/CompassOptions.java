@@ -16,19 +16,15 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "compass" operation.
  */
 public class CompassOptions {
 
 	private Integer times;
-	private VipsAngle45 angle;
-	private VipsCombine combine;
-	private VipsPrecision precision;
+	private com.criteo.vips.enums.VipsAngle45 angle;
+	private com.criteo.vips.enums.VipsCombine combine;
+	private com.criteo.vips.enums.VipsPrecision precision;
 	private Integer layers;
 	private Integer cluster;
 
@@ -70,7 +66,7 @@ public class CompassOptions {
 	 * Rotate mask by this much between convolutions
 	 * @return the value of {@code angle}
 	 */
-	public VipsAngle45 getAngle() {
+	public com.criteo.vips.enums.VipsAngle45 getAngle() {
 		return this.angle;
 	}
 
@@ -80,7 +76,7 @@ public class CompassOptions {
 	 * Rotate mask by this much between convolutions
 	 * @param angle the new value of {@code angle}
 	 */
-	public void setAngle(VipsAngle45 angle) {
+	public void setAngle(com.criteo.vips.enums.VipsAngle45 angle) {
 		this.angle = angle;
 	}
 
@@ -91,7 +87,7 @@ public class CompassOptions {
 	 * @param angle the new value of {@code angle}
 	 * @return this object for chaining
 	 */
-	public CompassOptions angle(VipsAngle45 angle) {
+	public CompassOptions angle(com.criteo.vips.enums.VipsAngle45 angle) {
 		setAngle(angle);
 		return this;
 	}
@@ -102,7 +98,7 @@ public class CompassOptions {
 	 * Combine convolution results like this
 	 * @return the value of {@code combine}
 	 */
-	public VipsCombine getCombine() {
+	public com.criteo.vips.enums.VipsCombine getCombine() {
 		return this.combine;
 	}
 
@@ -112,7 +108,7 @@ public class CompassOptions {
 	 * Combine convolution results like this
 	 * @param combine the new value of {@code combine}
 	 */
-	public void setCombine(VipsCombine combine) {
+	public void setCombine(com.criteo.vips.enums.VipsCombine combine) {
 		this.combine = combine;
 	}
 
@@ -123,7 +119,7 @@ public class CompassOptions {
 	 * @param combine the new value of {@code combine}
 	 * @return this object for chaining
 	 */
-	public CompassOptions combine(VipsCombine combine) {
+	public CompassOptions combine(com.criteo.vips.enums.VipsCombine combine) {
 		setCombine(combine);
 		return this;
 	}
@@ -134,7 +130,7 @@ public class CompassOptions {
 	 * Convolve with this precision
 	 * @return the value of {@code precision}
 	 */
-	public VipsPrecision getPrecision() {
+	public com.criteo.vips.enums.VipsPrecision getPrecision() {
 		return this.precision;
 	}
 
@@ -144,7 +140,7 @@ public class CompassOptions {
 	 * Convolve with this precision
 	 * @param precision the new value of {@code precision}
 	 */
-	public void setPrecision(VipsPrecision precision) {
+	public void setPrecision(com.criteo.vips.enums.VipsPrecision precision) {
 		this.precision = precision;
 	}
 
@@ -155,7 +151,7 @@ public class CompassOptions {
 	 * @param precision the new value of {@code precision}
 	 * @return this object for chaining
 	 */
-	public CompassOptions precision(VipsPrecision precision) {
+	public CompassOptions precision(com.criteo.vips.enums.VipsPrecision precision) {
 		setPrecision(precision);
 		return this;
 	}

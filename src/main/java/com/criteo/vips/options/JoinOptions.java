@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "join" operation.
  */
@@ -28,8 +24,8 @@ public class JoinOptions {
 	private Boolean expand;
 	private Integer shim;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
-	private VipsAlign align;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.enums.VipsAlign align;
 
 	/**
 	 * Optional argument: expand
@@ -133,7 +129,7 @@ public class JoinOptions {
 	 * Colour for new pixels
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -143,7 +139,7 @@ public class JoinOptions {
 	 * Colour for new pixels
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -158,7 +154,7 @@ public class JoinOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public JoinOptions backgroundPixelPacket(PixelPacket background) {
+	public JoinOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -171,7 +167,7 @@ public class JoinOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);
@@ -196,7 +192,7 @@ public class JoinOptions {
 	 * Align on the low, centre or high coordinate edge
 	 * @return the value of {@code align}
 	 */
-	public VipsAlign getAlign() {
+	public com.criteo.vips.enums.VipsAlign getAlign() {
 		return this.align;
 	}
 
@@ -206,7 +202,7 @@ public class JoinOptions {
 	 * Align on the low, centre or high coordinate edge
 	 * @param align the new value of {@code align}
 	 */
-	public void setAlign(VipsAlign align) {
+	public void setAlign(com.criteo.vips.enums.VipsAlign align) {
 		this.align = align;
 	}
 
@@ -217,7 +213,7 @@ public class JoinOptions {
 	 * @param align the new value of {@code align}
 	 * @return this object for chaining
 	 */
-	public JoinOptions align(VipsAlign align) {
+	public JoinOptions align(com.criteo.vips.enums.VipsAlign align) {
 		setAlign(align);
 		return this;
 	}

@@ -214,13 +214,13 @@ public class VipsImageTest {
     public void TestCastUchar(@FromDataPoints("filenames") String filename) throws IOException, VipsException {
         byte[] buffer = VipsTestUtils.getByteArray(filename);
         try (VipsImage img = new VipsImage(buffer, buffer.length)) {
-            assertNotEquals(img.imageGetFormat(), VipsBandFormat.FormatNotset);
-            img.applyCast(VipsBandFormat.FormatDouble);
-            assertEquals(img.imageGetFormat(), VipsBandFormat.FormatDouble);
+            assertNotEquals(img.imageGetFormat(), VipsBandFormat.Notset);
+            img.applyCast(VipsBandFormat.Double);
+            assertEquals(img.imageGetFormat(), VipsBandFormat.Double);
             img.applyCastUchar(true);
-            assertEquals(img.imageGetFormat(), VipsBandFormat.FormatUchar); // also checks that VipsBandFormat.UCHAR is correct
+            assertEquals(img.imageGetFormat(), VipsBandFormat.Uchar); // also checks that VipsBandFormat.UCHAR is correct
             img.applyCastUchar();
-            assertEquals(img.imageGetFormat(), VipsBandFormat.FormatUchar);
+            assertEquals(img.imageGetFormat(), VipsBandFormat.Uchar);
         }
     }
 
@@ -228,22 +228,22 @@ public class VipsImageTest {
     public void TestCast(@FromDataPoints("filenames") String filename) throws IOException, VipsException {
         byte[] buffer = VipsTestUtils.getByteArray(filename);
         try (VipsImage img = new VipsImage(buffer, buffer.length)) {
-            assertNotEquals(img.imageGetFormat(), VipsBandFormat.FormatNotset);
-            img.applyCast(VipsBandFormat.FormatUchar, true);
-            assertEquals(img.imageGetFormat(), VipsBandFormat.FormatUchar);
-            img.applyCast(VipsBandFormat.FormatShort);
-            assertEquals(img.imageGetFormat(), VipsBandFormat.FormatShort);
-            img.applyCast(VipsBandFormat.FormatFloat);
-            assertEquals(img.imageGetFormat(), VipsBandFormat.FormatFloat);
+            assertNotEquals(img.imageGetFormat(), VipsBandFormat.Notset);
+            img.applyCast(VipsBandFormat.Uchar, true);
+            assertEquals(img.imageGetFormat(), VipsBandFormat.Uchar);
+            img.applyCast(VipsBandFormat.Short);
+            assertEquals(img.imageGetFormat(), VipsBandFormat.Short);
+            img.applyCast(VipsBandFormat.Float);
+            assertEquals(img.imageGetFormat(), VipsBandFormat.Float);
         }
     }
 
     @Test
     public void TestVipsBandFormat() {
-        assertEquals(0, VipsBandFormat.FormatUchar.getValue());
+        assertEquals(0, VipsBandFormat.Uchar.getValue());
         assertEquals(0, VipsBandFormat.valueOf(0).getValue());
-        assertEquals(9, VipsBandFormat.FormatDpcomplex.getValue());
-        assertEquals(VipsBandFormat.valueOf(9), VipsBandFormat.FormatDpcomplex);
+        assertEquals(9, VipsBandFormat.Dpcomplex.getValue());
+        assertEquals(VipsBandFormat.valueOf(9), VipsBandFormat.Dpcomplex);
     }
 
     @Test

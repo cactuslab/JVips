@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "jp2ksave" operation.
  */
@@ -29,10 +25,10 @@ public class JP2KSaveOptions {
 	private Integer tileHeight;
 	private Boolean lossless;
 	private Integer q;
-	private VipsForeignSubsample subsampleMode;
+	private com.criteo.vips.enums.VipsForeignSubsample subsampleMode;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -169,7 +165,7 @@ public class JP2KSaveOptions {
 	 * Select chroma subsample operation mode
 	 * @return the value of {@code subsampleMode}
 	 */
-	public VipsForeignSubsample getSubsampleMode() {
+	public com.criteo.vips.enums.VipsForeignSubsample getSubsampleMode() {
 		return this.subsampleMode;
 	}
 
@@ -179,7 +175,7 @@ public class JP2KSaveOptions {
 	 * Select chroma subsample operation mode
 	 * @param subsampleMode the new value of {@code subsampleMode}
 	 */
-	public void setSubsampleMode(VipsForeignSubsample subsampleMode) {
+	public void setSubsampleMode(com.criteo.vips.enums.VipsForeignSubsample subsampleMode) {
 		this.subsampleMode = subsampleMode;
 	}
 
@@ -190,7 +186,7 @@ public class JP2KSaveOptions {
 	 * @param subsampleMode the new value of {@code subsampleMode}
 	 * @return this object for chaining
 	 */
-	public JP2KSaveOptions subsampleMode(VipsForeignSubsample subsampleMode) {
+	public JP2KSaveOptions subsampleMode(com.criteo.vips.enums.VipsForeignSubsample subsampleMode) {
 		setSubsampleMode(subsampleMode);
 		return this;
 	}
@@ -265,7 +261,7 @@ public class JP2KSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -275,7 +271,7 @@ public class JP2KSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -290,7 +286,7 @@ public class JP2KSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public JP2KSaveOptions backgroundPixelPacket(PixelPacket background) {
+	public JP2KSaveOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -303,7 +299,7 @@ public class JP2KSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

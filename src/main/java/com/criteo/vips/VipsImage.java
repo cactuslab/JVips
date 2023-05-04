@@ -96,11 +96,11 @@ public class VipsImage extends AbstractVipsImage implements Image {
     private native int imageGetFormatNative();
 
     public void applyCastUchar() throws VipsException {
-        applyCast(VipsBandFormat.FormatUchar);
+        applyCast(VipsBandFormat.Uchar);
     }
 
     public void applyCastUchar(boolean shift) throws VipsException {
-        applyCast(VipsBandFormat.FormatUchar, new CastOptions().shift(shift));
+        applyCast(VipsBandFormat.Uchar, new CastOptions().shift(shift));
     }
 
     public void applyCast(VipsBandFormat format, boolean shift) throws VipsException {

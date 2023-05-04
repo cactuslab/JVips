@@ -8986,14 +8986,14 @@ Java_com_criteo_vips_AbstractVipsImage_gifSave(JNIEnv *env, jobject in, jstring 
 			g_value_unset(&gvalue);
 		}
 
-		// reoptimise
-		jfieldID reoptimiseFid = (*env)->GetFieldID(env, optionsCls, "reoptimise", "Ljava/lang/Boolean;");
-		jobject reoptimiseObjectValue = (*env)->GetObjectField(env, options, reoptimiseFid);
-		if (reoptimiseObjectValue != NULL) {
-			jboolean reoptimise = (*env)->CallBooleanMethod(env, reoptimiseObjectValue, booleanValue_mid);
+		// reuse
+		jfieldID reuseFid = (*env)->GetFieldID(env, optionsCls, "reuse", "Ljava/lang/Boolean;");
+		jobject reuseObjectValue = (*env)->GetObjectField(env, options, reuseFid);
+		if (reuseObjectValue != NULL) {
+			jboolean reuse = (*env)->CallBooleanMethod(env, reuseObjectValue, booleanValue_mid);
 			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, reoptimise);
-			g_object_set_property(G_OBJECT(op), "reoptimise", &gvalue);
+			g_value_set_boolean(&gvalue, reuse);
+			g_object_set_property(G_OBJECT(op), "reuse", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9005,6 +9005,17 @@ Java_com_criteo_vips_AbstractVipsImage_gifSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_DOUBLE);
 			g_value_set_double(&gvalue, interpaletteMaxerror);
 			g_object_set_property(G_OBJECT(op), "interpalette-maxerror", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// interlace
+		jfieldID interlaceFid = (*env)->GetFieldID(env, optionsCls, "interlace", "Ljava/lang/Boolean;");
+		jobject interlaceObjectValue = (*env)->GetObjectField(env, options, interlaceFid);
+		if (interlaceObjectValue != NULL) {
+			jboolean interlace = (*env)->CallBooleanMethod(env, interlaceObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, interlace);
+			g_object_set_property(G_OBJECT(op), "interlace", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9139,14 +9150,14 @@ Java_com_criteo_vips_AbstractVipsImage_gifSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_unset(&gvalue);
 		}
 
-		// reoptimise
-		jfieldID reoptimiseFid = (*env)->GetFieldID(env, optionsCls, "reoptimise", "Ljava/lang/Boolean;");
-		jobject reoptimiseObjectValue = (*env)->GetObjectField(env, options, reoptimiseFid);
-		if (reoptimiseObjectValue != NULL) {
-			jboolean reoptimise = (*env)->CallBooleanMethod(env, reoptimiseObjectValue, booleanValue_mid);
+		// reuse
+		jfieldID reuseFid = (*env)->GetFieldID(env, optionsCls, "reuse", "Ljava/lang/Boolean;");
+		jobject reuseObjectValue = (*env)->GetObjectField(env, options, reuseFid);
+		if (reuseObjectValue != NULL) {
+			jboolean reuse = (*env)->CallBooleanMethod(env, reuseObjectValue, booleanValue_mid);
 			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, reoptimise);
-			g_object_set_property(G_OBJECT(op), "reoptimise", &gvalue);
+			g_value_set_boolean(&gvalue, reuse);
+			g_object_set_property(G_OBJECT(op), "reuse", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9158,6 +9169,17 @@ Java_com_criteo_vips_AbstractVipsImage_gifSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_init(&gvalue, G_TYPE_DOUBLE);
 			g_value_set_double(&gvalue, interpaletteMaxerror);
 			g_object_set_property(G_OBJECT(op), "interpalette-maxerror", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// interlace
+		jfieldID interlaceFid = (*env)->GetFieldID(env, optionsCls, "interlace", "Ljava/lang/Boolean;");
+		jobject interlaceObjectValue = (*env)->GetObjectField(env, options, interlaceFid);
+		if (interlaceObjectValue != NULL) {
+			jboolean interlace = (*env)->CallBooleanMethod(env, interlaceObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, interlace);
+			g_object_set_property(G_OBJECT(op), "interlace", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -10149,6 +10171,19 @@ Java_com_criteo_vips_AbstractVipsImage_heifSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// encoder
+		jfieldID encoderFid = (*env)->GetFieldID(env, optionsCls, "encoder", "Lcom/criteo/vips/enums/VipsForeignHeifEncoder;");
+		jobject encoder = (*env)->GetObjectField(env, options, encoderFid);
+		if (encoder != NULL) {
+			jclass encoderCls = (*env)->GetObjectClass(env, encoder);
+			jfieldID encoderValueFid = (*env)->GetFieldID(env, encoderCls, "value", "I");
+			jint encoderValue = (*env)->GetIntField(env, encoder, encoderValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, encoderValue);
+			g_object_set_property(G_OBJECT(op), "encoder", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 		// strip
 		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
 		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
@@ -10303,6 +10338,19 @@ Java_com_criteo_vips_AbstractVipsImage_heifSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, subsampleModeValue);
 			g_object_set_property(G_OBJECT(op), "subsample-mode", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// encoder
+		jfieldID encoderFid = (*env)->GetFieldID(env, optionsCls, "encoder", "Lcom/criteo/vips/enums/VipsForeignHeifEncoder;");
+		jobject encoder = (*env)->GetObjectField(env, options, encoderFid);
+		if (encoder != NULL) {
+			jclass encoderCls = (*env)->GetObjectClass(env, encoder);
+			jfieldID encoderValueFid = (*env)->GetFieldID(env, encoderCls, "value", "I");
+			jint encoderValue = (*env)->GetIntField(env, encoder, encoderValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, encoderValue);
+			g_object_set_property(G_OBJECT(op), "encoder", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14074,6 +14122,17 @@ Java_com_criteo_vips_AbstractVipsImage_jpegLoad(JNIEnv *env, jclass cls, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// unlimited
+		jfieldID unlimitedFid = (*env)->GetFieldID(env, optionsCls, "unlimited", "Ljava/lang/Boolean;");
+		jobject unlimitedObjectValue = (*env)->GetObjectField(env, options, unlimitedFid);
+		if (unlimitedObjectValue != NULL) {
+			jboolean unlimited = (*env)->CallBooleanMethod(env, unlimitedObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, unlimited);
+			g_object_set_property(G_OBJECT(op), "unlimited", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 		// memory
 		jfieldID memoryFid = (*env)->GetFieldID(env, optionsCls, "memory", "Ljava/lang/Boolean;");
 		jobject memoryObjectValue = (*env)->GetObjectField(env, options, memoryFid);
@@ -14185,6 +14244,17 @@ Java_com_criteo_vips_AbstractVipsImage_jpegLoadBuffer(JNIEnv *env, jclass cls, j
 			g_value_init(&gvalue, G_TYPE_BOOLEAN);
 			g_value_set_boolean(&gvalue, autorotate);
 			g_object_set_property(G_OBJECT(op), "autorotate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// unlimited
+		jfieldID unlimitedFid = (*env)->GetFieldID(env, optionsCls, "unlimited", "Ljava/lang/Boolean;");
+		jobject unlimitedObjectValue = (*env)->GetObjectField(env, options, unlimitedFid);
+		if (unlimitedObjectValue != NULL) {
+			jboolean unlimited = (*env)->CallBooleanMethod(env, unlimitedObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, unlimited);
+			g_object_set_property(G_OBJECT(op), "unlimited", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -20654,17 +20724,6 @@ Java_com_criteo_vips_AbstractVipsImage_openslideLoad(JNIEnv *env, jclass cls, js
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// attach-associated
-		jfieldID attachAssociatedFid = (*env)->GetFieldID(env, optionsCls, "attachAssociated", "Ljava/lang/Boolean;");
-		jobject attachAssociatedObjectValue = (*env)->GetObjectField(env, options, attachAssociatedFid);
-		if (attachAssociatedObjectValue != NULL) {
-			jboolean attachAssociated = (*env)->CallBooleanMethod(env, attachAssociatedObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, attachAssociated);
-			g_object_set_property(G_OBJECT(op), "attach-associated", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// level
 		jfieldID levelFid = (*env)->GetFieldID(env, optionsCls, "level", "Ljava/lang/Integer;");
 		jobject levelObjectValue = (*env)->GetObjectField(env, options, levelFid);
@@ -20696,6 +20755,28 @@ Java_com_criteo_vips_AbstractVipsImage_openslideLoad(JNIEnv *env, jclass cls, js
 			g_value_set_string(&gvalue, associatedChars);
 			(*env)->ReleaseStringUTFChars(env, associated, associatedChars);
 			g_object_set_property(G_OBJECT(op), "associated", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// attach-associated
+		jfieldID attachAssociatedFid = (*env)->GetFieldID(env, optionsCls, "attachAssociated", "Ljava/lang/Boolean;");
+		jobject attachAssociatedObjectValue = (*env)->GetObjectField(env, options, attachAssociatedFid);
+		if (attachAssociatedObjectValue != NULL) {
+			jboolean attachAssociated = (*env)->CallBooleanMethod(env, attachAssociatedObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, attachAssociated);
+			g_object_set_property(G_OBJECT(op), "attach-associated", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// rgb
+		jfieldID rgbFid = (*env)->GetFieldID(env, optionsCls, "rgb", "Ljava/lang/Boolean;");
+		jobject rgbObjectValue = (*env)->GetObjectField(env, options, rgbFid);
+		if (rgbObjectValue != NULL) {
+			jboolean rgb = (*env)->CallBooleanMethod(env, rgbObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, rgb);
+			g_object_set_property(G_OBJECT(op), "rgb", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -27814,14 +27895,14 @@ Java_com_criteo_vips_AbstractVipsImage_text(JNIEnv *env, jclass cls, jstring tex
 			g_value_unset(&gvalue);
 		}
 
-		// rgba
-		jfieldID rgbaFid = (*env)->GetFieldID(env, optionsCls, "rgba", "Ljava/lang/Boolean;");
-		jobject rgbaObjectValue = (*env)->GetObjectField(env, options, rgbaFid);
-		if (rgbaObjectValue != NULL) {
-			jboolean rgba = (*env)->CallBooleanMethod(env, rgbaObjectValue, booleanValue_mid);
+		// justify
+		jfieldID justifyFid = (*env)->GetFieldID(env, optionsCls, "justify", "Ljava/lang/Boolean;");
+		jobject justifyObjectValue = (*env)->GetObjectField(env, options, justifyFid);
+		if (justifyObjectValue != NULL) {
+			jboolean justify = (*env)->CallBooleanMethod(env, justifyObjectValue, booleanValue_mid);
 			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, rgba);
-			g_object_set_property(G_OBJECT(op), "rgba", &gvalue);
+			g_value_set_boolean(&gvalue, justify);
+			g_object_set_property(G_OBJECT(op), "justify", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -27833,17 +27914,6 @@ Java_com_criteo_vips_AbstractVipsImage_text(JNIEnv *env, jclass cls, jstring tex
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, dpi);
 			g_object_set_property(G_OBJECT(op), "dpi", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// justify
-		jfieldID justifyFid = (*env)->GetFieldID(env, optionsCls, "justify", "Ljava/lang/Boolean;");
-		jobject justifyObjectValue = (*env)->GetObjectField(env, options, justifyFid);
-		if (justifyObjectValue != NULL) {
-			jboolean justify = (*env)->CallBooleanMethod(env, justifyObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, justify);
-			g_object_set_property(G_OBJECT(op), "justify", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -27867,6 +27937,30 @@ Java_com_criteo_vips_AbstractVipsImage_text(JNIEnv *env, jclass cls, jstring tex
 			g_value_set_string(&gvalue, fontfileChars);
 			(*env)->ReleaseStringUTFChars(env, fontfile, fontfileChars);
 			g_object_set_property(G_OBJECT(op), "fontfile", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// rgba
+		jfieldID rgbaFid = (*env)->GetFieldID(env, optionsCls, "rgba", "Ljava/lang/Boolean;");
+		jobject rgbaObjectValue = (*env)->GetObjectField(env, options, rgbaFid);
+		if (rgbaObjectValue != NULL) {
+			jboolean rgba = (*env)->CallBooleanMethod(env, rgbaObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, rgba);
+			g_object_set_property(G_OBJECT(op), "rgba", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// wrap
+		jfieldID wrapFid = (*env)->GetFieldID(env, optionsCls, "wrap", "Lcom/criteo/vips/enums/VipsTextWrap;");
+		jobject wrap = (*env)->GetObjectField(env, options, wrapFid);
+		if (wrap != NULL) {
+			jclass wrapCls = (*env)->GetObjectClass(env, wrap);
+			jfieldID wrapValueFid = (*env)->GetFieldID(env, wrapCls, "value", "I");
+			jint wrapValue = (*env)->GetIntField(env, wrap, wrapValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, wrapValue);
+			g_object_set_property(G_OBJECT(op), "wrap", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -31042,6 +31136,228 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 
 	// Output
 	return buffer;
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_webpSaveMime(JNIEnv *env, jobject in, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("webpsave_mime");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// Q
+		jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "Ljava/lang/Integer;");
+		jobject qObjectValue = (*env)->GetObjectField(env, options, qFid);
+		if (qObjectValue != NULL) {
+			jint q = (*env)->CallIntMethod(env, qObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, q);
+			g_object_set_property(G_OBJECT(op), "Q", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// lossless
+		jfieldID losslessFid = (*env)->GetFieldID(env, optionsCls, "lossless", "Ljava/lang/Boolean;");
+		jobject losslessObjectValue = (*env)->GetObjectField(env, options, losslessFid);
+		if (losslessObjectValue != NULL) {
+			jboolean lossless = (*env)->CallBooleanMethod(env, losslessObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, lossless);
+			g_object_set_property(G_OBJECT(op), "lossless", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// preset
+		jfieldID presetFid = (*env)->GetFieldID(env, optionsCls, "preset", "Lcom/criteo/vips/enums/VipsForeignWebpPreset;");
+		jobject preset = (*env)->GetObjectField(env, options, presetFid);
+		if (preset != NULL) {
+			jclass presetCls = (*env)->GetObjectClass(env, preset);
+			jfieldID presetValueFid = (*env)->GetFieldID(env, presetCls, "value", "I");
+			jint presetValue = (*env)->GetIntField(env, preset, presetValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, presetValue);
+			g_object_set_property(G_OBJECT(op), "preset", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// smart-subsample
+		jfieldID smartSubsampleFid = (*env)->GetFieldID(env, optionsCls, "smartSubsample", "Ljava/lang/Boolean;");
+		jobject smartSubsampleObjectValue = (*env)->GetObjectField(env, options, smartSubsampleFid);
+		if (smartSubsampleObjectValue != NULL) {
+			jboolean smartSubsample = (*env)->CallBooleanMethod(env, smartSubsampleObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, smartSubsample);
+			g_object_set_property(G_OBJECT(op), "smart-subsample", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// near-lossless
+		jfieldID nearLosslessFid = (*env)->GetFieldID(env, optionsCls, "nearLossless", "Ljava/lang/Boolean;");
+		jobject nearLosslessObjectValue = (*env)->GetObjectField(env, options, nearLosslessFid);
+		if (nearLosslessObjectValue != NULL) {
+			jboolean nearLossless = (*env)->CallBooleanMethod(env, nearLosslessObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, nearLossless);
+			g_object_set_property(G_OBJECT(op), "near-lossless", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// alpha-q
+		jfieldID alphaQFid = (*env)->GetFieldID(env, optionsCls, "alphaQ", "Ljava/lang/Integer;");
+		jobject alphaQObjectValue = (*env)->GetObjectField(env, options, alphaQFid);
+		if (alphaQObjectValue != NULL) {
+			jint alphaQ = (*env)->CallIntMethod(env, alphaQObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, alphaQ);
+			g_object_set_property(G_OBJECT(op), "alpha-q", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// min-size
+		jfieldID minSizeFid = (*env)->GetFieldID(env, optionsCls, "minSize", "Ljava/lang/Boolean;");
+		jobject minSizeObjectValue = (*env)->GetObjectField(env, options, minSizeFid);
+		if (minSizeObjectValue != NULL) {
+			jboolean minSize = (*env)->CallBooleanMethod(env, minSizeObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, minSize);
+			g_object_set_property(G_OBJECT(op), "min-size", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// kmin
+		jfieldID kminFid = (*env)->GetFieldID(env, optionsCls, "kmin", "Ljava/lang/Integer;");
+		jobject kminObjectValue = (*env)->GetObjectField(env, options, kminFid);
+		if (kminObjectValue != NULL) {
+			jint kmin = (*env)->CallIntMethod(env, kminObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, kmin);
+			g_object_set_property(G_OBJECT(op), "kmin", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// kmax
+		jfieldID kmaxFid = (*env)->GetFieldID(env, optionsCls, "kmax", "Ljava/lang/Integer;");
+		jobject kmaxObjectValue = (*env)->GetObjectField(env, options, kmaxFid);
+		if (kmaxObjectValue != NULL) {
+			jint kmax = (*env)->CallIntMethod(env, kmaxObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, kmax);
+			g_object_set_property(G_OBJECT(op), "kmax", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// effort
+		jfieldID effortFid = (*env)->GetFieldID(env, optionsCls, "effort", "Ljava/lang/Integer;");
+		jobject effortObjectValue = (*env)->GetObjectField(env, options, effortFid);
+		if (effortObjectValue != NULL) {
+			jint effort = (*env)->CallIntMethod(env, effortObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, effort);
+			g_object_set_property(G_OBJECT(op), "effort", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// mixed
+		jfieldID mixedFid = (*env)->GetFieldID(env, optionsCls, "mixed", "Ljava/lang/Boolean;");
+		jobject mixedObjectValue = (*env)->GetObjectField(env, options, mixedFid);
+		if (mixedObjectValue != NULL) {
+			jboolean mixed = (*env)->CallBooleanMethod(env, mixedObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, mixed);
+			g_object_set_property(G_OBJECT(op), "mixed", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// strip
+		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
+		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
+		if (stripObjectValue != NULL) {
+			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, strip);
+			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// background
+		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
+		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
+		jboolean backgroundIsPixelPacket = JNI_FALSE;
+		if (background == NULL) {
+			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
+			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
+			if (backgroundPixelPacket != NULL) {
+				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				backgroundIsPixelPacket = JNI_TRUE;
+			}
+		}
+		if (background != NULL) {
+			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
+			jint backgroundLength = (*env)->GetArrayLength(env, background);
+			if (backgroundIsPixelPacket) {
+				/* Strip alpha component if the image doesn't have alpha */
+				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
+					backgroundLength = 3;
+				}
+			}
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
+			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
+			g_object_set_property(G_OBJECT(op), "background", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// page-height
+		jfieldID pageHeightFid = (*env)->GetFieldID(env, optionsCls, "pageHeight", "Ljava/lang/Integer;");
+		jobject pageHeightObjectValue = (*env)->GetObjectField(env, options, pageHeightFid);
+		if (pageHeightObjectValue != NULL) {
+			jint pageHeight = (*env)->CallIntMethod(env, pageHeightObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, pageHeight);
+			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "webpsave_mime failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
 }
 
 JNIEXPORT jobject JNICALL

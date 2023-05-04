@@ -3153,6 +3153,14 @@ JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_AbstractVipsImage_webpSaveBuff
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    webpSaveMime
+ * Signature: (Lcom/criteo/vips/options/WebpSaveMimeOptions;)V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_webpSaveMime
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    worley
  * Signature: (IILcom/criteo/vips/options/WorleyOptions;)Lcom/criteo/vips/VipsImage;
  */

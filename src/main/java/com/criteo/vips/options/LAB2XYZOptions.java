@@ -16,17 +16,13 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "Lab2XYZ" operation.
  */
 public class LAB2XYZOptions {
 
 	private double[] temp;
-	private PixelPacket tempPixelPacket;
+	private com.criteo.vips.PixelPacket tempPixelPacket;
 
 	/**
 	 * Optional argument: temp
@@ -66,7 +62,7 @@ public class LAB2XYZOptions {
 	 * Color temperature
 	 * @return the value of {@code temp}
 	 */
-	public PixelPacket getTempPixelPacket() {
+	public com.criteo.vips.PixelPacket getTempPixelPacket() {
 		return this.tempPixelPacket;
 	}
 
@@ -76,7 +72,7 @@ public class LAB2XYZOptions {
 	 * Color temperature
 	 * @param temp the new value of {@code temp}
 	 */
-	public void setTempPixelPacket(PixelPacket temp) {
+	public void setTempPixelPacket(com.criteo.vips.PixelPacket temp) {
 		if (temp != null) {
 			this.tempPixelPacket = temp;
 		} else {
@@ -91,7 +87,7 @@ public class LAB2XYZOptions {
 	 * @param temp the new value of {@code temp}
 	 * @return this object for chaining
 	 */
-	public LAB2XYZOptions tempPixelPacket(PixelPacket temp) {
+	public LAB2XYZOptions tempPixelPacket(com.criteo.vips.PixelPacket temp) {
 		setTempPixelPacket(temp);
 		return this;
 	}
@@ -104,7 +100,7 @@ public class LAB2XYZOptions {
 	 */
 	public void setTemp(java.awt.Color temp) {
 		if (temp != null) {
-			PixelPacket pixelPacket = new PixelPacket(temp.getRed(), temp.getGreen(), temp.getBlue(), temp.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(temp.getRed(), temp.getGreen(), temp.getBlue(), temp.getAlpha());
 			setTempPixelPacket(pixelPacket);
 		} else {
 			setTempPixelPacket(null);

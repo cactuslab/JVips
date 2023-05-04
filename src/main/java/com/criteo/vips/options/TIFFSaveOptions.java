@@ -16,18 +16,14 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "tiffsave" operation.
  */
 public class TIFFSaveOptions {
 
-	private VipsForeignTiffCompression compression;
+	private com.criteo.vips.enums.VipsForeignTiffCompression compression;
 	private Integer q;
-	private VipsForeignTiffPredictor predictor;
+	private com.criteo.vips.enums.VipsForeignTiffPredictor predictor;
 	private String profile;
 	private Boolean tile;
 	private Integer tileWidth;
@@ -35,20 +31,20 @@ public class TIFFSaveOptions {
 	private Boolean pyramid;
 	private Boolean miniswhite;
 	private Integer bitdepth;
-	private VipsForeignTiffResunit resunit;
+	private com.criteo.vips.enums.VipsForeignTiffResunit resunit;
 	private Double xres;
 	private Double yres;
 	private Boolean bigtiff;
 	private Boolean properties;
-	private VipsRegionShrink regionShrink;
+	private com.criteo.vips.enums.VipsRegionShrink regionShrink;
 	private Integer level;
 	private Boolean lossless;
-	private VipsForeignDzDepth depth;
+	private com.criteo.vips.enums.VipsForeignDzDepth depth;
 	private Boolean subifd;
 	private Boolean premultiply;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -57,7 +53,7 @@ public class TIFFSaveOptions {
 	 * Compression for this file
 	 * @return the value of {@code compression}
 	 */
-	public VipsForeignTiffCompression getCompression() {
+	public com.criteo.vips.enums.VipsForeignTiffCompression getCompression() {
 		return this.compression;
 	}
 
@@ -67,7 +63,7 @@ public class TIFFSaveOptions {
 	 * Compression for this file
 	 * @param compression the new value of {@code compression}
 	 */
-	public void setCompression(VipsForeignTiffCompression compression) {
+	public void setCompression(com.criteo.vips.enums.VipsForeignTiffCompression compression) {
 		this.compression = compression;
 	}
 
@@ -78,7 +74,7 @@ public class TIFFSaveOptions {
 	 * @param compression the new value of {@code compression}
 	 * @return this object for chaining
 	 */
-	public TIFFSaveOptions compression(VipsForeignTiffCompression compression) {
+	public TIFFSaveOptions compression(com.criteo.vips.enums.VipsForeignTiffCompression compression) {
 		setCompression(compression);
 		return this;
 	}
@@ -121,7 +117,7 @@ public class TIFFSaveOptions {
 	 * Compression prediction
 	 * @return the value of {@code predictor}
 	 */
-	public VipsForeignTiffPredictor getPredictor() {
+	public com.criteo.vips.enums.VipsForeignTiffPredictor getPredictor() {
 		return this.predictor;
 	}
 
@@ -131,7 +127,7 @@ public class TIFFSaveOptions {
 	 * Compression prediction
 	 * @param predictor the new value of {@code predictor}
 	 */
-	public void setPredictor(VipsForeignTiffPredictor predictor) {
+	public void setPredictor(com.criteo.vips.enums.VipsForeignTiffPredictor predictor) {
 		this.predictor = predictor;
 	}
 
@@ -142,7 +138,7 @@ public class TIFFSaveOptions {
 	 * @param predictor the new value of {@code predictor}
 	 * @return this object for chaining
 	 */
-	public TIFFSaveOptions predictor(VipsForeignTiffPredictor predictor) {
+	public TIFFSaveOptions predictor(com.criteo.vips.enums.VipsForeignTiffPredictor predictor) {
 		setPredictor(predictor);
 		return this;
 	}
@@ -377,7 +373,7 @@ public class TIFFSaveOptions {
 	 * Resolution unit
 	 * @return the value of {@code resunit}
 	 */
-	public VipsForeignTiffResunit getResunit() {
+	public com.criteo.vips.enums.VipsForeignTiffResunit getResunit() {
 		return this.resunit;
 	}
 
@@ -387,7 +383,7 @@ public class TIFFSaveOptions {
 	 * Resolution unit
 	 * @param resunit the new value of {@code resunit}
 	 */
-	public void setResunit(VipsForeignTiffResunit resunit) {
+	public void setResunit(com.criteo.vips.enums.VipsForeignTiffResunit resunit) {
 		this.resunit = resunit;
 	}
 
@@ -398,7 +394,7 @@ public class TIFFSaveOptions {
 	 * @param resunit the new value of {@code resunit}
 	 * @return this object for chaining
 	 */
-	public TIFFSaveOptions resunit(VipsForeignTiffResunit resunit) {
+	public TIFFSaveOptions resunit(com.criteo.vips.enums.VipsForeignTiffResunit resunit) {
 		setResunit(resunit);
 		return this;
 	}
@@ -537,7 +533,7 @@ public class TIFFSaveOptions {
 	 * Method to shrink regions
 	 * @return the value of {@code regionShrink}
 	 */
-	public VipsRegionShrink getRegionShrink() {
+	public com.criteo.vips.enums.VipsRegionShrink getRegionShrink() {
 		return this.regionShrink;
 	}
 
@@ -547,7 +543,7 @@ public class TIFFSaveOptions {
 	 * Method to shrink regions
 	 * @param regionShrink the new value of {@code regionShrink}
 	 */
-	public void setRegionShrink(VipsRegionShrink regionShrink) {
+	public void setRegionShrink(com.criteo.vips.enums.VipsRegionShrink regionShrink) {
 		this.regionShrink = regionShrink;
 	}
 
@@ -558,7 +554,7 @@ public class TIFFSaveOptions {
 	 * @param regionShrink the new value of {@code regionShrink}
 	 * @return this object for chaining
 	 */
-	public TIFFSaveOptions regionShrink(VipsRegionShrink regionShrink) {
+	public TIFFSaveOptions regionShrink(com.criteo.vips.enums.VipsRegionShrink regionShrink) {
 		setRegionShrink(regionShrink);
 		return this;
 	}
@@ -633,7 +629,7 @@ public class TIFFSaveOptions {
 	 * Pyramid depth
 	 * @return the value of {@code depth}
 	 */
-	public VipsForeignDzDepth getDepth() {
+	public com.criteo.vips.enums.VipsForeignDzDepth getDepth() {
 		return this.depth;
 	}
 
@@ -643,7 +639,7 @@ public class TIFFSaveOptions {
 	 * Pyramid depth
 	 * @param depth the new value of {@code depth}
 	 */
-	public void setDepth(VipsForeignDzDepth depth) {
+	public void setDepth(com.criteo.vips.enums.VipsForeignDzDepth depth) {
 		this.depth = depth;
 	}
 
@@ -654,7 +650,7 @@ public class TIFFSaveOptions {
 	 * @param depth the new value of {@code depth}
 	 * @return this object for chaining
 	 */
-	public TIFFSaveOptions depth(VipsForeignDzDepth depth) {
+	public TIFFSaveOptions depth(com.criteo.vips.enums.VipsForeignDzDepth depth) {
 		setDepth(depth);
 		return this;
 	}
@@ -793,7 +789,7 @@ public class TIFFSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -803,7 +799,7 @@ public class TIFFSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -818,7 +814,7 @@ public class TIFFSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public TIFFSaveOptions backgroundPixelPacket(PixelPacket background) {
+	public TIFFSaveOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -831,7 +827,7 @@ public class TIFFSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

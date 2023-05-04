@@ -16,17 +16,13 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "linecache" operation.
  */
 public class LinecacheOptions {
 
 	private Integer tileHeight;
-	private VipsAccess access;
+	private com.criteo.vips.enums.VipsAccess access;
 	private Boolean threaded;
 	private Boolean persistent;
 
@@ -68,7 +64,7 @@ public class LinecacheOptions {
 	 * Expected access pattern
 	 * @return the value of {@code access}
 	 */
-	public VipsAccess getAccess() {
+	public com.criteo.vips.enums.VipsAccess getAccess() {
 		return this.access;
 	}
 
@@ -78,7 +74,7 @@ public class LinecacheOptions {
 	 * Expected access pattern
 	 * @param access the new value of {@code access}
 	 */
-	public void setAccess(VipsAccess access) {
+	public void setAccess(com.criteo.vips.enums.VipsAccess access) {
 		this.access = access;
 	}
 
@@ -89,7 +85,7 @@ public class LinecacheOptions {
 	 * @param access the new value of {@code access}
 	 * @return this object for chaining
 	 */
-	public LinecacheOptions access(VipsAccess access) {
+	public LinecacheOptions access(com.criteo.vips.enums.VipsAccess access) {
 		setAccess(access);
 		return this;
 	}

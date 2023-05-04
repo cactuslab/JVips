@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "text" operation.
  */
@@ -28,12 +24,13 @@ public class TextOptions {
 	private String font;
 	private Integer width;
 	private Integer height;
-	private VipsAlign align;
-	private Boolean rgba;
-	private Integer dpi;
+	private com.criteo.vips.enums.VipsAlign align;
 	private Boolean justify;
+	private Integer dpi;
 	private Integer spacing;
 	private String fontfile;
+	private Boolean rgba;
+	private com.criteo.vips.enums.VipsTextWrap wrap;
 
 	/**
 	 * Optional argument: font
@@ -137,7 +134,7 @@ public class TextOptions {
 	 * Align on the low, centre or high edge
 	 * @return the value of {@code align}
 	 */
-	public VipsAlign getAlign() {
+	public com.criteo.vips.enums.VipsAlign getAlign() {
 		return this.align;
 	}
 
@@ -147,7 +144,7 @@ public class TextOptions {
 	 * Align on the low, centre or high edge
 	 * @param align the new value of {@code align}
 	 */
-	public void setAlign(VipsAlign align) {
+	public void setAlign(com.criteo.vips.enums.VipsAlign align) {
 		this.align = align;
 	}
 
@@ -158,72 +155,8 @@ public class TextOptions {
 	 * @param align the new value of {@code align}
 	 * @return this object for chaining
 	 */
-	public TextOptions align(VipsAlign align) {
+	public TextOptions align(com.criteo.vips.enums.VipsAlign align) {
 		setAlign(align);
-		return this;
-	}
-
-	/**
-	 * Optional argument: rgba
-	 * <p>
-	 * Enable RGBA output
-	 * @return the value of {@code rgba}
-	 */
-	public Boolean getRgba() {
-		return this.rgba;
-	}
-
-	/**
-	 * Set the optional "rgba" argument.
-	 * <p>
-	 * Enable RGBA output
-	 * @param rgba the new value of {@code rgba}
-	 */
-	public void setRgba(Boolean rgba) {
-		this.rgba = rgba;
-	}
-
-	/**
-	 * Set the optional "rgba" argument.
-	 * <p>
-	 * Enable RGBA output
-	 * @param rgba the new value of {@code rgba}
-	 * @return this object for chaining
-	 */
-	public TextOptions rgba(Boolean rgba) {
-		setRgba(rgba);
-		return this;
-	}
-
-	/**
-	 * Optional argument: dpi
-	 * <p>
-	 * DPI to render at
-	 * @return the value of {@code dpi}
-	 */
-	public Integer getDpi() {
-		return this.dpi;
-	}
-
-	/**
-	 * Set the optional "dpi" argument.
-	 * <p>
-	 * DPI to render at
-	 * @param dpi the new value of {@code dpi}
-	 */
-	public void setDpi(Integer dpi) {
-		this.dpi = dpi;
-	}
-
-	/**
-	 * Set the optional "dpi" argument.
-	 * <p>
-	 * DPI to render at
-	 * @param dpi the new value of {@code dpi}
-	 * @return this object for chaining
-	 */
-	public TextOptions dpi(Integer dpi) {
-		setDpi(dpi);
 		return this;
 	}
 
@@ -256,6 +189,38 @@ public class TextOptions {
 	 */
 	public TextOptions justify(Boolean justify) {
 		setJustify(justify);
+		return this;
+	}
+
+	/**
+	 * Optional argument: dpi
+	 * <p>
+	 * DPI to render at
+	 * @return the value of {@code dpi}
+	 */
+	public Integer getDpi() {
+		return this.dpi;
+	}
+
+	/**
+	 * Set the optional "dpi" argument.
+	 * <p>
+	 * DPI to render at
+	 * @param dpi the new value of {@code dpi}
+	 */
+	public void setDpi(Integer dpi) {
+		this.dpi = dpi;
+	}
+
+	/**
+	 * Set the optional "dpi" argument.
+	 * <p>
+	 * DPI to render at
+	 * @param dpi the new value of {@code dpi}
+	 * @return this object for chaining
+	 */
+	public TextOptions dpi(Integer dpi) {
+		setDpi(dpi);
 		return this;
 	}
 
@@ -320,6 +285,70 @@ public class TextOptions {
 	 */
 	public TextOptions fontfile(String fontfile) {
 		setFontfile(fontfile);
+		return this;
+	}
+
+	/**
+	 * Optional argument: rgba
+	 * <p>
+	 * Enable RGBA output
+	 * @return the value of {@code rgba}
+	 */
+	public Boolean getRgba() {
+		return this.rgba;
+	}
+
+	/**
+	 * Set the optional "rgba" argument.
+	 * <p>
+	 * Enable RGBA output
+	 * @param rgba the new value of {@code rgba}
+	 */
+	public void setRgba(Boolean rgba) {
+		this.rgba = rgba;
+	}
+
+	/**
+	 * Set the optional "rgba" argument.
+	 * <p>
+	 * Enable RGBA output
+	 * @param rgba the new value of {@code rgba}
+	 * @return this object for chaining
+	 */
+	public TextOptions rgba(Boolean rgba) {
+		setRgba(rgba);
+		return this;
+	}
+
+	/**
+	 * Optional argument: wrap
+	 * <p>
+	 * Wrap lines on word or character boundaries
+	 * @return the value of {@code wrap}
+	 */
+	public com.criteo.vips.enums.VipsTextWrap getWrap() {
+		return this.wrap;
+	}
+
+	/**
+	 * Set the optional "wrap" argument.
+	 * <p>
+	 * Wrap lines on word or character boundaries
+	 * @param wrap the new value of {@code wrap}
+	 */
+	public void setWrap(com.criteo.vips.enums.VipsTextWrap wrap) {
+		this.wrap = wrap;
+	}
+
+	/**
+	 * Set the optional "wrap" argument.
+	 * <p>
+	 * Wrap lines on word or character boundaries
+	 * @param wrap the new value of {@code wrap}
+	 * @return this object for chaining
+	 */
+	public TextOptions wrap(com.criteo.vips.enums.VipsTextWrap wrap) {
+		setWrap(wrap);
 		return this;
 	}
 

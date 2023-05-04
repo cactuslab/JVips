@@ -16,21 +16,17 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "rawload" operation.
  */
 public class RawLoadOptions {
 
 	private Long offset;
-	private VipsBandFormat format;
-	private VipsInterpretation interpretation;
+	private com.criteo.vips.enums.VipsBandFormat format;
+	private com.criteo.vips.enums.VipsInterpretation interpretation;
 	private Boolean memory;
-	private VipsAccess access;
-	private VipsFailOn failOn;
+	private com.criteo.vips.enums.VipsAccess access;
+	private com.criteo.vips.enums.VipsFailOn failOn;
 
 	/**
 	 * Optional argument: offset
@@ -70,7 +66,7 @@ public class RawLoadOptions {
 	 * Pixel format in image
 	 * @return the value of {@code format}
 	 */
-	public VipsBandFormat getFormat() {
+	public com.criteo.vips.enums.VipsBandFormat getFormat() {
 		return this.format;
 	}
 
@@ -80,7 +76,7 @@ public class RawLoadOptions {
 	 * Pixel format in image
 	 * @param format the new value of {@code format}
 	 */
-	public void setFormat(VipsBandFormat format) {
+	public void setFormat(com.criteo.vips.enums.VipsBandFormat format) {
 		this.format = format;
 	}
 
@@ -91,7 +87,7 @@ public class RawLoadOptions {
 	 * @param format the new value of {@code format}
 	 * @return this object for chaining
 	 */
-	public RawLoadOptions format(VipsBandFormat format) {
+	public RawLoadOptions format(com.criteo.vips.enums.VipsBandFormat format) {
 		setFormat(format);
 		return this;
 	}
@@ -102,7 +98,7 @@ public class RawLoadOptions {
 	 * Pixel interpretation
 	 * @return the value of {@code interpretation}
 	 */
-	public VipsInterpretation getInterpretation() {
+	public com.criteo.vips.enums.VipsInterpretation getInterpretation() {
 		return this.interpretation;
 	}
 
@@ -112,7 +108,7 @@ public class RawLoadOptions {
 	 * Pixel interpretation
 	 * @param interpretation the new value of {@code interpretation}
 	 */
-	public void setInterpretation(VipsInterpretation interpretation) {
+	public void setInterpretation(com.criteo.vips.enums.VipsInterpretation interpretation) {
 		this.interpretation = interpretation;
 	}
 
@@ -123,7 +119,7 @@ public class RawLoadOptions {
 	 * @param interpretation the new value of {@code interpretation}
 	 * @return this object for chaining
 	 */
-	public RawLoadOptions interpretation(VipsInterpretation interpretation) {
+	public RawLoadOptions interpretation(com.criteo.vips.enums.VipsInterpretation interpretation) {
 		setInterpretation(interpretation);
 		return this;
 	}
@@ -166,7 +162,7 @@ public class RawLoadOptions {
 	 * Required access pattern for this file
 	 * @return the value of {@code access}
 	 */
-	public VipsAccess getAccess() {
+	public com.criteo.vips.enums.VipsAccess getAccess() {
 		return this.access;
 	}
 
@@ -176,7 +172,7 @@ public class RawLoadOptions {
 	 * Required access pattern for this file
 	 * @param access the new value of {@code access}
 	 */
-	public void setAccess(VipsAccess access) {
+	public void setAccess(com.criteo.vips.enums.VipsAccess access) {
 		this.access = access;
 	}
 
@@ -187,7 +183,7 @@ public class RawLoadOptions {
 	 * @param access the new value of {@code access}
 	 * @return this object for chaining
 	 */
-	public RawLoadOptions access(VipsAccess access) {
+	public RawLoadOptions access(com.criteo.vips.enums.VipsAccess access) {
 		setAccess(access);
 		return this;
 	}
@@ -198,7 +194,7 @@ public class RawLoadOptions {
 	 * Error level to fail on
 	 * @return the value of {@code failOn}
 	 */
-	public VipsFailOn getFailOn() {
+	public com.criteo.vips.enums.VipsFailOn getFailOn() {
 		return this.failOn;
 	}
 
@@ -208,7 +204,7 @@ public class RawLoadOptions {
 	 * Error level to fail on
 	 * @param failOn the new value of {@code failOn}
 	 */
-	public void setFailOn(VipsFailOn failOn) {
+	public void setFailOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		this.failOn = failOn;
 	}
 
@@ -219,7 +215,7 @@ public class RawLoadOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public RawLoadOptions failOn(VipsFailOn failOn) {
+	public RawLoadOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}

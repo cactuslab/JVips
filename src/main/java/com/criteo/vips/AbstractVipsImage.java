@@ -20,9 +20,6 @@ import java.awt.Rectangle;
 
 import javax.annotation.Generated;
 
-import com.criteo.vips.enums.*;
-import com.criteo.vips.options.*;
-
 @Generated(value = "")
 abstract class AbstractVipsImage extends Vips {
 
@@ -58,7 +55,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void applyAdd(Image right) throws VipsException;
+	public native void applyAdd(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -66,14 +63,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand image argument
 	 */
-	public native VipsImage add(Image right) throws VipsException;
+	public native VipsImage add(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadAnalyze (analyzeload): load an Analyze6 image
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage analyzeLoad(String filename, AnalyzeLoadOptions options) throws VipsException;
+	public static native VipsImage analyzeLoad(String filename, com.criteo.vips.options.AnalyzeLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadAnalyze (analyzeload): load an Analyze6 image
@@ -88,13 +85,13 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in Array of input images
 	 * @param options optional arguments
 	 */
-	public static native VipsImage arrayjoin(Image[] in, ArrayjoinOptions options) throws VipsException;
+	public static native VipsImage arrayjoin(com.criteo.vips.Image[] in, com.criteo.vips.options.ArrayjoinOptions options) throws VipsException;
 	
 	/**
 	 * VipsArrayjoin (arrayjoin): join an array of images
 	 * @param in Array of input images
 	 */
-	public static VipsImage arrayjoin(Image[] in) throws VipsException {
+	public static VipsImage arrayjoin(com.criteo.vips.Image[] in) throws VipsException {
 		return arrayjoin(in, null);
 	}
 	
@@ -121,7 +118,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param booleanParam Boolean to perform
 	 */
-	public native void applyBandbool(VipsOperationBoolean booleanParam) throws VipsException;
+	public native void applyBandbool(com.criteo.vips.enums.VipsOperationBoolean booleanParam) throws VipsException;
 	
 	
 	/**
@@ -129,14 +126,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param booleanParam Boolean to perform
 	 */
-	public native VipsImage bandbool(VipsOperationBoolean booleanParam) throws VipsException;
+	public native VipsImage bandbool(com.criteo.vips.enums.VipsOperationBoolean booleanParam) throws VipsException;
 	
 	/**
 	 * VipsBandfold (bandfold): fold up x axis into bands
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyBandfold(BandfoldOptions options) throws VipsException;
+	public native void applyBandfold(com.criteo.vips.options.BandfoldOptions options) throws VipsException;
 	
 	/**
 	 * VipsBandfold (bandfold): fold up x axis into bands
@@ -152,7 +149,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage bandfold(BandfoldOptions options) throws VipsException;
+	public native VipsImage bandfold(com.criteo.vips.options.BandfoldOptions options) throws VipsException;
 	
 	/**
 	 * VipsBandfold (bandfold): fold up x axis into bands
@@ -166,7 +163,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsBandjoin (bandjoin): bandwise join a set of images
 	 * @param in Array of input images
 	 */
-	public static native VipsImage bandjoin(Image[] in) throws VipsException;
+	public static native VipsImage bandjoin(com.criteo.vips.Image[] in) throws VipsException;
 	
 	/**
 	 * VipsBandjoinConst (bandjoin_const): append a constant band to an image
@@ -201,13 +198,13 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in Array of input images
 	 * @param options optional arguments
 	 */
-	public static native VipsImage bandrank(Image[] in, BandrankOptions options) throws VipsException;
+	public static native VipsImage bandrank(com.criteo.vips.Image[] in, com.criteo.vips.options.BandrankOptions options) throws VipsException;
 	
 	/**
 	 * VipsBandrank (bandrank): band-wise rank of a set of images
 	 * @param in Array of input images
 	 */
-	public static VipsImage bandrank(Image[] in) throws VipsException {
+	public static VipsImage bandrank(com.criteo.vips.Image[] in) throws VipsException {
 		return bandrank(in, null);
 	}
 	
@@ -216,7 +213,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyBandunfold(BandunfoldOptions options) throws VipsException;
+	public native void applyBandunfold(com.criteo.vips.options.BandunfoldOptions options) throws VipsException;
 	
 	/**
 	 * VipsBandunfold (bandunfold): unfold image bands into x axis
@@ -232,7 +229,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage bandunfold(BandunfoldOptions options) throws VipsException;
+	public native VipsImage bandunfold(com.criteo.vips.options.BandunfoldOptions options) throws VipsException;
 	
 	/**
 	 * VipsBandunfold (bandunfold): unfold image bands into x axis
@@ -248,7 +245,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage black(int width, int height, BlackOptions options) throws VipsException;
+	public static native VipsImage black(int width, int height, com.criteo.vips.options.BlackOptions options) throws VipsException;
 	
 	/**
 	 * VipsBlack (black): make a black image
@@ -265,7 +262,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param booleanParam Boolean to perform
 	 */
-	public native void applyBoolean(Image right, VipsOperationBoolean booleanParam) throws VipsException;
+	public native void applyBoolean(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationBoolean booleanParam) throws VipsException;
 	
 	
 	/**
@@ -274,7 +271,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param booleanParam Boolean to perform
 	 */
-	public native VipsImage booleanOp(Image right, VipsOperationBoolean booleanParam) throws VipsException;
+	public native VipsImage booleanOp(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationBoolean booleanParam) throws VipsException;
 	
 	/**
 	 * VipsBooleanConst (boolean_const): boolean operations against a constant
@@ -282,7 +279,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param booleanParam Boolean to perform
 	 * @param c Array of constants
 	 */
-	public native void applyBooleanConst(VipsOperationBoolean booleanParam, double[] c) throws VipsException;
+	public native void applyBooleanConst(com.criteo.vips.enums.VipsOperationBoolean booleanParam, double[] c) throws VipsException;
 	
 	
 	/**
@@ -291,7 +288,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param booleanParam Boolean to perform
 	 * @param c Array of constants
 	 */
-	public native VipsImage booleanConst(VipsOperationBoolean booleanParam, double[] c) throws VipsException;
+	public native VipsImage booleanConst(com.criteo.vips.enums.VipsOperationBoolean booleanParam, double[] c) throws VipsException;
 	
 	/**
 	 * VipsBuildlut (buildlut): build a look-up table
@@ -324,7 +321,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyCache(CacheOptions options) throws VipsException;
+	public native void applyCache(com.criteo.vips.options.CacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsCache (cache): cache an image
@@ -340,7 +337,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage cache(CacheOptions options) throws VipsException;
+	public native VipsImage cache(com.criteo.vips.options.CacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsCache (cache): cache an image
@@ -355,7 +352,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyCanny(CannyOptions options) throws VipsException;
+	public native void applyCanny(com.criteo.vips.options.CannyOptions options) throws VipsException;
 	
 	/**
 	 * VipsCanny (canny): Canny edge detector
@@ -371,7 +368,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage canny(CannyOptions options) throws VipsException;
+	public native VipsImage canny(com.criteo.vips.options.CannyOptions options) throws VipsException;
 	
 	/**
 	 * VipsCanny (canny): Canny edge detector
@@ -386,7 +383,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param cases Array of case images
 	 */
-	public native void applyCase(Image[] cases) throws VipsException;
+	public native void applyCase(com.criteo.vips.Image[] cases) throws VipsException;
 	
 	
 	/**
@@ -394,7 +391,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param cases Array of case images
 	 */
-	public native VipsImage caseOp(Image[] cases) throws VipsException;
+	public native VipsImage caseOp(com.criteo.vips.Image[] cases) throws VipsException;
 	
 	/**
 	 * VipsCast (cast): cast an image
@@ -402,14 +399,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param format Format to cast to
 	 * @param options optional arguments
 	 */
-	public native void applyCast(VipsBandFormat format, CastOptions options) throws VipsException;
+	public native void applyCast(com.criteo.vips.enums.VipsBandFormat format, com.criteo.vips.options.CastOptions options) throws VipsException;
 	
 	/**
 	 * VipsCast (cast): cast an image
 	 * Mutates the image inplace.
 	 * @param format Format to cast to
 	 */
-	public void applyCast(VipsBandFormat format) throws VipsException {
+	public void applyCast(com.criteo.vips.enums.VipsBandFormat format) throws VipsException {
 		applyCast(format, null);
 	}
 	
@@ -420,14 +417,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param format Format to cast to
 	 * @param options optional arguments
 	 */
-	public native VipsImage cast(VipsBandFormat format, CastOptions options) throws VipsException;
+	public native VipsImage cast(com.criteo.vips.enums.VipsBandFormat format, com.criteo.vips.options.CastOptions options) throws VipsException;
 	
 	/**
 	 * VipsCast (cast): cast an image
 	 * Returns a new image.
 	 * @param format Format to cast to
 	 */
-	public VipsImage cast(VipsBandFormat format) throws VipsException {
+	public VipsImage cast(com.criteo.vips.enums.VipsBandFormat format) throws VipsException {
 		return cast(format, null);
 	}
 	
@@ -458,37 +455,37 @@ abstract class AbstractVipsImage extends Vips {
 	public native VipsImage cmyk2xyz() throws VipsException;
 	
 	/**
-	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * VipsColourspace (colourspace): convert to a new colorspace
 	 * Mutates the image inplace.
-	 * @param space Destination colour space
+	 * @param space Destination color space
 	 * @param options optional arguments
 	 */
-	public native void applyColourspace(VipsInterpretation space, ColourspaceOptions options) throws VipsException;
+	public native void applyColourspace(com.criteo.vips.enums.VipsInterpretation space, com.criteo.vips.options.ColourspaceOptions options) throws VipsException;
 	
 	/**
-	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * VipsColourspace (colourspace): convert to a new colorspace
 	 * Mutates the image inplace.
-	 * @param space Destination colour space
+	 * @param space Destination color space
 	 */
-	public void applyColourspace(VipsInterpretation space) throws VipsException {
+	public void applyColourspace(com.criteo.vips.enums.VipsInterpretation space) throws VipsException {
 		applyColourspace(space, null);
 	}
 	
 	
 	/**
-	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * VipsColourspace (colourspace): convert to a new colorspace
 	 * Returns a new image.
-	 * @param space Destination colour space
+	 * @param space Destination color space
 	 * @param options optional arguments
 	 */
-	public native VipsImage colourspace(VipsInterpretation space, ColourspaceOptions options) throws VipsException;
+	public native VipsImage colourspace(com.criteo.vips.enums.VipsInterpretation space, com.criteo.vips.options.ColourspaceOptions options) throws VipsException;
 	
 	/**
-	 * VipsColourspace (colourspace): convert to a new colourspace
+	 * VipsColourspace (colourspace): convert to a new colorspace
 	 * Returns a new image.
-	 * @param space Destination colour space
+	 * @param space Destination color space
 	 */
-	public VipsImage colourspace(VipsInterpretation space) throws VipsException {
+	public VipsImage colourspace(com.criteo.vips.enums.VipsInterpretation space) throws VipsException {
 		return colourspace(space, null);
 	}
 	
@@ -498,14 +495,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void applyCompass(Image mask, CompassOptions options) throws VipsException;
+	public native void applyCompass(com.criteo.vips.Image mask, com.criteo.vips.options.CompassOptions options) throws VipsException;
 	
 	/**
 	 * VipsCompass (compass): convolve with rotating mask
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void applyCompass(Image mask) throws VipsException {
+	public void applyCompass(com.criteo.vips.Image mask) throws VipsException {
 		applyCompass(mask, null);
 	}
 	
@@ -516,14 +513,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native VipsImage compass(Image mask, CompassOptions options) throws VipsException;
+	public native VipsImage compass(com.criteo.vips.Image mask, com.criteo.vips.options.CompassOptions options) throws VipsException;
 	
 	/**
 	 * VipsCompass (compass): convolve with rotating mask
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
-	public VipsImage compass(Image mask) throws VipsException {
+	public VipsImage compass(com.criteo.vips.Image mask) throws VipsException {
 		return compass(mask, null);
 	}
 	
@@ -532,7 +529,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param cmplx Complex to perform
 	 */
-	public native void applyComplex(VipsOperationComplex cmplx) throws VipsException;
+	public native void applyComplex(com.criteo.vips.enums.VipsOperationComplex cmplx) throws VipsException;
 	
 	
 	/**
@@ -540,7 +537,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param cmplx Complex to perform
 	 */
-	public native VipsImage complex(VipsOperationComplex cmplx) throws VipsException;
+	public native VipsImage complex(com.criteo.vips.enums.VipsOperationComplex cmplx) throws VipsException;
 	
 	/**
 	 * VipsComplex2 (complex2): complex binary operations on two images
@@ -548,7 +545,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param cmplx Binary complex operation to perform
 	 */
-	public native void applyComplex2(Image right, VipsOperationComplex2 cmplx) throws VipsException;
+	public native void applyComplex2(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationComplex2 cmplx) throws VipsException;
 	
 	
 	/**
@@ -557,14 +554,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param cmplx Binary complex operation to perform
 	 */
-	public native VipsImage complex2(Image right, VipsOperationComplex2 cmplx) throws VipsException;
+	public native VipsImage complex2(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationComplex2 cmplx) throws VipsException;
 	
 	/**
 	 * VipsComplexform (complexform): form a complex image from two real images
 	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void applyComplexform(Image right) throws VipsException;
+	public native void applyComplexform(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -572,14 +569,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand image argument
 	 */
-	public native VipsImage complexform(Image right) throws VipsException;
+	public native VipsImage complexform(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsComplexget (complexget): get a component from a complex image
 	 * Mutates the image inplace.
 	 * @param get Complex to perform
 	 */
-	public native void applyComplexget(VipsOperationComplexget get) throws VipsException;
+	public native void applyComplexget(com.criteo.vips.enums.VipsOperationComplexget get) throws VipsException;
 	
 	
 	/**
@@ -587,7 +584,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param get Complex to perform
 	 */
-	public native VipsImage complexget(VipsOperationComplexget get) throws VipsException;
+	public native VipsImage complexget(com.criteo.vips.enums.VipsOperationComplexget get) throws VipsException;
 	
 	/**
 	 * VipsComposite (composite): blend an array of images with an array of blend modes
@@ -595,14 +592,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mode Array of VipsBlendMode to join with
 	 * @param options optional arguments
 	 */
-	public static native VipsImage composite(Image[] in, int[] mode, CompositeOptions options) throws VipsException;
+	public static native VipsImage composite(com.criteo.vips.Image[] in, int[] mode, com.criteo.vips.options.CompositeOptions options) throws VipsException;
 	
 	/**
 	 * VipsComposite (composite): blend an array of images with an array of blend modes
 	 * @param in Array of input images
 	 * @param mode Array of VipsBlendMode to join with
 	 */
-	public static VipsImage composite(Image[] in, int[] mode) throws VipsException {
+	public static VipsImage composite(com.criteo.vips.Image[] in, int[] mode) throws VipsException {
 		return composite(in, mode, null);
 	}
 	
@@ -613,7 +610,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mode VipsBlendMode to join with
 	 * @param options optional arguments
 	 */
-	public native void applyComposite2(Image overlay, VipsBlendMode mode, Composite2Options options) throws VipsException;
+	public native void applyComposite2(com.criteo.vips.Image overlay, com.criteo.vips.enums.VipsBlendMode mode, com.criteo.vips.options.Composite2Options options) throws VipsException;
 	
 	/**
 	 * VipsComposite2 (composite2): blend a pair of images with a blend mode
@@ -621,7 +618,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param overlay Overlay image
 	 * @param mode VipsBlendMode to join with
 	 */
-	public void applyComposite2(Image overlay, VipsBlendMode mode) throws VipsException {
+	public void applyComposite2(com.criteo.vips.Image overlay, com.criteo.vips.enums.VipsBlendMode mode) throws VipsException {
 		applyComposite2(overlay, mode, null);
 	}
 	
@@ -633,7 +630,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mode VipsBlendMode to join with
 	 * @param options optional arguments
 	 */
-	public native VipsImage composite2(Image overlay, VipsBlendMode mode, Composite2Options options) throws VipsException;
+	public native VipsImage composite2(com.criteo.vips.Image overlay, com.criteo.vips.enums.VipsBlendMode mode, com.criteo.vips.options.Composite2Options options) throws VipsException;
 	
 	/**
 	 * VipsComposite2 (composite2): blend a pair of images with a blend mode
@@ -641,7 +638,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param overlay Overlay image
 	 * @param mode VipsBlendMode to join with
 	 */
-	public VipsImage composite2(Image overlay, VipsBlendMode mode) throws VipsException {
+	public VipsImage composite2(com.criteo.vips.Image overlay, com.criteo.vips.enums.VipsBlendMode mode) throws VipsException {
 		return composite2(overlay, mode, null);
 	}
 	
@@ -651,14 +648,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void applyConv(Image mask, ConvOptions options) throws VipsException;
+	public native void applyConv(com.criteo.vips.Image mask, com.criteo.vips.options.ConvOptions options) throws VipsException;
 	
 	/**
 	 * VipsConv (conv): convolution operation
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void applyConv(Image mask) throws VipsException {
+	public void applyConv(com.criteo.vips.Image mask) throws VipsException {
 		applyConv(mask, null);
 	}
 	
@@ -669,14 +666,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native VipsImage conv(Image mask, ConvOptions options) throws VipsException;
+	public native VipsImage conv(com.criteo.vips.Image mask, com.criteo.vips.options.ConvOptions options) throws VipsException;
 	
 	/**
 	 * VipsConv (conv): convolution operation
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
-	public VipsImage conv(Image mask) throws VipsException {
+	public VipsImage conv(com.criteo.vips.Image mask) throws VipsException {
 		return conv(mask, null);
 	}
 	
@@ -686,14 +683,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void applyConva(Image mask, ConvaOptions options) throws VipsException;
+	public native void applyConva(com.criteo.vips.Image mask, com.criteo.vips.options.ConvaOptions options) throws VipsException;
 	
 	/**
 	 * VipsConva (conva): approximate integer convolution
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void applyConva(Image mask) throws VipsException {
+	public void applyConva(com.criteo.vips.Image mask) throws VipsException {
 		applyConva(mask, null);
 	}
 	
@@ -704,14 +701,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native VipsImage conva(Image mask, ConvaOptions options) throws VipsException;
+	public native VipsImage conva(com.criteo.vips.Image mask, com.criteo.vips.options.ConvaOptions options) throws VipsException;
 	
 	/**
 	 * VipsConva (conva): approximate integer convolution
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
-	public VipsImage conva(Image mask) throws VipsException {
+	public VipsImage conva(com.criteo.vips.Image mask) throws VipsException {
 		return conva(mask, null);
 	}
 	
@@ -721,14 +718,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void applyConvasep(Image mask, ConvasepOptions options) throws VipsException;
+	public native void applyConvasep(com.criteo.vips.Image mask, com.criteo.vips.options.ConvasepOptions options) throws VipsException;
 	
 	/**
 	 * VipsConvasep (convasep): approximate separable integer convolution
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void applyConvasep(Image mask) throws VipsException {
+	public void applyConvasep(com.criteo.vips.Image mask) throws VipsException {
 		applyConvasep(mask, null);
 	}
 	
@@ -739,14 +736,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native VipsImage convasep(Image mask, ConvasepOptions options) throws VipsException;
+	public native VipsImage convasep(com.criteo.vips.Image mask, com.criteo.vips.options.ConvasepOptions options) throws VipsException;
 	
 	/**
 	 * VipsConvasep (convasep): approximate separable integer convolution
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
-	public VipsImage convasep(Image mask) throws VipsException {
+	public VipsImage convasep(com.criteo.vips.Image mask) throws VipsException {
 		return convasep(mask, null);
 	}
 	
@@ -755,7 +752,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public native void applyConvf(Image mask) throws VipsException;
+	public native void applyConvf(com.criteo.vips.Image mask) throws VipsException;
 	
 	
 	/**
@@ -763,14 +760,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
-	public native VipsImage convf(Image mask) throws VipsException;
+	public native VipsImage convf(com.criteo.vips.Image mask) throws VipsException;
 	
 	/**
 	 * VipsConvi (convi): int convolution operation
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public native void applyConvi(Image mask) throws VipsException;
+	public native void applyConvi(com.criteo.vips.Image mask) throws VipsException;
 	
 	
 	/**
@@ -778,7 +775,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
-	public native VipsImage convi(Image mask) throws VipsException;
+	public native VipsImage convi(com.criteo.vips.Image mask) throws VipsException;
 	
 	/**
 	 * VipsConvsep (convsep): seperable convolution operation
@@ -786,14 +783,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native void applyConvsep(Image mask, ConvsepOptions options) throws VipsException;
+	public native void applyConvsep(com.criteo.vips.Image mask, com.criteo.vips.options.ConvsepOptions options) throws VipsException;
 	
 	/**
 	 * VipsConvsep (convsep): seperable convolution operation
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
-	public void applyConvsep(Image mask) throws VipsException {
+	public void applyConvsep(com.criteo.vips.Image mask) throws VipsException {
 		applyConvsep(mask, null);
 	}
 	
@@ -804,14 +801,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param options optional arguments
 	 */
-	public native VipsImage convsep(Image mask, ConvsepOptions options) throws VipsException;
+	public native VipsImage convsep(com.criteo.vips.Image mask, com.criteo.vips.options.ConvsepOptions options) throws VipsException;
 	
 	/**
 	 * VipsConvsep (convsep): seperable convolution operation
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
-	public VipsImage convsep(Image mask) throws VipsException {
+	public VipsImage convsep(com.criteo.vips.Image mask) throws VipsException {
 		return convsep(mask, null);
 	}
 	
@@ -820,7 +817,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyCopy(CopyOptions options) throws VipsException;
+	public native void applyCopy(com.criteo.vips.options.CopyOptions options) throws VipsException;
 	
 	/**
 	 * VipsCopy (copy): copy an image
@@ -836,7 +833,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage copy(CopyOptions options) throws VipsException;
+	public native VipsImage copy(com.criteo.vips.options.CopyOptions options) throws VipsException;
 	
 	/**
 	 * VipsCopy (copy): copy an image
@@ -850,14 +847,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsCountlines (countlines): count lines in an image
 	 * @param direction Countlines left-right or up-down
 	 */
-	public native double countlines(VipsDirection direction) throws VipsException;
+	public native double countlines(com.criteo.vips.enums.VipsDirection direction) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadCsvFile (csvload): load csv
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage csvLoad(String filename, CSVLoadOptions options) throws VipsException;
+	public static native VipsImage csvLoad(String filename, com.criteo.vips.options.CSVLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadCsvFile (csvload): load csv
@@ -872,7 +869,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void csvSave(String filename, CSVSaveOptions options) throws VipsException;
+	public native void csvSave(String filename, com.criteo.vips.options.CSVSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveCsvFile (csvsave): save image to csv
@@ -887,7 +884,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param right Right-hand input image
 	 */
-	public native void applyDE00(Image right) throws VipsException;
+	public native void applyDE00(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -895,14 +892,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand input image
 	 */
-	public native VipsImage dE00(Image right) throws VipsException;
+	public native VipsImage dE00(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsdE76 (dE76): calculate dE76
 	 * Mutates the image inplace.
 	 * @param right Right-hand input image
 	 */
-	public native void applyDE76(Image right) throws VipsException;
+	public native void applyDE76(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -910,14 +907,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand input image
 	 */
-	public native VipsImage dE76(Image right) throws VipsException;
+	public native VipsImage dE76(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsdECMC (dECMC): calculate dECMC
 	 * Mutates the image inplace.
 	 * @param right Right-hand input image
 	 */
-	public native void applyDECMC(Image right) throws VipsException;
+	public native void applyDECMC(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -925,7 +922,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand input image
 	 */
-	public native VipsImage dECMC(Image right) throws VipsException;
+	public native VipsImage dECMC(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsDeviate (deviate): find image standard deviation
@@ -937,7 +934,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void applyDivide(Image right) throws VipsException;
+	public native void applyDivide(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -945,7 +942,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand image argument
 	 */
-	public native VipsImage divide(Image right) throws VipsException;
+	public native VipsImage divide(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsDrawCircle (draw_circle): draw a circle on an image
@@ -955,7 +952,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param radius Radius in pixels
 	 * @param options optional arguments
 	 */
-	public native void drawCircle(double[] ink, int cx, int cy, int radius, DrawCircleOptions options) throws VipsException;
+	public native void drawCircle(double[] ink, int cx, int cy, int radius, com.criteo.vips.options.DrawCircleOptions options) throws VipsException;
 	
 	/**
 	 * VipsDrawCircle (draw_circle): draw a circle on an image
@@ -975,7 +972,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param y DrawFlood start point
 	 * @param options optional arguments
 	 */
-	public native void drawFlood(double[] ink, int x, int y, DrawFloodOptions options) throws VipsException;
+	public native void drawFlood(double[] ink, int x, int y, com.criteo.vips.options.DrawFloodOptions options) throws VipsException;
 	
 	/**
 	 * VipsDrawFlood (draw_flood): flood-fill an area
@@ -994,7 +991,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param y Draw image here
 	 * @param options optional arguments
 	 */
-	public native void drawImage(Image sub, int x, int y, DrawImageOptions options) throws VipsException;
+	public native void drawImage(com.criteo.vips.Image sub, int x, int y, com.criteo.vips.options.DrawImageOptions options) throws VipsException;
 	
 	/**
 	 * VipsDrawImage (draw_image): paint an image into another image
@@ -1002,7 +999,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param x Draw image here
 	 * @param y Draw image here
 	 */
-	public void drawImage(Image sub, int x, int y) throws VipsException {
+	public void drawImage(com.criteo.vips.Image sub, int x, int y) throws VipsException {
 		drawImage(sub, x, y, null);
 	}
 	
@@ -1023,7 +1020,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param x Draw mask here
 	 * @param y Draw mask here
 	 */
-	public native void drawMask(double[] ink, Image mask, int x, int y) throws VipsException;
+	public native void drawMask(double[] ink, com.criteo.vips.Image mask, int x, int y) throws VipsException;
 	
 	/**
 	 * VipsDrawRect (draw_rect): paint a rectangle on an image
@@ -1034,7 +1031,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Rect to fill
 	 * @param options optional arguments
 	 */
-	public native void drawRect(double[] ink, int left, int top, int width, int height, DrawRectOptions options) throws VipsException;
+	public native void drawRect(double[] ink, int left, int top, int width, int height, com.criteo.vips.options.DrawRectOptions options) throws VipsException;
 	
 	/**
 	 * VipsDrawRect (draw_rect): paint a rectangle on an image
@@ -1062,7 +1059,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void dzSave(String filename, DZSaveOptions options) throws VipsException;
+	public native void dzSave(String filename, com.criteo.vips.options.DZSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveDzFile (dzsave): save image to deepzoom file
@@ -1076,7 +1073,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveDzBuffer (dzsave_buffer): save image to dz buffer
 	 * @param options optional arguments
 	 */
-	public native byte[] dzSaveBuffer(DZSaveBufferOptions options) throws VipsException;
+	public native byte[] dzSaveBuffer(com.criteo.vips.options.DZSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveDzBuffer (dzsave_buffer): save image to dz buffer
@@ -1094,7 +1091,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public native void applyEmbed(int x, int y, int width, int height, EmbedOptions options) throws VipsException;
+	public native void applyEmbed(int x, int y, int width, int height, com.criteo.vips.options.EmbedOptions options) throws VipsException;
 	
 	/**
 	 * VipsEmbed (embed): embed an image in a larger image
@@ -1118,7 +1115,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public native VipsImage embed(int x, int y, int width, int height, EmbedOptions options) throws VipsException;
+	public native VipsImage embed(int x, int y, int width, int height, com.criteo.vips.options.EmbedOptions options) throws VipsException;
 	
 	/**
 	 * VipsEmbed (embed): embed an image in a larger image
@@ -1159,7 +1156,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param band Band to extract
 	 * @param options optional arguments
 	 */
-	public native void applyExtractBand(int band, ExtractBandOptions options) throws VipsException;
+	public native void applyExtractBand(int band, com.criteo.vips.options.ExtractBandOptions options) throws VipsException;
 	
 	/**
 	 * VipsExtractBand (extract_band): extract band from an image
@@ -1177,7 +1174,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param band Band to extract
 	 * @param options optional arguments
 	 */
-	public native VipsImage extractBand(int band, ExtractBandOptions options) throws VipsException;
+	public native VipsImage extractBand(int band, com.criteo.vips.options.ExtractBandOptions options) throws VipsException;
 	
 	/**
 	 * VipsExtractBand (extract_band): extract band from an image
@@ -1194,7 +1191,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage eye(int width, int height, EyeOptions options) throws VipsException;
+	public static native VipsImage eye(int width, int height, com.criteo.vips.options.EyeOptions options) throws VipsException;
 	
 	/**
 	 * VipsEye (eye): make an image showing the eye's spatial response
@@ -1206,14 +1203,14 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsFalsecolour (falsecolour): false-colour an image
+	 * VipsFalsecolour (falsecolour): false-color an image
 	 * Mutates the image inplace.
 	 */
 	public native void applyFalsecolour() throws VipsException;
 	
 	
 	/**
-	 * VipsFalsecolour (falsecolour): false-colour an image
+	 * VipsFalsecolour (falsecolour): false-color an image
 	 * Returns a new image.
 	 */
 	public native VipsImage falsecolour() throws VipsException;
@@ -1223,7 +1220,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param ref Input reference image
 	 */
-	public native void applyFastcor(Image ref) throws VipsException;
+	public native void applyFastcor(com.criteo.vips.Image ref) throws VipsException;
 	
 	
 	/**
@@ -1231,7 +1228,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param ref Input reference image
 	 */
-	public native VipsImage fastcor(Image ref) throws VipsException;
+	public native VipsImage fastcor(com.criteo.vips.Image ref) throws VipsException;
 	
 	/**
 	 * VipsFillNearest (fill_nearest): fill image zeros with nearest non-zero pixel
@@ -1250,7 +1247,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsFindTrim (find_trim): search an image for non-edge areas
 	 * @param options optional arguments
 	 */
-	public native Rectangle findTrim(FindTrimOptions options) throws VipsException;
+	public native Rectangle findTrim(com.criteo.vips.options.FindTrimOptions options) throws VipsException;
 	
 	/**
 	 * VipsFindTrim (find_trim): search an image for non-edge areas
@@ -1264,7 +1261,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage fitsLoad(String filename, FITSLoadOptions options) throws VipsException;
+	public static native VipsImage fitsLoad(String filename, com.criteo.vips.options.FITSLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadFitsFile (fitsload): load a FITS image
@@ -1279,7 +1276,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void fitsSave(String filename, FITSSaveOptions options) throws VipsException;
+	public native void fitsSave(String filename, com.criteo.vips.options.FITSSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveFits (fitssave): save image to fits file
@@ -1294,7 +1291,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyFlatten(FlattenOptions options) throws VipsException;
+	public native void applyFlatten(com.criteo.vips.options.FlattenOptions options) throws VipsException;
 	
 	/**
 	 * VipsFlatten (flatten): flatten alpha out of an image
@@ -1310,7 +1307,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage flatten(FlattenOptions options) throws VipsException;
+	public native VipsImage flatten(com.criteo.vips.options.FlattenOptions options) throws VipsException;
 	
 	/**
 	 * VipsFlatten (flatten): flatten alpha out of an image
@@ -1325,7 +1322,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param direction Direction to flip image
 	 */
-	public native void applyFlip(VipsDirection direction) throws VipsException;
+	public native void applyFlip(com.criteo.vips.enums.VipsDirection direction) throws VipsException;
 	
 	
 	/**
@@ -1333,7 +1330,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param direction Direction to flip image
 	 */
-	public native VipsImage flip(VipsDirection direction) throws VipsException;
+	public native VipsImage flip(com.criteo.vips.enums.VipsDirection direction) throws VipsException;
 	
 	/**
 	 * VipsFloat2rad (float2rad): transform float RGB to Radiance coding
@@ -1361,7 +1358,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param mask Input mask image
 	 */
-	public native void applyFreqmult(Image mask) throws VipsException;
+	public native void applyFreqmult(com.criteo.vips.Image mask) throws VipsException;
 	
 	
 	/**
@@ -1369,7 +1366,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param mask Input mask image
 	 */
-	public native VipsImage freqmult(Image mask) throws VipsException;
+	public native VipsImage freqmult(com.criteo.vips.Image mask) throws VipsException;
 	
 	/**
 	 * VipsFwfft (fwfft): forward FFT
@@ -1389,7 +1386,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyGamma(GammaOptions options) throws VipsException;
+	public native void applyGamma(com.criteo.vips.options.GammaOptions options) throws VipsException;
 	
 	/**
 	 * VipsGamma (gamma): gamma an image
@@ -1405,7 +1402,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage gamma(GammaOptions options) throws VipsException;
+	public native VipsImage gamma(com.criteo.vips.options.GammaOptions options) throws VipsException;
 	
 	/**
 	 * VipsGamma (gamma): gamma an image
@@ -1421,7 +1418,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param sigma Sigma of Gaussian
 	 * @param options optional arguments
 	 */
-	public native void applyGaussBlur(double sigma, GaussBlurOptions options) throws VipsException;
+	public native void applyGaussBlur(double sigma, com.criteo.vips.options.GaussBlurOptions options) throws VipsException;
 	
 	/**
 	 * VipsGaussblur (gaussblur): gaussian blur
@@ -1439,7 +1436,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param sigma Sigma of Gaussian
 	 * @param options optional arguments
 	 */
-	public native VipsImage gaussBlur(double sigma, GaussBlurOptions options) throws VipsException;
+	public native VipsImage gaussBlur(double sigma, com.criteo.vips.options.GaussBlurOptions options) throws VipsException;
 	
 	/**
 	 * VipsGaussblur (gaussblur): gaussian blur
@@ -1456,7 +1453,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param minAmpl Minimum amplitude of Gaussian
 	 * @param options optional arguments
 	 */
-	public static native VipsImage gaussMat(double sigma, double minAmpl, GaussMatOptions options) throws VipsException;
+	public static native VipsImage gaussMat(double sigma, double minAmpl, com.criteo.vips.options.GaussMatOptions options) throws VipsException;
 	
 	/**
 	 * VipsGaussmat (gaussmat): make a gaussian image
@@ -1473,7 +1470,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage gaussNoise(int width, int height, GaussNoiseOptions options) throws VipsException;
+	public static native VipsImage gaussNoise(int width, int height, com.criteo.vips.options.GaussNoiseOptions options) throws VipsException;
 	
 	/**
 	 * VipsGaussnoise (gaussnoise): make a gaussnoise image
@@ -1496,7 +1493,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage gifLoad(String filename, GIFLoadOptions options) throws VipsException;
+	public static native VipsImage gifLoad(String filename, com.criteo.vips.options.GIFLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadNsgifFile (gifload): load GIF with libnsgif
@@ -1511,7 +1508,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage gifLoadBuffer(byte[] buffer, GIFLoadBufferOptions options) throws VipsException;
+	public static native VipsImage gifLoadBuffer(byte[] buffer, com.criteo.vips.options.GIFLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadNsgifBuffer (gifload_buffer): load GIF with libnsgif
@@ -1526,7 +1523,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void gifSave(String filename, GIFSaveOptions options) throws VipsException;
+	public native void gifSave(String filename, com.criteo.vips.options.GIFSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveCgifFile (gifsave): save as gif
@@ -1540,7 +1537,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveCgifBuffer (gifsave_buffer): save as gif
 	 * @param options optional arguments
 	 */
-	public native byte[] gifSaveBuffer(GIFSaveBufferOptions options) throws VipsException;
+	public native byte[] gifSaveBuffer(com.criteo.vips.options.GIFSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveCgifBuffer (gifsave_buffer): save as gif
@@ -1554,7 +1551,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyGlobalbalance(GlobalbalanceOptions options) throws VipsException;
+	public native void applyGlobalbalance(com.criteo.vips.options.GlobalbalanceOptions options) throws VipsException;
 	
 	/**
 	 * VipsGlobalbalance (globalbalance): global balance an image mosaic
@@ -1570,7 +1567,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage globalbalance(GlobalbalanceOptions options) throws VipsException;
+	public native VipsImage globalbalance(com.criteo.vips.options.GlobalbalanceOptions options) throws VipsException;
 	
 	/**
 	 * VipsGlobalbalance (globalbalance): global balance an image mosaic
@@ -1588,7 +1585,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public native void applyGravity(VipsCompassDirection direction, int width, int height, GravityOptions options) throws VipsException;
+	public native void applyGravity(com.criteo.vips.enums.VipsCompassDirection direction, int width, int height, com.criteo.vips.options.GravityOptions options) throws VipsException;
 	
 	/**
 	 * VipsGravity (gravity): place an image within a larger image with a certain gravity
@@ -1597,7 +1594,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param width Image width in pixels
 	 * @param height Image height in pixels
 	 */
-	public void applyGravity(VipsCompassDirection direction, int width, int height) throws VipsException {
+	public void applyGravity(com.criteo.vips.enums.VipsCompassDirection direction, int width, int height) throws VipsException {
 		applyGravity(direction, width, height, null);
 	}
 	
@@ -1610,7 +1607,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public native VipsImage gravity(VipsCompassDirection direction, int width, int height, GravityOptions options) throws VipsException;
+	public native VipsImage gravity(com.criteo.vips.enums.VipsCompassDirection direction, int width, int height, com.criteo.vips.options.GravityOptions options) throws VipsException;
 	
 	/**
 	 * VipsGravity (gravity): place an image within a larger image with a certain gravity
@@ -1619,7 +1616,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param width Image width in pixels
 	 * @param height Image height in pixels
 	 */
-	public VipsImage gravity(VipsCompassDirection direction, int width, int height) throws VipsException {
+	public VipsImage gravity(com.criteo.vips.enums.VipsCompassDirection direction, int width, int height) throws VipsException {
 		return gravity(direction, width, height, null);
 	}
 	
@@ -1629,7 +1626,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage grey(int width, int height, GreyOptions options) throws VipsException;
+	public static native VipsImage grey(int width, int height, com.criteo.vips.options.GreyOptions options) throws VipsException;
 	
 	/**
 	 * VipsGrey (grey): make a grey ramp image
@@ -1664,7 +1661,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage heifLoad(String filename, HEIFLoadOptions options) throws VipsException;
+	public static native VipsImage heifLoad(String filename, com.criteo.vips.options.HEIFLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadHeifFile (heifload): load a HEIF image
@@ -1679,7 +1676,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage heifLoadBuffer(byte[] buffer, HEIFLoadBufferOptions options) throws VipsException;
+	public static native VipsImage heifLoadBuffer(byte[] buffer, com.criteo.vips.options.HEIFLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadHeifBuffer (heifload_buffer): load a HEIF image
@@ -1694,7 +1691,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void heifSave(String filename, HEIFSaveOptions options) throws VipsException;
+	public native void heifSave(String filename, com.criteo.vips.options.HEIFSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveHeifFile (heifsave): save image in HEIF format
@@ -1708,7 +1705,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveHeifBuffer (heifsave_buffer): save image in HEIF format
 	 * @param options optional arguments
 	 */
-	public native byte[] heifSaveBuffer(HEIFSaveBufferOptions options) throws VipsException;
+	public native byte[] heifSaveBuffer(com.criteo.vips.options.HEIFSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveHeifBuffer (heifsave_buffer): save image in HEIF format
@@ -1740,7 +1737,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyHistEqual(HistEqualOptions options) throws VipsException;
+	public native void applyHistEqual(com.criteo.vips.options.HistEqualOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistEqual (hist_equal): histogram equalisation
@@ -1756,7 +1753,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage histEqual(HistEqualOptions options) throws VipsException;
+	public native VipsImage histEqual(com.criteo.vips.options.HistEqualOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistEqual (hist_equal): histogram equalisation
@@ -1771,7 +1768,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyHistFind(HistFindOptions options) throws VipsException;
+	public native void applyHistFind(com.criteo.vips.options.HistFindOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFind (hist_find): find image histogram
@@ -1787,7 +1784,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage histFind(HistFindOptions options) throws VipsException;
+	public native VipsImage histFind(com.criteo.vips.options.HistFindOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFind (hist_find): find image histogram
@@ -1803,14 +1800,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param index Index image
 	 * @param options optional arguments
 	 */
-	public native void applyHistFindIndexed(Image index, HistFindIndexedOptions options) throws VipsException;
+	public native void applyHistFindIndexed(com.criteo.vips.Image index, com.criteo.vips.options.HistFindIndexedOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFindIndexed (hist_find_indexed): find indexed image histogram
 	 * Mutates the image inplace.
 	 * @param index Index image
 	 */
-	public void applyHistFindIndexed(Image index) throws VipsException {
+	public void applyHistFindIndexed(com.criteo.vips.Image index) throws VipsException {
 		applyHistFindIndexed(index, null);
 	}
 	
@@ -1821,14 +1818,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param index Index image
 	 * @param options optional arguments
 	 */
-	public native VipsImage histFindIndexed(Image index, HistFindIndexedOptions options) throws VipsException;
+	public native VipsImage histFindIndexed(com.criteo.vips.Image index, com.criteo.vips.options.HistFindIndexedOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFindIndexed (hist_find_indexed): find indexed image histogram
 	 * Returns a new image.
 	 * @param index Index image
 	 */
-	public VipsImage histFindIndexed(Image index) throws VipsException {
+	public VipsImage histFindIndexed(com.criteo.vips.Image index) throws VipsException {
 		return histFindIndexed(index, null);
 	}
 	
@@ -1837,7 +1834,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyHistFindNdim(HistFindNdimOptions options) throws VipsException;
+	public native void applyHistFindNdim(com.criteo.vips.options.HistFindNdimOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFindNDim (hist_find_ndim): find n-dimensional image histogram
@@ -1853,7 +1850,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage histFindNdim(HistFindNdimOptions options) throws VipsException;
+	public native VipsImage histFindNdim(com.criteo.vips.options.HistFindNdimOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistFindNDim (hist_find_ndim): find n-dimensional image histogram
@@ -1875,7 +1872,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Window height in pixels
 	 * @param options optional arguments
 	 */
-	public native void applyHistLocal(int width, int height, HistLocalOptions options) throws VipsException;
+	public native void applyHistLocal(int width, int height, com.criteo.vips.options.HistLocalOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistLocal (hist_local): local histogram equalisation
@@ -1895,7 +1892,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Window height in pixels
 	 * @param options optional arguments
 	 */
-	public native VipsImage histLocal(int width, int height, HistLocalOptions options) throws VipsException;
+	public native VipsImage histLocal(int width, int height, com.criteo.vips.options.HistLocalOptions options) throws VipsException;
 	
 	/**
 	 * VipsHistLocal (hist_local): local histogram equalisation
@@ -1912,7 +1909,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param ref Reference histogram
 	 */
-	public native void applyHistMatch(Image ref) throws VipsException;
+	public native void applyHistMatch(com.criteo.vips.Image ref) throws VipsException;
 	
 	
 	/**
@@ -1920,7 +1917,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param ref Reference histogram
 	 */
-	public native VipsImage histMatch(Image ref) throws VipsException;
+	public native VipsImage histMatch(com.criteo.vips.Image ref) throws VipsException;
 	
 	/**
 	 * VipsHistNorm (hist_norm): normalise histogram
@@ -1953,7 +1950,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyHoughCircle(HoughCircleOptions options) throws VipsException;
+	public native void applyHoughCircle(com.criteo.vips.options.HoughCircleOptions options) throws VipsException;
 	
 	/**
 	 * VipsHoughCircle (hough_circle): find hough circle transform
@@ -1969,7 +1966,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage houghCircle(HoughCircleOptions options) throws VipsException;
+	public native VipsImage houghCircle(com.criteo.vips.options.HoughCircleOptions options) throws VipsException;
 	
 	/**
 	 * VipsHoughCircle (hough_circle): find hough circle transform
@@ -1984,7 +1981,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyHoughLine(HoughLineOptions options) throws VipsException;
+	public native void applyHoughLine(com.criteo.vips.options.HoughLineOptions options) throws VipsException;
 	
 	/**
 	 * VipsHoughLine (hough_line): find hough line transform
@@ -2000,7 +1997,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage houghLine(HoughLineOptions options) throws VipsException;
+	public native VipsImage houghLine(com.criteo.vips.options.HoughLineOptions options) throws VipsException;
 	
 	/**
 	 * VipsHoughLine (hough_line): find hough line transform
@@ -2028,7 +2025,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyIccExport(ICCExportOptions options) throws VipsException;
+	public native void applyIccExport(com.criteo.vips.options.ICCExportOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccExport (icc_export): output to device with ICC profile
@@ -2044,7 +2041,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage iccExport(ICCExportOptions options) throws VipsException;
+	public native VipsImage iccExport(com.criteo.vips.options.ICCExportOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccExport (icc_export): output to device with ICC profile
@@ -2059,7 +2056,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyIccImport(ICCImportOptions options) throws VipsException;
+	public native void applyIccImport(com.criteo.vips.options.ICCImportOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccImport (icc_import): import from device with ICC profile
@@ -2075,7 +2072,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage iccImport(ICCImportOptions options) throws VipsException;
+	public native VipsImage iccImport(com.criteo.vips.options.ICCImportOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccImport (icc_import): import from device with ICC profile
@@ -2091,7 +2088,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param outputProfile Filename to load output profile from
 	 * @param options optional arguments
 	 */
-	public native void applyIccTransform(String outputProfile, ICCTransformOptions options) throws VipsException;
+	public native void applyIccTransform(String outputProfile, com.criteo.vips.options.ICCTransformOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccTransform (icc_transform): transform between devices with ICC profiles
@@ -2109,7 +2106,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param outputProfile Filename to load output profile from
 	 * @param options optional arguments
 	 */
-	public native VipsImage iccTransform(String outputProfile, ICCTransformOptions options) throws VipsException;
+	public native VipsImage iccTransform(String outputProfile, com.criteo.vips.options.ICCTransformOptions options) throws VipsException;
 	
 	/**
 	 * VipsIccTransform (icc_transform): transform between devices with ICC profiles
@@ -2124,7 +2121,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsIdentity (identity): make a 1D image where pixel values are indexes
 	 * @param options optional arguments
 	 */
-	public static native VipsImage identity(IdentityOptions options) throws VipsException;
+	public static native VipsImage identity(com.criteo.vips.options.IdentityOptions options) throws VipsException;
 	
 	/**
 	 * VipsIdentity (identity): make a 1D image where pixel values are indexes
@@ -2140,7 +2137,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in2 Source for FALSE pixels
 	 * @param options optional arguments
 	 */
-	public native void applyIfthenelse(Image in1, Image in2, IfthenelseOptions options) throws VipsException;
+	public native void applyIfthenelse(com.criteo.vips.Image in1, com.criteo.vips.Image in2, com.criteo.vips.options.IfthenelseOptions options) throws VipsException;
 	
 	/**
 	 * VipsIfthenelse (ifthenelse): ifthenelse an image
@@ -2148,7 +2145,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in1 Source for TRUE pixels
 	 * @param in2 Source for FALSE pixels
 	 */
-	public void applyIfthenelse(Image in1, Image in2) throws VipsException {
+	public void applyIfthenelse(com.criteo.vips.Image in1, com.criteo.vips.Image in2) throws VipsException {
 		applyIfthenelse(in1, in2, null);
 	}
 	
@@ -2160,7 +2157,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in2 Source for FALSE pixels
 	 * @param options optional arguments
 	 */
-	public native VipsImage ifthenelse(Image in1, Image in2, IfthenelseOptions options) throws VipsException;
+	public native VipsImage ifthenelse(com.criteo.vips.Image in1, com.criteo.vips.Image in2, com.criteo.vips.options.IfthenelseOptions options) throws VipsException;
 	
 	/**
 	 * VipsIfthenelse (ifthenelse): ifthenelse an image
@@ -2168,7 +2165,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in1 Source for TRUE pixels
 	 * @param in2 Source for FALSE pixels
 	 */
-	public VipsImage ifthenelse(Image in1, Image in2) throws VipsException {
+	public VipsImage ifthenelse(com.criteo.vips.Image in1, com.criteo.vips.Image in2) throws VipsException {
 		return ifthenelse(in1, in2, null);
 	}
 	
@@ -2180,7 +2177,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param y Top edge of sub in main
 	 * @param options optional arguments
 	 */
-	public native void applyInsert(Image sub, int x, int y, InsertOptions options) throws VipsException;
+	public native void applyInsert(com.criteo.vips.Image sub, int x, int y, com.criteo.vips.options.InsertOptions options) throws VipsException;
 	
 	/**
 	 * VipsInsert (insert): insert image @sub into @main at @x, @y
@@ -2189,7 +2186,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param x Left edge of sub in main
 	 * @param y Top edge of sub in main
 	 */
-	public void applyInsert(Image sub, int x, int y) throws VipsException {
+	public void applyInsert(com.criteo.vips.Image sub, int x, int y) throws VipsException {
 		applyInsert(sub, x, y, null);
 	}
 	
@@ -2202,7 +2199,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param y Top edge of sub in main
 	 * @param options optional arguments
 	 */
-	public native VipsImage insert(Image sub, int x, int y, InsertOptions options) throws VipsException;
+	public native VipsImage insert(com.criteo.vips.Image sub, int x, int y, com.criteo.vips.options.InsertOptions options) throws VipsException;
 	
 	/**
 	 * VipsInsert (insert): insert image @sub into @main at @x, @y
@@ -2211,7 +2208,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param x Left edge of sub in main
 	 * @param y Top edge of sub in main
 	 */
-	public VipsImage insert(Image sub, int x, int y) throws VipsException {
+	public VipsImage insert(com.criteo.vips.Image sub, int x, int y) throws VipsException {
 		return insert(sub, x, y, null);
 	}
 	
@@ -2233,7 +2230,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyInvertlut(InvertLUTOptions options) throws VipsException;
+	public native void applyInvertlut(com.criteo.vips.options.InvertLUTOptions options) throws VipsException;
 	
 	/**
 	 * VipsInvertlut (invertlut): build an inverted look-up table
@@ -2249,7 +2246,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage invertlut(InvertLUTOptions options) throws VipsException;
+	public native VipsImage invertlut(com.criteo.vips.options.InvertLUTOptions options) throws VipsException;
 	
 	/**
 	 * VipsInvertlut (invertlut): build an inverted look-up table
@@ -2264,7 +2261,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyInvfft(InvFFTOptions options) throws VipsException;
+	public native void applyInvfft(com.criteo.vips.options.InvFFTOptions options) throws VipsException;
 	
 	/**
 	 * VipsInvfft (invfft): inverse FFT
@@ -2280,7 +2277,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage invfft(InvFFTOptions options) throws VipsException;
+	public native VipsImage invfft(com.criteo.vips.options.InvFFTOptions options) throws VipsException;
 	
 	/**
 	 * VipsInvfft (invfft): inverse FFT
@@ -2297,7 +2294,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param direction Join left-right or up-down
 	 * @param options optional arguments
 	 */
-	public native void applyJoin(Image in2, VipsDirection direction, JoinOptions options) throws VipsException;
+	public native void applyJoin(com.criteo.vips.Image in2, com.criteo.vips.enums.VipsDirection direction, com.criteo.vips.options.JoinOptions options) throws VipsException;
 	
 	/**
 	 * VipsJoin (join): join a pair of images
@@ -2305,7 +2302,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in2 Second input image
 	 * @param direction Join left-right or up-down
 	 */
-	public void applyJoin(Image in2, VipsDirection direction) throws VipsException {
+	public void applyJoin(com.criteo.vips.Image in2, com.criteo.vips.enums.VipsDirection direction) throws VipsException {
 		applyJoin(in2, direction, null);
 	}
 	
@@ -2317,7 +2314,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param direction Join left-right or up-down
 	 * @param options optional arguments
 	 */
-	public native VipsImage join(Image in2, VipsDirection direction, JoinOptions options) throws VipsException;
+	public native VipsImage join(com.criteo.vips.Image in2, com.criteo.vips.enums.VipsDirection direction, com.criteo.vips.options.JoinOptions options) throws VipsException;
 	
 	/**
 	 * VipsJoin (join): join a pair of images
@@ -2325,7 +2322,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param in2 Second input image
 	 * @param direction Join left-right or up-down
 	 */
-	public VipsImage join(Image in2, VipsDirection direction) throws VipsException {
+	public VipsImage join(com.criteo.vips.Image in2, com.criteo.vips.enums.VipsDirection direction) throws VipsException {
 		return join(in2, direction, null);
 	}
 	
@@ -2334,7 +2331,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage jp2kLoad(String filename, JP2KLoadOptions options) throws VipsException;
+	public static native VipsImage jp2kLoad(String filename, com.criteo.vips.options.JP2KLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadJp2kFile (jp2kload): load JPEG2000 image
@@ -2349,7 +2346,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage jp2kLoadBuffer(byte[] buffer, JP2KLoadBufferOptions options) throws VipsException;
+	public static native VipsImage jp2kLoadBuffer(byte[] buffer, com.criteo.vips.options.JP2KLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadJp2kBuffer (jp2kload_buffer): load JPEG2000 image
@@ -2364,7 +2361,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public native void jp2kSave(String filename, JP2KSaveOptions options) throws VipsException;
+	public native void jp2kSave(String filename, com.criteo.vips.options.JP2KSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveJp2kFile (jp2ksave): save image in JPEG2000 format
@@ -2378,7 +2375,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveJp2kBuffer (jp2ksave_buffer): save image in JPEG2000 format
 	 * @param options optional arguments
 	 */
-	public native byte[] jp2kSaveBuffer(JP2KSaveBufferOptions options) throws VipsException;
+	public native byte[] jp2kSaveBuffer(com.criteo.vips.options.JP2KSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveJp2kBuffer (jp2ksave_buffer): save image in JPEG2000 format
@@ -2392,7 +2389,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage jpegLoad(String filename, JPEGLoadOptions options) throws VipsException;
+	public static native VipsImage jpegLoad(String filename, com.criteo.vips.options.JPEGLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadJpegFile (jpegload): load jpeg from file
@@ -2407,7 +2404,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage jpegLoadBuffer(byte[] buffer, JPEGLoadBufferOptions options) throws VipsException;
+	public static native VipsImage jpegLoadBuffer(byte[] buffer, com.criteo.vips.options.JPEGLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadJpegBuffer (jpegload_buffer): load jpeg from buffer
@@ -2422,7 +2419,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void jpegSave(String filename, JPEGSaveOptions options) throws VipsException;
+	public native void jpegSave(String filename, com.criteo.vips.options.JPEGSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveJpegFile (jpegsave): save image to jpeg file
@@ -2436,7 +2433,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveJpegBuffer (jpegsave_buffer): save image to jpeg buffer
 	 * @param options optional arguments
 	 */
-	public native byte[] jpegSaveBuffer(JPEGSaveBufferOptions options) throws VipsException;
+	public native byte[] jpegSaveBuffer(com.criteo.vips.options.JPEGSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveJpegBuffer (jpegsave_buffer): save image to jpeg buffer
@@ -2449,7 +2446,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveJpegMime (jpegsave_mime): save image to jpeg mime
 	 * @param options optional arguments
 	 */
-	public native void jpegSaveMime(JPEGSaveMimeOptions options) throws VipsException;
+	public native void jpegSaveMime(com.criteo.vips.options.JPEGSaveMimeOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveJpegMime (jpegsave_mime): save image to jpeg mime
@@ -2463,7 +2460,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage jxlLoad(String filename, JXLLoadOptions options) throws VipsException;
+	public static native VipsImage jxlLoad(String filename, com.criteo.vips.options.JXLLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadJxlFile (jxlload): load JPEG-XL image
@@ -2478,7 +2475,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage jxlLoadBuffer(byte[] buffer, JXLLoadBufferOptions options) throws VipsException;
+	public static native VipsImage jxlLoadBuffer(byte[] buffer, com.criteo.vips.options.JXLLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadJxlBuffer (jxlload_buffer): load JPEG-XL image
@@ -2493,7 +2490,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public native void jxlSave(String filename, JXLSaveOptions options) throws VipsException;
+	public native void jxlSave(String filename, com.criteo.vips.options.JXLSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveJxlFile (jxlsave): save image in JPEG-XL format
@@ -2507,7 +2504,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveJxlBuffer (jxlsave_buffer): save image in JPEG-XL format
 	 * @param options optional arguments
 	 */
-	public native byte[] jxlSaveBuffer(JXLSaveBufferOptions options) throws VipsException;
+	public native byte[] jxlSaveBuffer(com.criteo.vips.options.JXLSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveJxlBuffer (jxlsave_buffer): save image in JPEG-XL format
@@ -2560,7 +2557,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyLab2XYZ(LAB2XYZOptions options) throws VipsException;
+	public native void applyLab2XYZ(com.criteo.vips.options.LAB2XYZOptions options) throws VipsException;
 	
 	/**
 	 * VipsLab2XYZ (Lab2XYZ): transform CIELAB to XYZ
@@ -2576,7 +2573,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage lab2XYZ(LAB2XYZOptions options) throws VipsException;
+	public native VipsImage lab2XYZ(com.criteo.vips.options.LAB2XYZOptions options) throws VipsException;
 	
 	/**
 	 * VipsLab2XYZ (Lab2XYZ): transform CIELAB to XYZ
@@ -2697,7 +2694,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param b Add this
 	 * @param options optional arguments
 	 */
-	public native void applyLinear(double[] a, double[] b, LinearOptions options) throws VipsException;
+	public native void applyLinear(double[] a, double[] b, com.criteo.vips.options.LinearOptions options) throws VipsException;
 	
 	/**
 	 * VipsLinear (linear): calculate (a * in + b)
@@ -2717,7 +2714,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param b Add this
 	 * @param options optional arguments
 	 */
-	public native VipsImage linear(double[] a, double[] b, LinearOptions options) throws VipsException;
+	public native VipsImage linear(double[] a, double[] b, com.criteo.vips.options.LinearOptions options) throws VipsException;
 	
 	/**
 	 * VipsLinear (linear): calculate (a * in + b)
@@ -2734,7 +2731,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyLinecache(LinecacheOptions options) throws VipsException;
+	public native void applyLinecache(com.criteo.vips.options.LinecacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsLineCache (linecache): cache an image as a set of lines
@@ -2750,7 +2747,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage linecache(LinecacheOptions options) throws VipsException;
+	public native VipsImage linecache(com.criteo.vips.options.LinecacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsLineCache (linecache): cache an image as a set of lines
@@ -2766,7 +2763,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param minAmpl Minimum amplitude of Gaussian
 	 * @param options optional arguments
 	 */
-	public static native VipsImage logmat(double sigma, double minAmpl, LogmatOptions options) throws VipsException;
+	public static native VipsImage logmat(double sigma, double minAmpl, com.criteo.vips.options.LogmatOptions options) throws VipsException;
 	
 	/**
 	 * VipsLogmat (logmat): make a Laplacian of Gaussian image
@@ -2782,7 +2779,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage magickLoad(String filename, MagickLoadOptions options) throws VipsException;
+	public static native VipsImage magickLoad(String filename, com.criteo.vips.options.MagickLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadMagick7File (magickload): load file with ImageMagick7
@@ -2797,7 +2794,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage magickLoadBuffer(byte[] buffer, MagickLoadBufferOptions options) throws VipsException;
+	public static native VipsImage magickLoadBuffer(byte[] buffer, com.criteo.vips.options.MagickLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadMagick7Buffer (magickload_buffer): load buffer with ImageMagick7
@@ -2812,7 +2809,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void magickSave(String filename, MagickSaveOptions options) throws VipsException;
+	public native void magickSave(String filename, com.criteo.vips.options.MagickSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveMagickFile (magicksave): save file with ImageMagick
@@ -2826,7 +2823,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveMagickBuffer (magicksave_buffer): save image to magick buffer
 	 * @param options optional arguments
 	 */
-	public native byte[] magickSaveBuffer(MagickSaveBufferOptions options) throws VipsException;
+	public native byte[] magickSaveBuffer(com.criteo.vips.options.MagickSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveMagickBuffer (magicksave_buffer): save image to magick buffer
@@ -2841,14 +2838,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param lut Look-up table image
 	 * @param options optional arguments
 	 */
-	public native void applyMaplut(Image lut, MapLUTOptions options) throws VipsException;
+	public native void applyMaplut(com.criteo.vips.Image lut, com.criteo.vips.options.MapLUTOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaplut (maplut): map an image though a lut
 	 * Mutates the image inplace.
 	 * @param lut Look-up table image
 	 */
-	public void applyMaplut(Image lut) throws VipsException {
+	public void applyMaplut(com.criteo.vips.Image lut) throws VipsException {
 		applyMaplut(lut, null);
 	}
 	
@@ -2859,14 +2856,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param lut Look-up table image
 	 * @param options optional arguments
 	 */
-	public native VipsImage maplut(Image lut, MapLUTOptions options) throws VipsException;
+	public native VipsImage maplut(com.criteo.vips.Image lut, com.criteo.vips.options.MapLUTOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaplut (maplut): map an image though a lut
 	 * Returns a new image.
 	 * @param lut Look-up table image
 	 */
-	public VipsImage maplut(Image lut) throws VipsException {
+	public VipsImage maplut(com.criteo.vips.Image lut) throws VipsException {
 		return maplut(lut, null);
 	}
 	
@@ -2879,7 +2876,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param amplitudeCutoff Amplitude cutoff
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskButterworth(int width, int height, double order, double frequencyCutoff, double amplitudeCutoff, MaskButterworthOptions options) throws VipsException;
+	public static native VipsImage maskButterworth(int width, int height, double order, double frequencyCutoff, double amplitudeCutoff, com.criteo.vips.options.MaskButterworthOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskButterworth (mask_butterworth): make a butterworth filter
@@ -2904,7 +2901,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param amplitudeCutoff Amplitude cutoff
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskButterworthBand(int width, int height, double order, double frequencyCutoffX, double frequencyCutoffY, double radius, double amplitudeCutoff, MaskButterworthBandOptions options) throws VipsException;
+	public static native VipsImage maskButterworthBand(int width, int height, double order, double frequencyCutoffX, double frequencyCutoffY, double radius, double amplitudeCutoff, com.criteo.vips.options.MaskButterworthBandOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskButterworthBand (mask_butterworth_band): make a butterworth_band filter
@@ -2930,7 +2927,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param ringwidth Ringwidth
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskButterworthRing(int width, int height, double order, double frequencyCutoff, double amplitudeCutoff, double ringwidth, MaskButterworthRingOptions options) throws VipsException;
+	public static native VipsImage maskButterworthRing(int width, int height, double order, double frequencyCutoff, double amplitudeCutoff, double ringwidth, com.criteo.vips.options.MaskButterworthRingOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskButterworthRing (mask_butterworth_ring): make a butterworth ring filter
@@ -2952,7 +2949,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param fractalDimension Fractal dimension
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskFractal(int width, int height, double fractalDimension, MaskFractalOptions options) throws VipsException;
+	public static native VipsImage maskFractal(int width, int height, double fractalDimension, com.criteo.vips.options.MaskFractalOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskFractal (mask_fractal): make fractal filter
@@ -2972,7 +2969,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param amplitudeCutoff Amplitude cutoff
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskGaussian(int width, int height, double frequencyCutoff, double amplitudeCutoff, MaskGaussianOptions options) throws VipsException;
+	public static native VipsImage maskGaussian(int width, int height, double frequencyCutoff, double amplitudeCutoff, com.criteo.vips.options.MaskGaussianOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskGaussian (mask_gaussian): make a gaussian filter
@@ -2995,7 +2992,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param amplitudeCutoff Amplitude cutoff
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskGaussianBand(int width, int height, double frequencyCutoffX, double frequencyCutoffY, double radius, double amplitudeCutoff, MaskGaussianBandOptions options) throws VipsException;
+	public static native VipsImage maskGaussianBand(int width, int height, double frequencyCutoffX, double frequencyCutoffY, double radius, double amplitudeCutoff, com.criteo.vips.options.MaskGaussianBandOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskGaussianBand (mask_gaussian_band): make a gaussian filter
@@ -3019,7 +3016,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param ringwidth Ringwidth
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskGaussianRing(int width, int height, double frequencyCutoff, double amplitudeCutoff, double ringwidth, MaskGaussianRingOptions options) throws VipsException;
+	public static native VipsImage maskGaussianRing(int width, int height, double frequencyCutoff, double amplitudeCutoff, double ringwidth, com.criteo.vips.options.MaskGaussianRingOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskGaussianRing (mask_gaussian_ring): make a gaussian ring filter
@@ -3040,7 +3037,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param frequencyCutoff Frequency cutoff
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskIdeal(int width, int height, double frequencyCutoff, MaskIdealOptions options) throws VipsException;
+	public static native VipsImage maskIdeal(int width, int height, double frequencyCutoff, com.criteo.vips.options.MaskIdealOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskIdeal (mask_ideal): make an ideal filter
@@ -3061,7 +3058,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param radius Radius of circle
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskIdealBand(int width, int height, double frequencyCutoffX, double frequencyCutoffY, double radius, MaskIdealBandOptions options) throws VipsException;
+	public static native VipsImage maskIdealBand(int width, int height, double frequencyCutoffX, double frequencyCutoffY, double radius, com.criteo.vips.options.MaskIdealBandOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskIdealBand (mask_ideal_band): make an ideal band filter
@@ -3083,7 +3080,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param ringwidth Ringwidth
 	 * @param options optional arguments
 	 */
-	public static native VipsImage maskIdealRing(int width, int height, double frequencyCutoff, double ringwidth, MaskIdealRingOptions options) throws VipsException;
+	public static native VipsImage maskIdealRing(int width, int height, double frequencyCutoff, double ringwidth, com.criteo.vips.options.MaskIdealRingOptions options) throws VipsException;
 	
 	/**
 	 * VipsMaskIdealRing (mask_ideal_ring): make an ideal ring filter
@@ -3101,7 +3098,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param math Math to perform
 	 */
-	public native void applyMath(VipsOperationMath math) throws VipsException;
+	public native void applyMath(com.criteo.vips.enums.VipsOperationMath math) throws VipsException;
 	
 	
 	/**
@@ -3109,7 +3106,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param math Math to perform
 	 */
-	public native VipsImage math(VipsOperationMath math) throws VipsException;
+	public native VipsImage math(com.criteo.vips.enums.VipsOperationMath math) throws VipsException;
 	
 	/**
 	 * VipsMath2 (math2): binary math operations
@@ -3117,7 +3114,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param math2 Math to perform
 	 */
-	public native void applyMath2(Image right, VipsOperationMath2 math2) throws VipsException;
+	public native void applyMath2(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationMath2 math2) throws VipsException;
 	
 	
 	/**
@@ -3126,7 +3123,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param math2 Math to perform
 	 */
-	public native VipsImage math2(Image right, VipsOperationMath2 math2) throws VipsException;
+	public native VipsImage math2(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationMath2 math2) throws VipsException;
 	
 	/**
 	 * VipsMath2Const (math2_const): binary math operations with a constant
@@ -3134,7 +3131,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param math2 Math to perform
 	 * @param c Array of constants
 	 */
-	public native void applyMath2Const(VipsOperationMath2 math2, double[] c) throws VipsException;
+	public native void applyMath2Const(com.criteo.vips.enums.VipsOperationMath2 math2, double[] c) throws VipsException;
 	
 	
 	/**
@@ -3143,14 +3140,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param math2 Math to perform
 	 * @param c Array of constants
 	 */
-	public native VipsImage math2Const(VipsOperationMath2 math2, double[] c) throws VipsException;
+	public native VipsImage math2Const(com.criteo.vips.enums.VipsOperationMath2 math2, double[] c) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadMat (matload): load mat from file
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage matLoad(String filename, MatLoadOptions options) throws VipsException;
+	public static native VipsImage matLoad(String filename, com.criteo.vips.options.MatLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadMat (matload): load mat from file
@@ -3178,7 +3175,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage matrixLoad(String filename, MatrixLoadOptions options) throws VipsException;
+	public static native VipsImage matrixLoad(String filename, com.criteo.vips.options.MatrixLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadMatrixFile (matrixload): load matrix
@@ -3192,7 +3189,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignPrintMatrix (matrixprint): print matrix
 	 * @param options optional arguments
 	 */
-	public native void matrixprint(MatrixprintOptions options) throws VipsException;
+	public native void matrixprint(com.criteo.vips.options.MatrixprintOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignPrintMatrix (matrixprint): print matrix
@@ -3206,7 +3203,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void matrixSave(String filename, MatrixSaveOptions options) throws VipsException;
+	public native void matrixSave(String filename, com.criteo.vips.options.MatrixSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveMatrixFile (matrixsave): save image to matrix
@@ -3220,7 +3217,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsMax (max): find image maximum
 	 * @param options optional arguments
 	 */
-	public native double max(MaxOptions options) throws VipsException;
+	public native double max(com.criteo.vips.options.MaxOptions options) throws VipsException;
 	
 	/**
 	 * VipsMax (max): find image maximum
@@ -3230,16 +3227,16 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * VipsMeasure (measure): measure a set of patches on a color chart
 	 * Mutates the image inplace.
 	 * @param h Number of patches across chart
 	 * @param v Number of patches down chart
 	 * @param options optional arguments
 	 */
-	public native void applyMeasure(int h, int v, MeasureOptions options) throws VipsException;
+	public native void applyMeasure(int h, int v, com.criteo.vips.options.MeasureOptions options) throws VipsException;
 	
 	/**
-	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * VipsMeasure (measure): measure a set of patches on a color chart
 	 * Mutates the image inplace.
 	 * @param h Number of patches across chart
 	 * @param v Number of patches down chart
@@ -3250,16 +3247,16 @@ abstract class AbstractVipsImage extends Vips {
 	
 	
 	/**
-	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * VipsMeasure (measure): measure a set of patches on a color chart
 	 * Returns a new image.
 	 * @param h Number of patches across chart
 	 * @param v Number of patches down chart
 	 * @param options optional arguments
 	 */
-	public native VipsImage measure(int h, int v, MeasureOptions options) throws VipsException;
+	public native VipsImage measure(int h, int v, com.criteo.vips.options.MeasureOptions options) throws VipsException;
 	
 	/**
-	 * VipsMeasure (measure): measure a set of patches on a colour chart
+	 * VipsMeasure (measure): measure a set of patches on a color chart
 	 * Returns a new image.
 	 * @param h Number of patches across chart
 	 * @param v Number of patches down chart
@@ -3277,7 +3274,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param dy Vertical displacement from sec to ref
 	 * @param options optional arguments
 	 */
-	public native void applyMerge(Image sec, VipsDirection direction, int dx, int dy, MergeOptions options) throws VipsException;
+	public native void applyMerge(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int dx, int dy, com.criteo.vips.options.MergeOptions options) throws VipsException;
 	
 	/**
 	 * VipsMerge (merge): merge two images
@@ -3287,7 +3284,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param dx Horizontal displacement from sec to ref
 	 * @param dy Vertical displacement from sec to ref
 	 */
-	public void applyMerge(Image sec, VipsDirection direction, int dx, int dy) throws VipsException {
+	public void applyMerge(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int dx, int dy) throws VipsException {
 		applyMerge(sec, direction, dx, dy, null);
 	}
 	
@@ -3301,7 +3298,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param dy Vertical displacement from sec to ref
 	 * @param options optional arguments
 	 */
-	public native VipsImage merge(Image sec, VipsDirection direction, int dx, int dy, MergeOptions options) throws VipsException;
+	public native VipsImage merge(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int dx, int dy, com.criteo.vips.options.MergeOptions options) throws VipsException;
 	
 	/**
 	 * VipsMerge (merge): merge two images
@@ -3311,7 +3308,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param dx Horizontal displacement from sec to ref
 	 * @param dy Vertical displacement from sec to ref
 	 */
-	public VipsImage merge(Image sec, VipsDirection direction, int dx, int dy) throws VipsException {
+	public VipsImage merge(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int dx, int dy) throws VipsException {
 		return merge(sec, direction, dx, dy, null);
 	}
 	
@@ -3319,7 +3316,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsMin (min): find image minimum
 	 * @param options optional arguments
 	 */
-	public native double min(MinOptions options) throws VipsException;
+	public native double min(com.criteo.vips.options.MinOptions options) throws VipsException;
 	
 	/**
 	 * VipsMin (min): find image minimum
@@ -3334,7 +3331,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param morph Morphological operation to perform
 	 */
-	public native void applyMorph(Image mask, VipsOperationMorphology morph) throws VipsException;
+	public native void applyMorph(com.criteo.vips.Image mask, com.criteo.vips.enums.VipsOperationMorphology morph) throws VipsException;
 	
 	
 	/**
@@ -3343,7 +3340,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param mask Input matrix image
 	 * @param morph Morphological operation to perform
 	 */
-	public native VipsImage morph(Image mask, VipsOperationMorphology morph) throws VipsException;
+	public native VipsImage morph(com.criteo.vips.Image mask, com.criteo.vips.enums.VipsOperationMorphology morph) throws VipsException;
 	
 	/**
 	 * VipsMosaic (mosaic): mosaic two images
@@ -3356,7 +3353,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param ysec Position of secondary tie-point
 	 * @param options optional arguments
 	 */
-	public native void applyMosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec, MosaicOptions options) throws VipsException;
+	public native void applyMosaic(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int xref, int yref, int xsec, int ysec, com.criteo.vips.options.MosaicOptions options) throws VipsException;
 	
 	/**
 	 * VipsMosaic (mosaic): mosaic two images
@@ -3368,7 +3365,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param xsec Position of secondary tie-point
 	 * @param ysec Position of secondary tie-point
 	 */
-	public void applyMosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec) throws VipsException {
+	public void applyMosaic(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int xref, int yref, int xsec, int ysec) throws VipsException {
 		applyMosaic(sec, direction, xref, yref, xsec, ysec, null);
 	}
 	
@@ -3384,7 +3381,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param ysec Position of secondary tie-point
 	 * @param options optional arguments
 	 */
-	public native VipsImage mosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec, MosaicOptions options) throws VipsException;
+	public native VipsImage mosaic(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int xref, int yref, int xsec, int ysec, com.criteo.vips.options.MosaicOptions options) throws VipsException;
 	
 	/**
 	 * VipsMosaic (mosaic): mosaic two images
@@ -3396,7 +3393,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param xsec Position of secondary tie-point
 	 * @param ysec Position of secondary tie-point
 	 */
-	public VipsImage mosaic(Image sec, VipsDirection direction, int xref, int yref, int xsec, int ysec) throws VipsException {
+	public VipsImage mosaic(com.criteo.vips.Image sec, com.criteo.vips.enums.VipsDirection direction, int xref, int yref, int xsec, int ysec) throws VipsException {
 		return mosaic(sec, direction, xref, yref, xsec, ysec, null);
 	}
 	
@@ -3405,7 +3402,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyMsb(MsbOptions options) throws VipsException;
+	public native void applyMsb(com.criteo.vips.options.MsbOptions options) throws VipsException;
 	
 	/**
 	 * VipsMsb (msb): pick most-significant byte from an image
@@ -3421,7 +3418,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage msb(MsbOptions options) throws VipsException;
+	public native VipsImage msb(com.criteo.vips.options.MsbOptions options) throws VipsException;
 	
 	/**
 	 * VipsMsb (msb): pick most-significant byte from an image
@@ -3436,7 +3433,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void applyMultiply(Image right) throws VipsException;
+	public native void applyMultiply(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -3444,14 +3441,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand image argument
 	 */
-	public native VipsImage multiply(Image right) throws VipsException;
+	public native VipsImage multiply(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadOpenexr (openexrload): load an OpenEXR image
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage openexrLoad(String filename, OpenexrLoadOptions options) throws VipsException;
+	public static native VipsImage openexrLoad(String filename, com.criteo.vips.options.OpenexrLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadOpenexr (openexrload): load an OpenEXR image
@@ -3466,7 +3463,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage openslideLoad(String filename, OpenslideLoadOptions options) throws VipsException;
+	public static native VipsImage openslideLoad(String filename, com.criteo.vips.options.OpenslideLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadOpenslideFile (openslideload): load file with OpenSlide
@@ -3481,7 +3478,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage pdfLoad(String filename, PDFLoadOptions options) throws VipsException;
+	public static native VipsImage pdfLoad(String filename, com.criteo.vips.options.PDFLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadPdfFile (pdfload): load PDF from file
@@ -3496,7 +3493,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage pdfLoadBuffer(byte[] buffer, PDFLoadBufferOptions options) throws VipsException;
+	public static native VipsImage pdfLoadBuffer(byte[] buffer, com.criteo.vips.options.PDFLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadPdfBuffer (pdfload_buffer): load PDF from buffer
@@ -3518,7 +3515,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage perlin(int width, int height, PerlinOptions options) throws VipsException;
+	public static native VipsImage perlin(int width, int height, com.criteo.vips.options.PerlinOptions options) throws VipsException;
 	
 	/**
 	 * VipsPerlin (perlin): make a perlin noise image
@@ -3534,7 +3531,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param in2 Second input image
 	 */
-	public native void applyPhasecor(Image in2) throws VipsException;
+	public native void applyPhasecor(com.criteo.vips.Image in2) throws VipsException;
 	
 	
 	/**
@@ -3542,14 +3539,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param in2 Second input image
 	 */
-	public native VipsImage phasecor(Image in2) throws VipsException;
+	public native VipsImage phasecor(com.criteo.vips.Image in2) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadPngFile (pngload): load png from file
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage pngLoad(String filename, PNGLoadOptions options) throws VipsException;
+	public static native VipsImage pngLoad(String filename, com.criteo.vips.options.PNGLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadPngFile (pngload): load png from file
@@ -3564,7 +3561,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage pngLoadBuffer(byte[] buffer, PNGLoadBufferOptions options) throws VipsException;
+	public static native VipsImage pngLoadBuffer(byte[] buffer, com.criteo.vips.options.PNGLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadPngBuffer (pngload_buffer): load png from buffer
@@ -3579,7 +3576,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void pngSave(String filename, PNGSaveOptions options) throws VipsException;
+	public native void pngSave(String filename, com.criteo.vips.options.PNGSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveSpngFile (pngsave): save image to file as PNG
@@ -3593,7 +3590,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveSpngBuffer (pngsave_buffer): save image to buffer as PNG
 	 * @param options optional arguments
 	 */
-	public native byte[] pngSaveBuffer(PNGSaveBufferOptions options) throws VipsException;
+	public native byte[] pngSaveBuffer(com.criteo.vips.options.PNGSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveSpngBuffer (pngsave_buffer): save image to buffer as PNG
@@ -3607,7 +3604,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage ppmLoad(String filename, PPMLoadOptions options) throws VipsException;
+	public static native VipsImage ppmLoad(String filename, com.criteo.vips.options.PPMLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadPpmFile (ppmload): load ppm from file
@@ -3622,7 +3619,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void ppmSave(String filename, PPMSaveOptions options) throws VipsException;
+	public native void ppmSave(String filename, com.criteo.vips.options.PPMSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSavePpmFile (ppmsave): save image to ppm file
@@ -3637,7 +3634,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyPremultiply(PremultiplyOptions options) throws VipsException;
+	public native void applyPremultiply(com.criteo.vips.options.PremultiplyOptions options) throws VipsException;
 	
 	/**
 	 * VipsPremultiply (premultiply): premultiply image alpha
@@ -3653,7 +3650,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage premultiply(PremultiplyOptions options) throws VipsException;
+	public native VipsImage premultiply(com.criteo.vips.options.PremultiplyOptions options) throws VipsException;
 	
 	/**
 	 * VipsPremultiply (premultiply): premultiply image alpha
@@ -3687,7 +3684,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage radLoad(String filename, RadLoadOptions options) throws VipsException;
+	public static native VipsImage radLoad(String filename, com.criteo.vips.options.RadLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadRadFile (radload): load a Radiance image from a file
@@ -3702,7 +3699,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage radLoadBuffer(byte[] buffer, RadLoadBufferOptions options) throws VipsException;
+	public static native VipsImage radLoadBuffer(byte[] buffer, com.criteo.vips.options.RadLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadRadBuffer (radload_buffer): load rad from buffer
@@ -3717,7 +3714,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void radSave(String filename, RadSaveOptions options) throws VipsException;
+	public native void radSave(String filename, com.criteo.vips.options.RadSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveRadFile (radsave): save image to Radiance file
@@ -3731,7 +3728,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveRadBuffer (radsave_buffer): save image to Radiance buffer
 	 * @param options optional arguments
 	 */
-	public native byte[] radSaveBuffer(RadSaveBufferOptions options) throws VipsException;
+	public native byte[] radSaveBuffer(com.criteo.vips.options.RadSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveRadBuffer (radsave_buffer): save image to Radiance buffer
@@ -3767,7 +3764,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param bands Number of bands in image
 	 * @param options optional arguments
 	 */
-	public static native VipsImage rawLoad(String filename, int width, int height, int bands, RawLoadOptions options) throws VipsException;
+	public static native VipsImage rawLoad(String filename, int width, int height, int bands, com.criteo.vips.options.RawLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadRaw (rawload): load raw data from a file
@@ -3785,7 +3782,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void rawSave(String filename, RawSaveOptions options) throws VipsException;
+	public native void rawSave(String filename, com.criteo.vips.options.RawSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveRaw (rawsave): save image to raw file
@@ -3800,7 +3797,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param fd File descriptor to write to
 	 * @param options optional arguments
 	 */
-	public native void rawSaveFd(int fd, RawSaveFdOptions options) throws VipsException;
+	public native void rawSaveFd(int fd, com.criteo.vips.options.RawSaveFdOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveRawFd (rawsave_fd): write raw image to file descriptor
@@ -3815,7 +3812,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param m Matrix of coefficients
 	 */
-	public native void applyRecomb(Image m) throws VipsException;
+	public native void applyRecomb(com.criteo.vips.Image m) throws VipsException;
 	
 	
 	/**
@@ -3823,7 +3820,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param m Matrix of coefficients
 	 */
-	public native VipsImage recomb(Image m) throws VipsException;
+	public native VipsImage recomb(com.criteo.vips.Image m) throws VipsException;
 	
 	/**
 	 * VipsReduce (reduce): reduce an image
@@ -3832,7 +3829,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native void applyReduce(double hshrink, double vshrink, ReduceOptions options) throws VipsException;
+	public native void applyReduce(double hshrink, double vshrink, com.criteo.vips.options.ReduceOptions options) throws VipsException;
 	
 	/**
 	 * VipsReduce (reduce): reduce an image
@@ -3852,7 +3849,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage reduce(double hshrink, double vshrink, ReduceOptions options) throws VipsException;
+	public native VipsImage reduce(double hshrink, double vshrink, com.criteo.vips.options.ReduceOptions options) throws VipsException;
 	
 	/**
 	 * VipsReduce (reduce): reduce an image
@@ -3870,7 +3867,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param hshrink Horizontal shrink factor
 	 * @param options optional arguments
 	 */
-	public native void applyReduceh(double hshrink, ReducehOptions options) throws VipsException;
+	public native void applyReduceh(double hshrink, com.criteo.vips.options.ReducehOptions options) throws VipsException;
 	
 	/**
 	 * VipsReduceh (reduceh): shrink an image horizontally
@@ -3888,7 +3885,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param hshrink Horizontal shrink factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage reduceh(double hshrink, ReducehOptions options) throws VipsException;
+	public native VipsImage reduceh(double hshrink, com.criteo.vips.options.ReducehOptions options) throws VipsException;
 	
 	/**
 	 * VipsReduceh (reduceh): shrink an image horizontally
@@ -3905,7 +3902,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native void applyReducev(double vshrink, ReducevOptions options) throws VipsException;
+	public native void applyReducev(double vshrink, com.criteo.vips.options.ReducevOptions options) throws VipsException;
 	
 	/**
 	 * VipsReducev (reducev): shrink an image vertically
@@ -3923,7 +3920,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage reducev(double vshrink, ReducevOptions options) throws VipsException;
+	public native VipsImage reducev(double vshrink, com.criteo.vips.options.ReducevOptions options) throws VipsException;
 	
 	/**
 	 * VipsReducev (reducev): shrink an image vertically
@@ -3940,7 +3937,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param relational Relational to perform
 	 */
-	public native void applyRelational(Image right, VipsOperationRelational relational) throws VipsException;
+	public native void applyRelational(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationRelational relational) throws VipsException;
 	
 	
 	/**
@@ -3949,7 +3946,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param right Right-hand image argument
 	 * @param relational Relational to perform
 	 */
-	public native VipsImage relational(Image right, VipsOperationRelational relational) throws VipsException;
+	public native VipsImage relational(com.criteo.vips.Image right, com.criteo.vips.enums.VipsOperationRelational relational) throws VipsException;
 	
 	/**
 	 * VipsRelationalConst (relational_const): relational operations against a constant
@@ -3957,7 +3954,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param relational Relational to perform
 	 * @param c Array of constants
 	 */
-	public native void applyRelationalConst(VipsOperationRelational relational, double[] c) throws VipsException;
+	public native void applyRelationalConst(com.criteo.vips.enums.VipsOperationRelational relational, double[] c) throws VipsException;
 	
 	
 	/**
@@ -3966,14 +3963,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param relational Relational to perform
 	 * @param c Array of constants
 	 */
-	public native VipsImage relationalConst(VipsOperationRelational relational, double[] c) throws VipsException;
+	public native VipsImage relationalConst(com.criteo.vips.enums.VipsOperationRelational relational, double[] c) throws VipsException;
 	
 	/**
 	 * VipsRemainder (remainder): remainder after integer division of two images
 	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void applyRemainder(Image right) throws VipsException;
+	public native void applyRemainder(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -3981,7 +3978,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand image argument
 	 */
-	public native VipsImage remainder(Image right) throws VipsException;
+	public native VipsImage remainder(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsRemainderConst (remainder_const): remainder after integer division of an image and a constant
@@ -4021,7 +4018,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param scale Scale image by this factor
 	 * @param options optional arguments
 	 */
-	public native void applyResize(double scale, ResizeOptions options) throws VipsException;
+	public native void applyResize(double scale, com.criteo.vips.options.ResizeOptions options) throws VipsException;
 	
 	/**
 	 * VipsResize (resize): resize an image
@@ -4039,7 +4036,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param scale Scale image by this factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage resize(double scale, ResizeOptions options) throws VipsException;
+	public native VipsImage resize(double scale, com.criteo.vips.options.ResizeOptions options) throws VipsException;
 	
 	/**
 	 * VipsResize (resize): resize an image
@@ -4055,7 +4052,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param angle Angle to rotate image
 	 */
-	public native void applyRot(VipsAngle angle) throws VipsException;
+	public native void applyRot(com.criteo.vips.enums.VipsAngle angle) throws VipsException;
 	
 	
 	/**
@@ -4063,14 +4060,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param angle Angle to rotate image
 	 */
-	public native VipsImage rot(VipsAngle angle) throws VipsException;
+	public native VipsImage rot(com.criteo.vips.enums.VipsAngle angle) throws VipsException;
 	
 	/**
 	 * VipsRot45 (rot45): rotate an image
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyRot45(Rot45Options options) throws VipsException;
+	public native void applyRot45(com.criteo.vips.options.Rot45Options options) throws VipsException;
 	
 	/**
 	 * VipsRot45 (rot45): rotate an image
@@ -4086,7 +4083,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage rot45(Rot45Options options) throws VipsException;
+	public native VipsImage rot45(com.criteo.vips.options.Rot45Options options) throws VipsException;
 	
 	/**
 	 * VipsRot45 (rot45): rotate an image
@@ -4101,7 +4098,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param round Rounding operation to perform
 	 */
-	public native void applyRound(VipsOperationRound round) throws VipsException;
+	public native void applyRound(com.criteo.vips.enums.VipsOperationRound round) throws VipsException;
 	
 	
 	/**
@@ -4109,14 +4106,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param round Rounding operation to perform
 	 */
-	public native VipsImage round(VipsOperationRound round) throws VipsException;
+	public native VipsImage round(com.criteo.vips.enums.VipsOperationRound round) throws VipsException;
 	
 	/**
 	 * VipsScale (scale): scale an image to uchar
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyScale(ScaleOptions options) throws VipsException;
+	public native void applyScale(com.criteo.vips.options.ScaleOptions options) throws VipsException;
 	
 	/**
 	 * VipsScale (scale): scale an image to uchar
@@ -4132,7 +4129,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage scale(ScaleOptions options) throws VipsException;
+	public native VipsImage scale(com.criteo.vips.options.ScaleOptions options) throws VipsException;
 	
 	/**
 	 * VipsScale (scale): scale an image to uchar
@@ -4147,7 +4144,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyScRGB2BW(ScRGB2BWOptions options) throws VipsException;
+	public native void applyScRGB2BW(com.criteo.vips.options.ScRGB2BWOptions options) throws VipsException;
 	
 	/**
 	 * VipsscRGB2BW (scRGB2BW): convert scRGB to BW
@@ -4163,7 +4160,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage scRGB2BW(ScRGB2BWOptions options) throws VipsException;
+	public native VipsImage scRGB2BW(com.criteo.vips.options.ScRGB2BWOptions options) throws VipsException;
 	
 	/**
 	 * VipsscRGB2BW (scRGB2BW): convert scRGB to BW
@@ -4178,7 +4175,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyScRGB2sRGB(ScRGB2sRGBOptions options) throws VipsException;
+	public native void applyScRGB2sRGB(com.criteo.vips.options.ScRGB2sRGBOptions options) throws VipsException;
 	
 	/**
 	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
@@ -4194,7 +4191,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage scRGB2sRGB(ScRGB2sRGBOptions options) throws VipsException;
+	public native VipsImage scRGB2sRGB(com.criteo.vips.options.ScRGB2sRGBOptions options) throws VipsException;
 	
 	/**
 	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
@@ -4222,7 +4219,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applySequential(SequentialOptions options) throws VipsException;
+	public native void applySequential(com.criteo.vips.options.SequentialOptions options) throws VipsException;
 	
 	/**
 	 * VipsSequential (sequential): check sequential access
@@ -4238,7 +4235,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage sequential(SequentialOptions options) throws VipsException;
+	public native VipsImage sequential(com.criteo.vips.options.SequentialOptions options) throws VipsException;
 	
 	/**
 	 * VipsSequential (sequential): check sequential access
@@ -4253,7 +4250,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applySharpen(SharpenOptions options) throws VipsException;
+	public native void applySharpen(com.criteo.vips.options.SharpenOptions options) throws VipsException;
 	
 	/**
 	 * VipsSharpen (sharpen): unsharp masking for print
@@ -4269,7 +4266,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage sharpen(SharpenOptions options) throws VipsException;
+	public native VipsImage sharpen(com.criteo.vips.options.SharpenOptions options) throws VipsException;
 	
 	/**
 	 * VipsSharpen (sharpen): unsharp masking for print
@@ -4286,7 +4283,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native void applyShrink(double hshrink, double vshrink, ShrinkOptions options) throws VipsException;
+	public native void applyShrink(double hshrink, double vshrink, com.criteo.vips.options.ShrinkOptions options) throws VipsException;
 	
 	/**
 	 * VipsShrink (shrink): shrink an image
@@ -4306,7 +4303,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage shrink(double hshrink, double vshrink, ShrinkOptions options) throws VipsException;
+	public native VipsImage shrink(double hshrink, double vshrink, com.criteo.vips.options.ShrinkOptions options) throws VipsException;
 	
 	/**
 	 * VipsShrink (shrink): shrink an image
@@ -4324,7 +4321,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param hshrink Horizontal shrink factor
 	 * @param options optional arguments
 	 */
-	public native void applyShrinkh(int hshrink, ShrinkhOptions options) throws VipsException;
+	public native void applyShrinkh(int hshrink, com.criteo.vips.options.ShrinkhOptions options) throws VipsException;
 	
 	/**
 	 * VipsShrinkh (shrinkh): shrink an image horizontally
@@ -4342,7 +4339,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param hshrink Horizontal shrink factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage shrinkh(int hshrink, ShrinkhOptions options) throws VipsException;
+	public native VipsImage shrinkh(int hshrink, com.criteo.vips.options.ShrinkhOptions options) throws VipsException;
 	
 	/**
 	 * VipsShrinkh (shrinkh): shrink an image horizontally
@@ -4359,7 +4356,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native void applyShrinkv(int vshrink, ShrinkvOptions options) throws VipsException;
+	public native void applyShrinkv(int vshrink, com.criteo.vips.options.ShrinkvOptions options) throws VipsException;
 	
 	/**
 	 * VipsShrinkv (shrinkv): shrink an image vertically
@@ -4377,7 +4374,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param vshrink Vertical shrink factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage shrinkv(int vshrink, ShrinkvOptions options) throws VipsException;
+	public native VipsImage shrinkv(int vshrink, com.criteo.vips.options.ShrinkvOptions options) throws VipsException;
 	
 	/**
 	 * VipsShrinkv (shrinkv): shrink an image vertically
@@ -4407,7 +4404,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage sines(int width, int height, SinesOptions options) throws VipsException;
+	public static native VipsImage sines(int width, int height, com.criteo.vips.options.SinesOptions options) throws VipsException;
 	
 	/**
 	 * VipsSines (sines): make a 2D sine wave
@@ -4425,7 +4422,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Height of extract area
 	 * @param options optional arguments
 	 */
-	public native void applySmartcrop(int width, int height, SmartcropOptions options) throws VipsException;
+	public native void applySmartcrop(int width, int height, com.criteo.vips.options.SmartcropOptions options) throws VipsException;
 	
 	/**
 	 * VipsSmartcrop (smartcrop): extract an area from an image
@@ -4445,7 +4442,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Height of extract area
 	 * @param options optional arguments
 	 */
-	public native VipsImage smartcrop(int width, int height, SmartcropOptions options) throws VipsException;
+	public native VipsImage smartcrop(int width, int height, com.criteo.vips.options.SmartcropOptions options) throws VipsException;
 	
 	/**
 	 * VipsSmartcrop (smartcrop): extract an area from an image
@@ -4475,7 +4472,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param ref Input reference image
 	 */
-	public native void applySpcor(Image ref) throws VipsException;
+	public native void applySpcor(com.criteo.vips.Image ref) throws VipsException;
 	
 	
 	/**
@@ -4483,7 +4480,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param ref Input reference image
 	 */
-	public native VipsImage spcor(Image ref) throws VipsException;
+	public native VipsImage spcor(com.criteo.vips.Image ref) throws VipsException;
 	
 	/**
 	 * VipsSpectrum (spectrum): make displayable power spectrum
@@ -4544,7 +4541,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Window height in pixels
 	 * @param options optional arguments
 	 */
-	public native void applyStdif(int width, int height, StdifOptions options) throws VipsException;
+	public native void applyStdif(int width, int height, com.criteo.vips.options.StdifOptions options) throws VipsException;
 	
 	/**
 	 * VipsStdif (stdif): statistical difference
@@ -4564,7 +4561,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Window height in pixels
 	 * @param options optional arguments
 	 */
-	public native VipsImage stdif(int width, int height, StdifOptions options) throws VipsException;
+	public native VipsImage stdif(int width, int height, com.criteo.vips.options.StdifOptions options) throws VipsException;
 	
 	/**
 	 * VipsStdif (stdif): statistical difference
@@ -4583,7 +4580,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param yfac Vertical subsample factor
 	 * @param options optional arguments
 	 */
-	public native void applySubsample(int xfac, int yfac, SubsampleOptions options) throws VipsException;
+	public native void applySubsample(int xfac, int yfac, com.criteo.vips.options.SubsampleOptions options) throws VipsException;
 	
 	/**
 	 * VipsSubsample (subsample): subsample an image
@@ -4603,7 +4600,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param yfac Vertical subsample factor
 	 * @param options optional arguments
 	 */
-	public native VipsImage subsample(int xfac, int yfac, SubsampleOptions options) throws VipsException;
+	public native VipsImage subsample(int xfac, int yfac, com.criteo.vips.options.SubsampleOptions options) throws VipsException;
 	
 	/**
 	 * VipsSubsample (subsample): subsample an image
@@ -4620,7 +4617,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param right Right-hand image argument
 	 */
-	public native void applySubtract(Image right) throws VipsException;
+	public native void applySubtract(com.criteo.vips.Image right) throws VipsException;
 	
 	
 	/**
@@ -4628,20 +4625,20 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param right Right-hand image argument
 	 */
-	public native VipsImage subtract(Image right) throws VipsException;
+	public native VipsImage subtract(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsSum (sum): sum an array of images
 	 * @param in Array of input images
 	 */
-	public static native VipsImage sum(Image[] in) throws VipsException;
+	public static native VipsImage sum(com.criteo.vips.Image[] in) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadSvgFile (svgload): load SVG with rsvg
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage svgLoad(String filename, SvgLoadOptions options) throws VipsException;
+	public static native VipsImage svgLoad(String filename, com.criteo.vips.options.SvgLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadSvgFile (svgload): load SVG with rsvg
@@ -4656,7 +4653,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage svgLoadBuffer(byte[] buffer, SvgLoadBufferOptions options) throws VipsException;
+	public static native VipsImage svgLoadBuffer(byte[] buffer, com.criteo.vips.options.SvgLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadSvgBuffer (svgload_buffer): load SVG with rsvg
@@ -4670,14 +4667,14 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsSwitch (switch): find the index of the first non-zero pixel in tests
 	 * @param tests Table of images to test
 	 */
-	public static native VipsImage switchOp(Image[] tests) throws VipsException;
+	public static native VipsImage switchOp(com.criteo.vips.Image[] tests) throws VipsException;
 	
 	/**
 	 * VipsSystem (system): run an external command
 	 * @param cmdFormat Command to run
 	 * @param options optional arguments
 	 */
-	public static native void system(String cmdFormat, SystemOptions options) throws VipsException;
+	public static native void system(String cmdFormat, com.criteo.vips.options.SystemOptions options) throws VipsException;
 	
 	/**
 	 * VipsSystem (system): run an external command
@@ -4692,7 +4689,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param text Text to render
 	 * @param options optional arguments
 	 */
-	public static native VipsImage text(String text, TextOptions options) throws VipsException;
+	public static native VipsImage text(String text, com.criteo.vips.options.TextOptions options) throws VipsException;
 	
 	/**
 	 * VipsText (text): make a text image
@@ -4708,7 +4705,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param width Size to this width
 	 * @param options optional arguments
 	 */
-	public static native VipsImage thumbnail(String filename, int width, ThumbnailOptions options) throws VipsException;
+	public static native VipsImage thumbnail(String filename, int width, com.criteo.vips.options.ThumbnailOptions options) throws VipsException;
 	
 	/**
 	 * VipsThumbnailFile (thumbnail): generate thumbnail from file
@@ -4725,7 +4722,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param width Size to this width
 	 * @param options optional arguments
 	 */
-	public static native VipsImage thumbnailBuffer(byte[] buffer, int width, ThumbnailBufferOptions options) throws VipsException;
+	public static native VipsImage thumbnailBuffer(byte[] buffer, int width, com.criteo.vips.options.ThumbnailBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsThumbnailBuffer (thumbnail_buffer): generate thumbnail from buffer
@@ -4742,7 +4739,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param width Size to this width
 	 * @param options optional arguments
 	 */
-	public native void applyThumbnailImage(int width, ThumbnailImageOptions options) throws VipsException;
+	public native void applyThumbnailImage(int width, com.criteo.vips.options.ThumbnailImageOptions options) throws VipsException;
 	
 	/**
 	 * VipsThumbnailImage (thumbnail_image): generate thumbnail from image
@@ -4760,7 +4757,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param width Size to this width
 	 * @param options optional arguments
 	 */
-	public native VipsImage thumbnailImage(int width, ThumbnailImageOptions options) throws VipsException;
+	public native VipsImage thumbnailImage(int width, com.criteo.vips.options.ThumbnailImageOptions options) throws VipsException;
 	
 	/**
 	 * VipsThumbnailImage (thumbnail_image): generate thumbnail from image
@@ -4776,7 +4773,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage tiffLoad(String filename, TIFFLoadOptions options) throws VipsException;
+	public static native VipsImage tiffLoad(String filename, com.criteo.vips.options.TIFFLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadTiffFile (tiffload): load tiff from file
@@ -4791,7 +4788,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage tiffLoadBuffer(byte[] buffer, TIFFLoadBufferOptions options) throws VipsException;
+	public static native VipsImage tiffLoadBuffer(byte[] buffer, com.criteo.vips.options.TIFFLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadTiffBuffer (tiffload_buffer): load tiff from buffer
@@ -4806,7 +4803,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void tiffSave(String filename, TIFFSaveOptions options) throws VipsException;
+	public native void tiffSave(String filename, com.criteo.vips.options.TIFFSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveTiffFile (tiffsave): save image to tiff file
@@ -4820,7 +4817,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsForeignSaveTiffBuffer (tiffsave_buffer): save image to tiff buffer
 	 * @param options optional arguments
 	 */
-	public native byte[] tiffSaveBuffer(TIFFSaveBufferOptions options) throws VipsException;
+	public native byte[] tiffSaveBuffer(com.criteo.vips.options.TIFFSaveBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveTiffBuffer (tiffsave_buffer): save image to tiff buffer
@@ -4834,7 +4831,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyTilecache(TilecacheOptions options) throws VipsException;
+	public native void applyTilecache(com.criteo.vips.options.TilecacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsTileCache (tilecache): cache an image as a set of tiles
@@ -4850,7 +4847,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage tilecache(TilecacheOptions options) throws VipsException;
+	public native VipsImage tilecache(com.criteo.vips.options.TilecacheOptions options) throws VipsException;
 	
 	/**
 	 * VipsTileCache (tilecache): cache an image as a set of tiles
@@ -4864,7 +4861,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * VipsTonelut (tonelut): build a look-up table
 	 * @param options optional arguments
 	 */
-	public static native VipsImage tonelut(ToneLUTOptions options) throws VipsException;
+	public static native VipsImage tonelut(com.criteo.vips.options.ToneLUTOptions options) throws VipsException;
 	
 	/**
 	 * VipsTonelut (tonelut): build a look-up table
@@ -4878,7 +4875,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyTranspose3d(Transpose3dOptions options) throws VipsException;
+	public native void applyTranspose3d(com.criteo.vips.options.Transpose3dOptions options) throws VipsException;
 	
 	/**
 	 * VipsTranspose3d (transpose3d): transpose3d an image
@@ -4894,7 +4891,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage transpose3d(Transpose3dOptions options) throws VipsException;
+	public native VipsImage transpose3d(com.criteo.vips.options.Transpose3dOptions options) throws VipsException;
 	
 	/**
 	 * VipsTranspose3d (transpose3d): transpose3d an image
@@ -4909,7 +4906,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyUnpremultiply(UnpremultiplyOptions options) throws VipsException;
+	public native void applyUnpremultiply(com.criteo.vips.options.UnpremultiplyOptions options) throws VipsException;
 	
 	/**
 	 * VipsUnpremultiply (unpremultiply): unpremultiply image alpha
@@ -4925,7 +4922,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage unpremultiply(UnpremultiplyOptions options) throws VipsException;
+	public native VipsImage unpremultiply(com.criteo.vips.options.UnpremultiplyOptions options) throws VipsException;
 	
 	/**
 	 * VipsUnpremultiply (unpremultiply): unpremultiply image alpha
@@ -4940,7 +4937,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage vipsLoad(String filename, VipsLoadOptions options) throws VipsException;
+	public static native VipsImage vipsLoad(String filename, com.criteo.vips.options.VipsLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadVipsFile (vipsload): load vips from file
@@ -4955,7 +4952,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void vipsSave(String filename, VipsSaveOptions options) throws VipsException;
+	public native void vipsSave(String filename, com.criteo.vips.options.VipsSaveOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignSaveVipsFile (vipssave): save image to file in vips format
@@ -4970,7 +4967,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param filename Filename to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage webpLoad(String filename, WebpLoadOptions options) throws VipsException;
+	public static native VipsImage webpLoad(String filename, com.criteo.vips.options.WebpLoadOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadWebpFile (webpload): load webp from file
@@ -4985,7 +4982,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param buffer Buffer to load from
 	 * @param options optional arguments
 	 */
-	public static native VipsImage webpLoadBuffer(byte[] buffer, WebpLoadBufferOptions options) throws VipsException;
+	public static native VipsImage webpLoadBuffer(byte[] buffer, com.criteo.vips.options.WebpLoadBufferOptions options) throws VipsException;
 	
 	/**
 	 * VipsForeignLoadWebpBuffer (webpload_buffer): load webp from buffer
@@ -4996,14 +4993,14 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsForeignSaveWebpFile (webpsave): save image to webp file
+	 * VipsForeignSaveWebpFile (webpsave): save as WebP
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
-	public native void webpSave(String filename, WebpSaveOptions options) throws VipsException;
+	public native void webpSave(String filename, com.criteo.vips.options.WebpSaveOptions options) throws VipsException;
 	
 	/**
-	 * VipsForeignSaveWebpFile (webpsave): save image to webp file
+	 * VipsForeignSaveWebpFile (webpsave): save as WebP
 	 * @param filename Filename to save to
 	 */
 	public void webpSave(String filename) throws VipsException {
@@ -5011,16 +5008,29 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsForeignSaveWebpBuffer (webpsave_buffer): save image to webp buffer
+	 * VipsForeignSaveWebpBuffer (webpsave_buffer): save as WebP
 	 * @param options optional arguments
 	 */
-	public native byte[] webpSaveBuffer(WebpSaveBufferOptions options) throws VipsException;
+	public native byte[] webpSaveBuffer(com.criteo.vips.options.WebpSaveBufferOptions options) throws VipsException;
 	
 	/**
-	 * VipsForeignSaveWebpBuffer (webpsave_buffer): save image to webp buffer
+	 * VipsForeignSaveWebpBuffer (webpsave_buffer): save as WebP
 	 */
 	public byte[] webpSaveBuffer() throws VipsException {
 		return webpSaveBuffer(null);
+	}
+	
+	/**
+	 * VipsForeignSaveWebpMime (webpsave_mime): save image to webp mime
+	 * @param options optional arguments
+	 */
+	public native void webpSaveMime(com.criteo.vips.options.WebpSaveMimeOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignSaveWebpMime (webpsave_mime): save image to webp mime
+	 */
+	public void webpSaveMime() throws VipsException {
+		webpSaveMime(null);
 	}
 	
 	/**
@@ -5029,7 +5039,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage worley(int width, int height, WorleyOptions options) throws VipsException;
+	public static native VipsImage worley(int width, int height, com.criteo.vips.options.WorleyOptions options) throws VipsException;
 	
 	/**
 	 * VipsWorley (worley): make a worley noise image
@@ -5045,7 +5055,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyWrap(WrapOptions options) throws VipsException;
+	public native void applyWrap(com.criteo.vips.options.WrapOptions options) throws VipsException;
 	
 	/**
 	 * VipsWrap (wrap): wrap image origin
@@ -5061,7 +5071,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage wrap(WrapOptions options) throws VipsException;
+	public native VipsImage wrap(com.criteo.vips.options.WrapOptions options) throws VipsException;
 	
 	/**
 	 * VipsWrap (wrap): wrap image origin
@@ -5077,7 +5087,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage xyz(int width, int height, XYZOptions options) throws VipsException;
+	public static native VipsImage xyz(int width, int height, com.criteo.vips.options.XYZOptions options) throws VipsException;
 	
 	/**
 	 * VipsXyz (xyz): make an image where pixel values are coordinates
@@ -5106,7 +5116,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
-	public native void applyXYZ2Lab(XYZ2LabOptions options) throws VipsException;
+	public native void applyXYZ2Lab(com.criteo.vips.options.XYZ2LabOptions options) throws VipsException;
 	
 	/**
 	 * VipsXYZ2Lab (XYZ2Lab): transform XYZ to Lab
@@ -5122,7 +5132,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
-	public native VipsImage xYZ2Lab(XYZ2LabOptions options) throws VipsException;
+	public native VipsImage xYZ2Lab(com.criteo.vips.options.XYZ2LabOptions options) throws VipsException;
 	
 	/**
 	 * VipsXYZ2Lab (XYZ2Lab): transform XYZ to Lab
@@ -5177,7 +5187,7 @@ abstract class AbstractVipsImage extends Vips {
 	 * @param height Image height in pixels
 	 * @param options optional arguments
 	 */
-	public static native VipsImage zone(int width, int height, ZoneOptions options) throws VipsException;
+	public static native VipsImage zone(int width, int height, com.criteo.vips.options.ZoneOptions options) throws VipsException;
 	
 	/**
 	 * VipsZone (zone): make a zone plate

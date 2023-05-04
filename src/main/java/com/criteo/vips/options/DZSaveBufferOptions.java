@@ -16,32 +16,28 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "dzsave_buffer" operation.
  */
 public class DZSaveBufferOptions {
 
 	private String basename;
-	private VipsForeignDzLayout layout;
+	private com.criteo.vips.enums.VipsForeignDzLayout layout;
 	private String suffix;
 	private Integer overlap;
 	private Integer tileSize;
 	private Boolean centre;
-	private VipsForeignDzDepth depth;
-	private VipsAngle angle;
-	private VipsForeignDzContainer container;
+	private com.criteo.vips.enums.VipsForeignDzDepth depth;
+	private com.criteo.vips.enums.VipsAngle angle;
+	private com.criteo.vips.enums.VipsForeignDzContainer container;
 	private Integer compression;
-	private VipsRegionShrink regionShrink;
+	private com.criteo.vips.enums.VipsRegionShrink regionShrink;
 	private Integer skipBlanks;
 	private Boolean noStrip;
 	private String id;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -82,7 +78,7 @@ public class DZSaveBufferOptions {
 	 * Directory layout
 	 * @return the value of {@code layout}
 	 */
-	public VipsForeignDzLayout getLayout() {
+	public com.criteo.vips.enums.VipsForeignDzLayout getLayout() {
 		return this.layout;
 	}
 
@@ -92,7 +88,7 @@ public class DZSaveBufferOptions {
 	 * Directory layout
 	 * @param layout the new value of {@code layout}
 	 */
-	public void setLayout(VipsForeignDzLayout layout) {
+	public void setLayout(com.criteo.vips.enums.VipsForeignDzLayout layout) {
 		this.layout = layout;
 	}
 
@@ -103,7 +99,7 @@ public class DZSaveBufferOptions {
 	 * @param layout the new value of {@code layout}
 	 * @return this object for chaining
 	 */
-	public DZSaveBufferOptions layout(VipsForeignDzLayout layout) {
+	public DZSaveBufferOptions layout(com.criteo.vips.enums.VipsForeignDzLayout layout) {
 		setLayout(layout);
 		return this;
 	}
@@ -242,7 +238,7 @@ public class DZSaveBufferOptions {
 	 * Pyramid depth
 	 * @return the value of {@code depth}
 	 */
-	public VipsForeignDzDepth getDepth() {
+	public com.criteo.vips.enums.VipsForeignDzDepth getDepth() {
 		return this.depth;
 	}
 
@@ -252,7 +248,7 @@ public class DZSaveBufferOptions {
 	 * Pyramid depth
 	 * @param depth the new value of {@code depth}
 	 */
-	public void setDepth(VipsForeignDzDepth depth) {
+	public void setDepth(com.criteo.vips.enums.VipsForeignDzDepth depth) {
 		this.depth = depth;
 	}
 
@@ -263,7 +259,7 @@ public class DZSaveBufferOptions {
 	 * @param depth the new value of {@code depth}
 	 * @return this object for chaining
 	 */
-	public DZSaveBufferOptions depth(VipsForeignDzDepth depth) {
+	public DZSaveBufferOptions depth(com.criteo.vips.enums.VipsForeignDzDepth depth) {
 		setDepth(depth);
 		return this;
 	}
@@ -274,7 +270,7 @@ public class DZSaveBufferOptions {
 	 * Rotate image during save
 	 * @return the value of {@code angle}
 	 */
-	public VipsAngle getAngle() {
+	public com.criteo.vips.enums.VipsAngle getAngle() {
 		return this.angle;
 	}
 
@@ -284,7 +280,7 @@ public class DZSaveBufferOptions {
 	 * Rotate image during save
 	 * @param angle the new value of {@code angle}
 	 */
-	public void setAngle(VipsAngle angle) {
+	public void setAngle(com.criteo.vips.enums.VipsAngle angle) {
 		this.angle = angle;
 	}
 
@@ -295,7 +291,7 @@ public class DZSaveBufferOptions {
 	 * @param angle the new value of {@code angle}
 	 * @return this object for chaining
 	 */
-	public DZSaveBufferOptions angle(VipsAngle angle) {
+	public DZSaveBufferOptions angle(com.criteo.vips.enums.VipsAngle angle) {
 		setAngle(angle);
 		return this;
 	}
@@ -306,7 +302,7 @@ public class DZSaveBufferOptions {
 	 * Pyramid container type
 	 * @return the value of {@code container}
 	 */
-	public VipsForeignDzContainer getContainer() {
+	public com.criteo.vips.enums.VipsForeignDzContainer getContainer() {
 		return this.container;
 	}
 
@@ -316,7 +312,7 @@ public class DZSaveBufferOptions {
 	 * Pyramid container type
 	 * @param container the new value of {@code container}
 	 */
-	public void setContainer(VipsForeignDzContainer container) {
+	public void setContainer(com.criteo.vips.enums.VipsForeignDzContainer container) {
 		this.container = container;
 	}
 
@@ -327,7 +323,7 @@ public class DZSaveBufferOptions {
 	 * @param container the new value of {@code container}
 	 * @return this object for chaining
 	 */
-	public DZSaveBufferOptions container(VipsForeignDzContainer container) {
+	public DZSaveBufferOptions container(com.criteo.vips.enums.VipsForeignDzContainer container) {
 		setContainer(container);
 		return this;
 	}
@@ -370,7 +366,7 @@ public class DZSaveBufferOptions {
 	 * Method to shrink regions
 	 * @return the value of {@code regionShrink}
 	 */
-	public VipsRegionShrink getRegionShrink() {
+	public com.criteo.vips.enums.VipsRegionShrink getRegionShrink() {
 		return this.regionShrink;
 	}
 
@@ -380,7 +376,7 @@ public class DZSaveBufferOptions {
 	 * Method to shrink regions
 	 * @param regionShrink the new value of {@code regionShrink}
 	 */
-	public void setRegionShrink(VipsRegionShrink regionShrink) {
+	public void setRegionShrink(com.criteo.vips.enums.VipsRegionShrink regionShrink) {
 		this.regionShrink = regionShrink;
 	}
 
@@ -391,7 +387,7 @@ public class DZSaveBufferOptions {
 	 * @param regionShrink the new value of {@code regionShrink}
 	 * @return this object for chaining
 	 */
-	public DZSaveBufferOptions regionShrink(VipsRegionShrink regionShrink) {
+	public DZSaveBufferOptions regionShrink(com.criteo.vips.enums.VipsRegionShrink regionShrink) {
 		setRegionShrink(regionShrink);
 		return this;
 	}
@@ -562,7 +558,7 @@ public class DZSaveBufferOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -572,7 +568,7 @@ public class DZSaveBufferOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -587,7 +583,7 @@ public class DZSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public DZSaveBufferOptions backgroundPixelPacket(PixelPacket background) {
+	public DZSaveBufferOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -600,7 +596,7 @@ public class DZSaveBufferOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

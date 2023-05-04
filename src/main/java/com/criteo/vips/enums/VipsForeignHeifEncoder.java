@@ -19,30 +19,30 @@ package com.criteo.vips.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum VipsForeignPngFilter {
+public enum VipsForeignHeifEncoder {
 
-	None(8),
-	Sub(16),
-	Up(32),
-	Avg(64),
-	Paeth(128),
-	All(248),
+	Auto(0),
+	Aom(1),
+	Rav1e(2),
+	Svt(3),
+	X265(4),
+	Last(5),
 	;
 
 	private int value;
-	private static Map<Integer, VipsForeignPngFilter> map = new HashMap<>();
+	private static Map<Integer, VipsForeignHeifEncoder> map = new HashMap<>();
 
-	private VipsForeignPngFilter(int i) {
+	private VipsForeignHeifEncoder(int i) {
 		value = i;
 	}
 
 	static {
-		for (VipsForeignPngFilter e : VipsForeignPngFilter.values()) {
+		for (VipsForeignHeifEncoder e : VipsForeignHeifEncoder.values()) {
 			map.put(e.value, e);
 		}
 	}
 
-	public static VipsForeignPngFilter valueOf(int i) {
+	public static VipsForeignHeifEncoder valueOf(int i) {
 		return map.get(i);
 	}
 

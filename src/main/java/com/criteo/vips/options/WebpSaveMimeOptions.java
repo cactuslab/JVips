@@ -17,9 +17,9 @@ limitations under the License.
 package com.criteo.vips.options;
 
 /**
- * Optional arguments for the "webpsave_buffer" operation.
+ * Optional arguments for the "webpsave_mime" operation.
  */
-public class WebpSaveBufferOptions {
+public class WebpSaveMimeOptions {
 
 	private Integer q;
 	private Boolean lossless;
@@ -65,7 +65,7 @@ public class WebpSaveBufferOptions {
 	 * @param q the new value of {@code q}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions q(Integer q) {
+	public WebpSaveMimeOptions q(Integer q) {
 		setQ(q);
 		return this;
 	}
@@ -97,7 +97,7 @@ public class WebpSaveBufferOptions {
 	 * @param lossless the new value of {@code lossless}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions lossless(Boolean lossless) {
+	public WebpSaveMimeOptions lossless(Boolean lossless) {
 		setLossless(lossless);
 		return this;
 	}
@@ -129,7 +129,7 @@ public class WebpSaveBufferOptions {
 	 * @param preset the new value of {@code preset}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions preset(com.criteo.vips.enums.VipsForeignWebpPreset preset) {
+	public WebpSaveMimeOptions preset(com.criteo.vips.enums.VipsForeignWebpPreset preset) {
 		setPreset(preset);
 		return this;
 	}
@@ -161,7 +161,7 @@ public class WebpSaveBufferOptions {
 	 * @param smartSubsample the new value of {@code smartSubsample}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions smartSubsample(Boolean smartSubsample) {
+	public WebpSaveMimeOptions smartSubsample(Boolean smartSubsample) {
 		setSmartSubsample(smartSubsample);
 		return this;
 	}
@@ -193,7 +193,7 @@ public class WebpSaveBufferOptions {
 	 * @param nearLossless the new value of {@code nearLossless}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions nearLossless(Boolean nearLossless) {
+	public WebpSaveMimeOptions nearLossless(Boolean nearLossless) {
 		setNearLossless(nearLossless);
 		return this;
 	}
@@ -225,7 +225,7 @@ public class WebpSaveBufferOptions {
 	 * @param alphaQ the new value of {@code alphaQ}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions alphaQ(Integer alphaQ) {
+	public WebpSaveMimeOptions alphaQ(Integer alphaQ) {
 		setAlphaQ(alphaQ);
 		return this;
 	}
@@ -257,7 +257,7 @@ public class WebpSaveBufferOptions {
 	 * @param minSize the new value of {@code minSize}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions minSize(Boolean minSize) {
+	public WebpSaveMimeOptions minSize(Boolean minSize) {
 		setMinSize(minSize);
 		return this;
 	}
@@ -289,7 +289,7 @@ public class WebpSaveBufferOptions {
 	 * @param kmin the new value of {@code kmin}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions kmin(Integer kmin) {
+	public WebpSaveMimeOptions kmin(Integer kmin) {
 		setKmin(kmin);
 		return this;
 	}
@@ -321,7 +321,7 @@ public class WebpSaveBufferOptions {
 	 * @param kmax the new value of {@code kmax}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions kmax(Integer kmax) {
+	public WebpSaveMimeOptions kmax(Integer kmax) {
 		setKmax(kmax);
 		return this;
 	}
@@ -353,7 +353,7 @@ public class WebpSaveBufferOptions {
 	 * @param effort the new value of {@code effort}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions effort(Integer effort) {
+	public WebpSaveMimeOptions effort(Integer effort) {
 		setEffort(effort);
 		return this;
 	}
@@ -385,7 +385,7 @@ public class WebpSaveBufferOptions {
 	 * @param profile the new value of {@code profile}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions profile(String profile) {
+	public WebpSaveMimeOptions profile(String profile) {
 		setProfile(profile);
 		return this;
 	}
@@ -417,7 +417,7 @@ public class WebpSaveBufferOptions {
 	 * @param mixed the new value of {@code mixed}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions mixed(Boolean mixed) {
+	public WebpSaveMimeOptions mixed(Boolean mixed) {
 		setMixed(mixed);
 		return this;
 	}
@@ -449,7 +449,7 @@ public class WebpSaveBufferOptions {
 	 * @param strip the new value of {@code strip}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions strip(Boolean strip) {
+	public WebpSaveMimeOptions strip(Boolean strip) {
 		setStrip(strip);
 		return this;
 	}
@@ -481,7 +481,7 @@ public class WebpSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions background(double[] background) {
+	public WebpSaveMimeOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}
@@ -517,7 +517,7 @@ public class WebpSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
+	public WebpSaveMimeOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -544,7 +544,7 @@ public class WebpSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions background(java.awt.Color background) {
+	public WebpSaveMimeOptions background(java.awt.Color background) {
 		setBackground(background);
 		return this;
 	}
@@ -576,7 +576,7 @@ public class WebpSaveBufferOptions {
 	 * @param pageHeight the new value of {@code pageHeight}
 	 * @return this object for chaining
 	 */
-	public WebpSaveBufferOptions pageHeight(Integer pageHeight) {
+	public WebpSaveMimeOptions pageHeight(Integer pageHeight) {
 		setPageHeight(pageHeight);
 		return this;
 	}

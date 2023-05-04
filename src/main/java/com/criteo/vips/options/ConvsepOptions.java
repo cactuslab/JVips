@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "convsep" operation.
  */
 public class ConvsepOptions {
 
-	private VipsPrecision precision;
+	private com.criteo.vips.enums.VipsPrecision precision;
 	private Integer layers;
 	private Integer cluster;
 
@@ -35,7 +31,7 @@ public class ConvsepOptions {
 	 * Convolve with this precision
 	 * @return the value of {@code precision}
 	 */
-	public VipsPrecision getPrecision() {
+	public com.criteo.vips.enums.VipsPrecision getPrecision() {
 		return this.precision;
 	}
 
@@ -45,7 +41,7 @@ public class ConvsepOptions {
 	 * Convolve with this precision
 	 * @param precision the new value of {@code precision}
 	 */
-	public void setPrecision(VipsPrecision precision) {
+	public void setPrecision(com.criteo.vips.enums.VipsPrecision precision) {
 		this.precision = precision;
 	}
 
@@ -56,7 +52,7 @@ public class ConvsepOptions {
 	 * @param precision the new value of {@code precision}
 	 * @return this object for chaining
 	 */
-	public ConvsepOptions precision(VipsPrecision precision) {
+	public ConvsepOptions precision(com.criteo.vips.enums.VipsPrecision precision) {
 		setPrecision(precision);
 		return this;
 	}

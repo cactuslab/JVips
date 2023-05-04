@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "gifsave" operation.
  */
@@ -29,11 +25,12 @@ public class GIFSaveOptions {
 	private Integer effort;
 	private Integer bitdepth;
 	private Double interframeMaxerror;
-	private Boolean reoptimise;
+	private Boolean reuse;
 	private Double interpaletteMaxerror;
+	private Boolean interlace;
 	private Boolean strip;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 
 	/**
@@ -165,34 +162,34 @@ public class GIFSaveOptions {
 	}
 
 	/**
-	 * Optional argument: reoptimise
+	 * Optional argument: reuse
 	 * <p>
-	 * Reoptimise colour palettes
-	 * @return the value of {@code reoptimise}
+	 * Reuse palette from input
+	 * @return the value of {@code reuse}
 	 */
-	public Boolean getReoptimise() {
-		return this.reoptimise;
+	public Boolean getReuse() {
+		return this.reuse;
 	}
 
 	/**
-	 * Set the optional "reoptimise" argument.
+	 * Set the optional "reuse" argument.
 	 * <p>
-	 * Reoptimise colour palettes
-	 * @param reoptimise the new value of {@code reoptimise}
+	 * Reuse palette from input
+	 * @param reuse the new value of {@code reuse}
 	 */
-	public void setReoptimise(Boolean reoptimise) {
-		this.reoptimise = reoptimise;
+	public void setReuse(Boolean reuse) {
+		this.reuse = reuse;
 	}
 
 	/**
-	 * Set the optional "reoptimise" argument.
+	 * Set the optional "reuse" argument.
 	 * <p>
-	 * Reoptimise colour palettes
-	 * @param reoptimise the new value of {@code reoptimise}
+	 * Reuse palette from input
+	 * @param reuse the new value of {@code reuse}
 	 * @return this object for chaining
 	 */
-	public GIFSaveOptions reoptimise(Boolean reoptimise) {
-		setReoptimise(reoptimise);
+	public GIFSaveOptions reuse(Boolean reuse) {
+		setReuse(reuse);
 		return this;
 	}
 
@@ -225,6 +222,38 @@ public class GIFSaveOptions {
 	 */
 	public GIFSaveOptions interpaletteMaxerror(Double interpaletteMaxerror) {
 		setInterpaletteMaxerror(interpaletteMaxerror);
+		return this;
+	}
+
+	/**
+	 * Optional argument: interlace
+	 * <p>
+	 * Generate an interlaced (progressive) GIF
+	 * @return the value of {@code interlace}
+	 */
+	public Boolean getInterlace() {
+		return this.interlace;
+	}
+
+	/**
+	 * Set the optional "interlace" argument.
+	 * <p>
+	 * Generate an interlaced (progressive) GIF
+	 * @param interlace the new value of {@code interlace}
+	 */
+	public void setInterlace(Boolean interlace) {
+		this.interlace = interlace;
+	}
+
+	/**
+	 * Set the optional "interlace" argument.
+	 * <p>
+	 * Generate an interlaced (progressive) GIF
+	 * @param interlace the new value of {@code interlace}
+	 * @return this object for chaining
+	 */
+	public GIFSaveOptions interlace(Boolean interlace) {
+		setInterlace(interlace);
 		return this;
 	}
 
@@ -298,7 +327,7 @@ public class GIFSaveOptions {
 	 * Background value
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
@@ -308,7 +337,7 @@ public class GIFSaveOptions {
 	 * Background value
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -323,7 +352,7 @@ public class GIFSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public GIFSaveOptions backgroundPixelPacket(PixelPacket background) {
+	public GIFSaveOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -336,7 +365,7 @@ public class GIFSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "rot45" operation.
  */
 public class Rot45Options {
 
-	private VipsAngle45 angle;
+	private com.criteo.vips.enums.VipsAngle45 angle;
 
 	/**
 	 * Optional argument: angle
@@ -33,7 +29,7 @@ public class Rot45Options {
 	 * Angle to rotate image
 	 * @return the value of {@code angle}
 	 */
-	public VipsAngle45 getAngle() {
+	public com.criteo.vips.enums.VipsAngle45 getAngle() {
 		return this.angle;
 	}
 
@@ -43,7 +39,7 @@ public class Rot45Options {
 	 * Angle to rotate image
 	 * @param angle the new value of {@code angle}
 	 */
-	public void setAngle(VipsAngle45 angle) {
+	public void setAngle(com.criteo.vips.enums.VipsAngle45 angle) {
 		this.angle = angle;
 	}
 
@@ -54,7 +50,7 @@ public class Rot45Options {
 	 * @param angle the new value of {@code angle}
 	 * @return this object for chaining
 	 */
-	public Rot45Options angle(VipsAngle45 angle) {
+	public Rot45Options angle(com.criteo.vips.enums.VipsAngle45 angle) {
 		setAngle(angle);
 		return this;
 	}

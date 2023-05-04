@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "pdfload" operation.
  */
@@ -30,16 +26,16 @@ public class PDFLoadOptions {
 	private Double dpi;
 	private Double scale;
 	private double[] background;
-	private PixelPacket backgroundPixelPacket;
+	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private String password;
 	private Boolean memory;
-	private VipsAccess access;
-	private VipsFailOn failOn;
+	private com.criteo.vips.enums.VipsAccess access;
+	private com.criteo.vips.enums.VipsFailOn failOn;
 
 	/**
 	 * Optional argument: page
 	 * <p>
-	 * Load this page from the file
+	 * First page to load
 	 * @return the value of {@code page}
 	 */
 	public Integer getPage() {
@@ -49,7 +45,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "page" argument.
 	 * <p>
-	 * Load this page from the file
+	 * First page to load
 	 * @param page the new value of {@code page}
 	 */
 	public void setPage(Integer page) {
@@ -59,7 +55,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "page" argument.
 	 * <p>
-	 * Load this page from the file
+	 * First page to load
 	 * @param page the new value of {@code page}
 	 * @return this object for chaining
 	 */
@@ -71,7 +67,7 @@ public class PDFLoadOptions {
 	/**
 	 * Optional argument: n
 	 * <p>
-	 * Load this many pages
+	 * Number of pages to load, -1 for all
 	 * @return the value of {@code n}
 	 */
 	public Integer getN() {
@@ -81,7 +77,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "n" argument.
 	 * <p>
-	 * Load this many pages
+	 * Number of pages to load, -1 for all
 	 * @param n the new value of {@code n}
 	 */
 	public void setN(Integer n) {
@@ -91,7 +87,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "n" argument.
 	 * <p>
-	 * Load this many pages
+	 * Number of pages to load, -1 for all
 	 * @param n the new value of {@code n}
 	 * @return this object for chaining
 	 */
@@ -103,7 +99,7 @@ public class PDFLoadOptions {
 	/**
 	 * Optional argument: dpi
 	 * <p>
-	 * Render at this DPI
+	 * DPI to render at
 	 * @return the value of {@code dpi}
 	 */
 	public Double getDpi() {
@@ -113,7 +109,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "dpi" argument.
 	 * <p>
-	 * Render at this DPI
+	 * DPI to render at
 	 * @param dpi the new value of {@code dpi}
 	 */
 	public void setDpi(Double dpi) {
@@ -123,7 +119,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "dpi" argument.
 	 * <p>
-	 * Render at this DPI
+	 * DPI to render at
 	 * @param dpi the new value of {@code dpi}
 	 * @return this object for chaining
 	 */
@@ -135,7 +131,7 @@ public class PDFLoadOptions {
 	/**
 	 * Optional argument: scale
 	 * <p>
-	 * Scale output by this factor
+	 * Factor to scale by
 	 * @return the value of {@code scale}
 	 */
 	public Double getScale() {
@@ -145,7 +141,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "scale" argument.
 	 * <p>
-	 * Scale output by this factor
+	 * Factor to scale by
 	 * @param scale the new value of {@code scale}
 	 */
 	public void setScale(Double scale) {
@@ -155,7 +151,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "scale" argument.
 	 * <p>
-	 * Scale output by this factor
+	 * Factor to scale by
 	 * @param scale the new value of {@code scale}
 	 * @return this object for chaining
 	 */
@@ -167,7 +163,7 @@ public class PDFLoadOptions {
 	/**
 	 * Optional argument: background
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @return the value of {@code background}
 	 */
 	public double[] getBackground() {
@@ -177,7 +173,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "background" argument.
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @param background the new value of {@code background}
 	 */
 	public void setBackground(double[] background) {
@@ -187,7 +183,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "background" argument.
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
@@ -199,20 +195,20 @@ public class PDFLoadOptions {
 	/**
 	 * Optional argument: background
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @return the value of {@code background}
 	 */
-	public PixelPacket getBackgroundPixelPacket() {
+	public com.criteo.vips.PixelPacket getBackgroundPixelPacket() {
 		return this.backgroundPixelPacket;
 	}
 
 	/**
 	 * Set the optional "background" argument.
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @param background the new value of {@code background}
 	 */
-	public void setBackgroundPixelPacket(PixelPacket background) {
+	public void setBackgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		if (background != null) {
 			this.backgroundPixelPacket = background;
 		} else {
@@ -223,11 +219,11 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "background" argument.
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public PDFLoadOptions backgroundPixelPacket(PixelPacket background) {
+	public PDFLoadOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -235,12 +231,12 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "background" argument.
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @param background the new value of {@code background}
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			PixelPacket pixelPacket = new PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);
@@ -250,7 +246,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "background" argument.
 	 * <p>
-	 * Background value
+	 * Background colour
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
@@ -262,7 +258,7 @@ public class PDFLoadOptions {
 	/**
 	 * Optional argument: password
 	 * <p>
-	 * Decrypt with this password
+	 * Password to decrypt with
 	 * @return the value of {@code password}
 	 */
 	public String getPassword() {
@@ -272,7 +268,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "password" argument.
 	 * <p>
-	 * Decrypt with this password
+	 * Password to decrypt with
 	 * @param password the new value of {@code password}
 	 */
 	public void setPassword(String password) {
@@ -282,7 +278,7 @@ public class PDFLoadOptions {
 	/**
 	 * Set the optional "password" argument.
 	 * <p>
-	 * Decrypt with this password
+	 * Password to decrypt with
 	 * @param password the new value of {@code password}
 	 * @return this object for chaining
 	 */
@@ -329,7 +325,7 @@ public class PDFLoadOptions {
 	 * Required access pattern for this file
 	 * @return the value of {@code access}
 	 */
-	public VipsAccess getAccess() {
+	public com.criteo.vips.enums.VipsAccess getAccess() {
 		return this.access;
 	}
 
@@ -339,7 +335,7 @@ public class PDFLoadOptions {
 	 * Required access pattern for this file
 	 * @param access the new value of {@code access}
 	 */
-	public void setAccess(VipsAccess access) {
+	public void setAccess(com.criteo.vips.enums.VipsAccess access) {
 		this.access = access;
 	}
 
@@ -350,7 +346,7 @@ public class PDFLoadOptions {
 	 * @param access the new value of {@code access}
 	 * @return this object for chaining
 	 */
-	public PDFLoadOptions access(VipsAccess access) {
+	public PDFLoadOptions access(com.criteo.vips.enums.VipsAccess access) {
 		setAccess(access);
 		return this;
 	}
@@ -361,7 +357,7 @@ public class PDFLoadOptions {
 	 * Error level to fail on
 	 * @return the value of {@code failOn}
 	 */
-	public VipsFailOn getFailOn() {
+	public com.criteo.vips.enums.VipsFailOn getFailOn() {
 		return this.failOn;
 	}
 
@@ -371,7 +367,7 @@ public class PDFLoadOptions {
 	 * Error level to fail on
 	 * @param failOn the new value of {@code failOn}
 	 */
-	public void setFailOn(VipsFailOn failOn) {
+	public void setFailOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		this.failOn = failOn;
 	}
 
@@ -382,7 +378,7 @@ public class PDFLoadOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public PDFLoadOptions failOn(VipsFailOn failOn) {
+	public PDFLoadOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}

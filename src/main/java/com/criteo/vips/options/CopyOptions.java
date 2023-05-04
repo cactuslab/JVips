@@ -16,10 +16,6 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "copy" operation.
  */
@@ -28,9 +24,9 @@ public class CopyOptions {
 	private Integer width;
 	private Integer height;
 	private Integer bands;
-	private VipsBandFormat format;
-	private VipsCoding coding;
-	private VipsInterpretation interpretation;
+	private com.criteo.vips.enums.VipsBandFormat format;
+	private com.criteo.vips.enums.VipsCoding coding;
+	private com.criteo.vips.enums.VipsInterpretation interpretation;
 	private Double xres;
 	private Double yres;
 	private Integer xoffset;
@@ -138,7 +134,7 @@ public class CopyOptions {
 	 * Pixel format in image
 	 * @return the value of {@code format}
 	 */
-	public VipsBandFormat getFormat() {
+	public com.criteo.vips.enums.VipsBandFormat getFormat() {
 		return this.format;
 	}
 
@@ -148,7 +144,7 @@ public class CopyOptions {
 	 * Pixel format in image
 	 * @param format the new value of {@code format}
 	 */
-	public void setFormat(VipsBandFormat format) {
+	public void setFormat(com.criteo.vips.enums.VipsBandFormat format) {
 		this.format = format;
 	}
 
@@ -159,7 +155,7 @@ public class CopyOptions {
 	 * @param format the new value of {@code format}
 	 * @return this object for chaining
 	 */
-	public CopyOptions format(VipsBandFormat format) {
+	public CopyOptions format(com.criteo.vips.enums.VipsBandFormat format) {
 		setFormat(format);
 		return this;
 	}
@@ -170,7 +166,7 @@ public class CopyOptions {
 	 * Pixel coding
 	 * @return the value of {@code coding}
 	 */
-	public VipsCoding getCoding() {
+	public com.criteo.vips.enums.VipsCoding getCoding() {
 		return this.coding;
 	}
 
@@ -180,7 +176,7 @@ public class CopyOptions {
 	 * Pixel coding
 	 * @param coding the new value of {@code coding}
 	 */
-	public void setCoding(VipsCoding coding) {
+	public void setCoding(com.criteo.vips.enums.VipsCoding coding) {
 		this.coding = coding;
 	}
 
@@ -191,7 +187,7 @@ public class CopyOptions {
 	 * @param coding the new value of {@code coding}
 	 * @return this object for chaining
 	 */
-	public CopyOptions coding(VipsCoding coding) {
+	public CopyOptions coding(com.criteo.vips.enums.VipsCoding coding) {
 		setCoding(coding);
 		return this;
 	}
@@ -202,7 +198,7 @@ public class CopyOptions {
 	 * Pixel interpretation
 	 * @return the value of {@code interpretation}
 	 */
-	public VipsInterpretation getInterpretation() {
+	public com.criteo.vips.enums.VipsInterpretation getInterpretation() {
 		return this.interpretation;
 	}
 
@@ -212,7 +208,7 @@ public class CopyOptions {
 	 * Pixel interpretation
 	 * @param interpretation the new value of {@code interpretation}
 	 */
-	public void setInterpretation(VipsInterpretation interpretation) {
+	public void setInterpretation(com.criteo.vips.enums.VipsInterpretation interpretation) {
 		this.interpretation = interpretation;
 	}
 
@@ -223,7 +219,7 @@ public class CopyOptions {
 	 * @param interpretation the new value of {@code interpretation}
 	 * @return this object for chaining
 	 */
-	public CopyOptions interpretation(VipsInterpretation interpretation) {
+	public CopyOptions interpretation(com.criteo.vips.enums.VipsInterpretation interpretation) {
 		setInterpretation(interpretation);
 		return this;
 	}

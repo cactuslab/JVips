@@ -16,24 +16,20 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "thumbnail" operation.
  */
 public class ThumbnailOptions {
 
 	private Integer height;
-	private VipsSize size;
+	private com.criteo.vips.enums.VipsSize size;
 	private Boolean noRotate;
-	private VipsInteresting crop;
+	private com.criteo.vips.enums.VipsInteresting crop;
 	private Boolean linear;
 	private String importProfile;
 	private String exportProfile;
-	private VipsIntent intent;
-	private VipsFailOn failOn;
+	private com.criteo.vips.enums.VipsIntent intent;
+	private com.criteo.vips.enums.VipsFailOn failOn;
 
 	/**
 	 * Optional argument: height
@@ -73,7 +69,7 @@ public class ThumbnailOptions {
 	 * Only upsize, only downsize, or both
 	 * @return the value of {@code size}
 	 */
-	public VipsSize getSize() {
+	public com.criteo.vips.enums.VipsSize getSize() {
 		return this.size;
 	}
 
@@ -83,7 +79,7 @@ public class ThumbnailOptions {
 	 * Only upsize, only downsize, or both
 	 * @param size the new value of {@code size}
 	 */
-	public void setSize(VipsSize size) {
+	public void setSize(com.criteo.vips.enums.VipsSize size) {
 		this.size = size;
 	}
 
@@ -94,7 +90,7 @@ public class ThumbnailOptions {
 	 * @param size the new value of {@code size}
 	 * @return this object for chaining
 	 */
-	public ThumbnailOptions size(VipsSize size) {
+	public ThumbnailOptions size(com.criteo.vips.enums.VipsSize size) {
 		setSize(size);
 		return this;
 	}
@@ -137,7 +133,7 @@ public class ThumbnailOptions {
 	 * Reduce to fill target rectangle, then crop
 	 * @return the value of {@code crop}
 	 */
-	public VipsInteresting getCrop() {
+	public com.criteo.vips.enums.VipsInteresting getCrop() {
 		return this.crop;
 	}
 
@@ -147,7 +143,7 @@ public class ThumbnailOptions {
 	 * Reduce to fill target rectangle, then crop
 	 * @param crop the new value of {@code crop}
 	 */
-	public void setCrop(VipsInteresting crop) {
+	public void setCrop(com.criteo.vips.enums.VipsInteresting crop) {
 		this.crop = crop;
 	}
 
@@ -158,7 +154,7 @@ public class ThumbnailOptions {
 	 * @param crop the new value of {@code crop}
 	 * @return this object for chaining
 	 */
-	public ThumbnailOptions crop(VipsInteresting crop) {
+	public ThumbnailOptions crop(com.criteo.vips.enums.VipsInteresting crop) {
 		setCrop(crop);
 		return this;
 	}
@@ -265,7 +261,7 @@ public class ThumbnailOptions {
 	 * Rendering intent
 	 * @return the value of {@code intent}
 	 */
-	public VipsIntent getIntent() {
+	public com.criteo.vips.enums.VipsIntent getIntent() {
 		return this.intent;
 	}
 
@@ -275,7 +271,7 @@ public class ThumbnailOptions {
 	 * Rendering intent
 	 * @param intent the new value of {@code intent}
 	 */
-	public void setIntent(VipsIntent intent) {
+	public void setIntent(com.criteo.vips.enums.VipsIntent intent) {
 		this.intent = intent;
 	}
 
@@ -286,7 +282,7 @@ public class ThumbnailOptions {
 	 * @param intent the new value of {@code intent}
 	 * @return this object for chaining
 	 */
-	public ThumbnailOptions intent(VipsIntent intent) {
+	public ThumbnailOptions intent(com.criteo.vips.enums.VipsIntent intent) {
 		setIntent(intent);
 		return this;
 	}
@@ -297,7 +293,7 @@ public class ThumbnailOptions {
 	 * Error level to fail on
 	 * @return the value of {@code failOn}
 	 */
-	public VipsFailOn getFailOn() {
+	public com.criteo.vips.enums.VipsFailOn getFailOn() {
 		return this.failOn;
 	}
 
@@ -307,7 +303,7 @@ public class ThumbnailOptions {
 	 * Error level to fail on
 	 * @param failOn the new value of {@code failOn}
 	 */
-	public void setFailOn(VipsFailOn failOn) {
+	public void setFailOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		this.failOn = failOn;
 	}
 
@@ -318,7 +314,7 @@ public class ThumbnailOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public ThumbnailOptions failOn(VipsFailOn failOn) {
+	public ThumbnailOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}

@@ -16,16 +16,12 @@ limitations under the License.
 
 package com.criteo.vips.options;
 
-import com.criteo.vips.Image;
-import com.criteo.vips.PixelPacket;
-import com.criteo.vips.enums.*;
-
 /**
  * Optional arguments for the "system" operation.
  */
 public class SystemOptions {
 
-	private Image[] in;
+	private com.criteo.vips.Image[] in;
 	private String outFormat;
 	private String inFormat;
 
@@ -35,7 +31,7 @@ public class SystemOptions {
 	 * Array of input images
 	 * @return the value of {@code in}
 	 */
-	public Image[] getIn() {
+	public com.criteo.vips.Image[] getIn() {
 		return this.in;
 	}
 
@@ -45,7 +41,7 @@ public class SystemOptions {
 	 * Array of input images
 	 * @param in the new value of {@code in}
 	 */
-	public void setIn(Image[] in) {
+	public void setIn(com.criteo.vips.Image[] in) {
 		this.in = in;
 	}
 
@@ -56,7 +52,7 @@ public class SystemOptions {
 	 * @param in the new value of {@code in}
 	 * @return this object for chaining
 	 */
-	public SystemOptions in(Image[] in) {
+	public SystemOptions in(com.criteo.vips.Image[] in) {
 		setIn(in);
 		return this;
 	}
