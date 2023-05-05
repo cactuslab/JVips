@@ -314,33 +314,18 @@ if(NOT VIPS)
     ExternalProject_Add(libvips
       URL "https://github.com/libvips/libvips/archive/v${VIPS_VERSION}.tar.gz"
       PREFIX "${CMAKE_CURRENT_BINARY_DIR}/libvips"
-      CONFIGURE_COMMAND ./autogen.sh
-      PKG_CONFIG_PATH=${EXT_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
-      LDFLAGS=-L${EXT_INSTALL_DIR}/lib\ -Wl,-rpath,${EXT_INSTALL_DIR}/lib
-      CPPFLAGS=-I${EXT_INSTALL_DIR}/include
+      CONFIGURE_COMMAND meson setup
+      --pkg-config-path ${EXT_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
       --prefix=${EXT_INSTALL_DIR}
+      --libdir lib
+      --buildtype release
       ${CONFIGURE_HOST}
-      --enable-shared
-      --disable-static
-      --disable-dependency-tracking
-      --with-libwebp
-      --with-lcms
-      --with-imagequant
-      --with-jpeg
-      --with-jpeg-includes=${EXT_INSTALL_DIR}/include
-      --with-jpeg-libraries=${EXT_INSTALL_DIR}/lib
-      --with-tiff
-      --with-tiff-includes=${EXT_INSTALL_DIR}/include
-      --with-tiff-libraries=${EXT_INSTALL_DIR}/lib
-      --with-cgif
-      --without-magick
-      --without-orc
-      --without-gsf
-      --without-rsvg
-      ${LIBSPNG_FLAGS}
-      ${LIBHEIF_FLAGS}
+      build
       DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff
       BUILD_IN_SOURCE 1
+      BUILD_COMMAND meson compile -C build
+      TEST_COMMAND meson test -C build
+      INSTALL_COMMAND meson install -C build
       )
 else()
     add_custom_target(libvips "")
