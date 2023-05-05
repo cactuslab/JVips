@@ -14,19 +14,14 @@ For macOS:
 
 ```shell
 # In this folder
-mkdir combine
-cd combine
-jar xf ../JVips.jar
-
-mkdir apple
-cd apple
+mkdir applesilicon
+cd applesilicon
 # Extract the jar from the other machine
-jar xf ~Desktop/JVips.jar
-cd ..
-
+jar xf ~/Desktop/JVips.jar
 mkdir universal
-for i in *.dylib; do lipo $i apple/$i -create -output universal/$i ; done
+for i in *.dylib; do lipo ../build/all/$i $i -create -output universal/$i ; done
 cp -f universal/* ../build/all
+cd ..
 ```
 
 The output files are `pom.xml` and `JVips.jar`.
