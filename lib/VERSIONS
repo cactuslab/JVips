@@ -26,7 +26,7 @@ WEBP_VERSION=1.1.0
 AOM_VERSION=2.0.0
 
 # renovate: datasource=github-tags depName=libheif packageName=strukturag/libheif
-HEIF_VERSION=1.9.1
+HEIF_VERSION=1.16.1
 
 # renovate: datasource=github-releases depName=little-cms packageName=mm2/Little-CMS
 LCMS2_VERSION=2.11
