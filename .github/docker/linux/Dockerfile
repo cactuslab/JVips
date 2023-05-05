@@ -50,7 +50,8 @@ RUN apt-get install ${APT_OPTIONS} curl && \
     tar -zxf apache-maven-3.9.1-bin.tar.gz
 ENV PATH="/opt/apache-maven-3.9.1/bin:${PATH}"
 
-ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+RUN ln -s /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk
+ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
 
 # Switch to a non-root user.
 RUN groupadd -g $GID -o $UNAME
