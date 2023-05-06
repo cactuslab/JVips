@@ -1,16 +1,18 @@
 # Cactuslab build instructions
 
+Install 
+The Linux and first macOS parts of the build should be done on an Intel machine:
+
 ```shell
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
-docker run --rm -v $(pwd):/app -w /app -it jvips-builder-linux
+docker run --rm -v $(pwd):/app -it jvips-builder-linux
 ./build.sh --with-macos --without-linux
 ```
 
-For macOS:
+For macOS we also build on an Apple Silicon machine and then copy the `JVips.jar` to the Intel machine.
 
-* Build on an Intel machine and an Apple Silicon machine
-* Copy the `JVips.jar` from one to the other
+On the Intel machine:
 
 ```shell
 # In this folder
