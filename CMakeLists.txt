@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.6.0)
 cmake_policy(VERSION 3.6.0)
-cmake_policy(SET CMP0135 NEW)
+if (POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
 
 project(JVIPS C Java)
 
@@ -46,6 +48,8 @@ link_directories("${EXT_INSTALL_DIR}/lib/")
 
 set(ENV{PKG_CONFIG_PATH} "${EXT_INSTALL_DIR}/lib/pkgconfig/")
 
+add_subdirectory(lib)
+
 pkg_check_modules(GLIB2 REQUIRED glib-2.0)
 if (GLIB2_FOUND)
     message (STATUS "GLIB2_INCLUDE_DIRS=${GLIB2_INCLUDE_DIRS}")
@@ -55,8 +59,6 @@ if (GLIB2_FOUND)
 endif()
 link_directories(${GLIB2_LIBRARY_DIRS})
 include_directories(${GLIB2_INCLUDE_DIRS})
-
-add_subdirectory(lib)
 
 # Use libspng if WITH_LIBSPNG is ON, libpng otherwise.
 option(WITH_LIBSPNG "Build libvips with libspng" OFF)

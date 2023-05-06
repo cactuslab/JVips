@@ -316,6 +316,50 @@ else()
     add_custom_target(lcms2 "")
 endif()
 
+if(NOT ${BUILD_TARGET} STREQUAL "macOS")
+  add_custom_target(glib-2.0 "")
+else()
+  find_library(PCRE2 pcre2-posix PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+  if(NOT PCRE2)
+    ExternalProject_Add(pcre2
+      URL "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${PCRE2_VERSION}/pcre2-${PCRE2_VERSION}.tar.bz2"
+      PREFIX "${CMAKE_CURRENT_BINARY_DIR}/pcre2"
+      CMAKE_ARGS
+      -DCMAKE_INSTALL_PREFIX=${EXT_INSTALL_DIR}
+      -DCMAKE_INSTALL_LIBDIR=lib
+      -DCMAKE_BUILD_TYPE=Release
+      -DBUILD_SHARED_LIBS=1
+      -DPCRE2_BUILD_PCRE2_16=on
+      -DPCRE2_BUILD_PCRE2_32=on
+      -DPCRE2_SUPPORT_JIT=on
+      BUILD_IN_SOURCE 1
+    )
+  else()
+      add_custom_target(pcre2 "")
+  endif()
+
+  find_library(GLIB2 glib-2.0 PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+  if(NOT GLIB2)
+    ExternalProject_Add(glib-2.0
+      URL "https://download.gnome.org/sources/glib/2.76/glib-${GLIB_VERSION}.tar.xz"
+      PREFIX "${CMAKE_CURRENT_BINARY_DIR}/glib-2.0"
+      CONFIGURE_COMMAND ${Meson_EXECUTABLE} setup
+      --pkg-config-path ${EXT_INSTALL_DIR}/lib/pkgconfig
+      --prefix=${EXT_INSTALL_DIR}
+      --libdir lib
+      --buildtype release
+      ${CONFIGURE_HOST}
+      build
+      BUILD_IN_SOURCE 1
+      BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
+      INSTALL_COMMAND ${Meson_EXECUTABLE} install -C build
+      DEPENDS pcre2
+    )
+  else()
+      add_custom_target(glib-2.0 "")
+  endif()
+endif()
+
 find_library(VIPS vips PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 if(NOT VIPS)
     ExternalProject_Add(libvips
@@ -339,7 +383,7 @@ if(NOT VIPS)
       -Dmagick=disabled
       -Dgsf=disabled
       build
-      DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff
+      DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff glib-2.0
       BUILD_IN_SOURCE 1
       BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
       # TEST_COMMAND ${Meson_EXECUTABLE} test -C build

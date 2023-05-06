@@ -57,6 +57,12 @@ public class Vips {
         "lcms2.2",
         "aom.3.6.0",
         "heif.1.16.1",
+        "intl.8",
+        "pcre2-8.0.11.2",
+        "glib-2.0.0",
+        "gobject-2.0.0",
+        "gmodule-2.0.0",
+        "gio-2.0.0",
         "vips.42"
     };
 
