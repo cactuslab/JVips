@@ -40,6 +40,7 @@ RUN apt-get update && \
     libmpc-dev \
     gtk-doc-tools \
     gobject-introspection \
+    libgirepository1.0-dev \
     openjdk-17-jdk \
     python3-pip \
     libglib2.0-dev
