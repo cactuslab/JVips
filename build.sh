@@ -173,23 +173,25 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
     for LIB in $LIBS; do
         cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/
     done
+    # Copy all of the libs, without the symlinks
+    find "${BUILDDIR}/${TARGET}/inst/lib/" -name "*.dylib" ! -type l -exec cp {} "${BUILDDIR}"/all/ \;
 
-    # Convert a path to a basename and simplify the library name to remove version numbers
-    simple_lib_basename() {
-        local result="$(basename "$1")"
-        result="${result/-0*/}"
-        result="${result/-1*/}"
-        result="${result/-2*/}"
-        result="${result/-3*/}"
-        result="${result/-4*/}"
-        result="${result/-5*/}"
-        result="${result/-6*/}"
-        result="${result/-7*/}"
-        result="${result/-8*/}"
-        result="${result/-9*/}"
-        result="${result/.*/}"
-        echo "${result}.dylib"
-    }
+    # Fix macOS dynamic library paths to suit bundling
+    for lib in "${BUILDDIR}/all/"*.dylib; do
+        install_name_tool -id "@loader_path/$(basename "$lib")" "$lib"
+    done
+
+    for targetlib in "${BUILDDIR}/${TARGET}/inst/lib/"*.dylib; do
+        if [ -L "$targetlib" ]; then
+            targetlibname="$(basename "$(readlink -f "$targetlib")")"
+        else
+            targetlibname="$(basename "$targetlib")"
+        fi
+        for lib in "${BUILDDIR}/all/"*.dylib; do
+            install_name_tool -change "$targetlib" "@loader_path/$targetlibname" "$lib"
+            install_name_tool -change "@rpath/$(basename "$targetlib")" "@loader_path/$targetlibname" "$lib"
+        done
+    done
 fi
 
 mvn ${MAVEN_ARGS} -DnewVersion=${VERSION} versions:set

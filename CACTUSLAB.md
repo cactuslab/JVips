@@ -3,7 +3,7 @@
 ```shell
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
-docker run --rm -v $(pwd):/app -w /app -u root -it jvips-builder-linux
+docker run --rm -v $(pwd):/app -w /app -it jvips-builder-linux
 ./build.sh --with-macos --without-linux
 ```
 

@@ -279,9 +279,17 @@ if (WITH_LIBHEIF)
           -DCMAKE_INSTALL_PREFIX=${EXT_INSTALL_DIR}
           -DCMAKE_INSTALL_LIBDIR=lib
           -DCMAKE_BUILD_TYPE=Release
-          -DHAVE_AOM=yes
-          -DHAVE_GO=no
+          -DWITH_AOM_ENCODER=yes
+          -DWITH_AOM_DECODER=yes
+          -DAOM_INCLUDE_DIR=${EXT_INSTALL_DIR}/include
+          -DAOM_LIBRARY=${EXT_INSTALL_DIR}/lib/libaom.dylib
           -DWITH_EXAMPLES=no
+          -DENABLE_PLUGIN_LOADING=0
+          -DWITH_LIBDE265=no
+          -DWITH_X265=no
+          -DWITH_SvtEnc=no
+          -DWITH_RAV1E=no
+          -DWITH_LIBSHARPYUV=no
           DEPENDS libaom
           BUILD_IN_SOURCE 1
           )
@@ -310,22 +318,32 @@ endif()
 
 find_library(VIPS vips PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 if(NOT VIPS)
-    # Cannot set CFLAGS with space separated flags
     ExternalProject_Add(libvips
       URL "https://github.com/libvips/libvips/archive/v${VIPS_VERSION}.tar.gz"
       PREFIX "${CMAKE_CURRENT_BINARY_DIR}/libvips"
-      CONFIGURE_COMMAND meson setup
-      --pkg-config-path ${EXT_INSTALL_DIR}/lib/pkgconfig:$PKG_CONFIG_PATH
+      CONFIGURE_COMMAND ${Meson_EXECUTABLE} setup
+      --pkg-config-path ${EXT_INSTALL_DIR}/lib/pkgconfig
       --prefix=${EXT_INSTALL_DIR}
       --libdir lib
       --buildtype release
       ${CONFIGURE_HOST}
+      -Dexamples=false
+      -Dcplusplus=false
+      -Dmodules=disabled
+      -Dpangocairo=disabled
+      -Dfontconfig=disabled
+      -Dopenexr=disabled
+      -Dopenjpeg=disabled
+      -Djpeg-xl=disabled
+      -Drsvg=disabled
+      -Dmagick=disabled
+      -Dgsf=disabled
       build
       DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff
       BUILD_IN_SOURCE 1
-      BUILD_COMMAND meson compile -C build
-      TEST_COMMAND meson test -C build
-      INSTALL_COMMAND meson install -C build
+      BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
+      # TEST_COMMAND ${Meson_EXECUTABLE} test -C build
+      INSTALL_COMMAND ${Meson_EXECUTABLE} install -C build
       )
 else()
     add_custom_target(libvips "")

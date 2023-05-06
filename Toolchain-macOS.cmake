@@ -2,6 +2,7 @@ set(BUILD_TARGET macOS)
 
 # the name of the target operating system
 SET(CMAKE_SYSTEM_NAME Darwin)
+set(CMAKE_SYSTEM_PROCESSOR ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
 # which compilers to use for C and C++
 SET(CMAKE_C_COMPILER clang)

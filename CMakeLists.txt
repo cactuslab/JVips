@@ -1,5 +1,8 @@
-project(JVIPS C Java)
 cmake_minimum_required(VERSION 3.6.0)
+cmake_policy(VERSION 3.6.0)
+cmake_policy(SET CMP0135 NEW)
+
+project(JVIPS C Java)
 
 set(JVIPS_VERSION 8.14.2)
 
@@ -53,21 +56,7 @@ endif()
 link_directories(${GLIB2_LIBRARY_DIRS})
 include_directories(${GLIB2_INCLUDE_DIRS})
 
-# Under macOS libvips will not build as is, but you can rely on Homebrew.
-# Here's a formula for vips 8.8.3:
-# $ brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/39ba7794c1678b0d61b179239f93e9ac553c045b/Formula/vips.rb
-if(NOT ${BUILD_TARGET} STREQUAL "macOS")
-    add_subdirectory(lib)
-else()
-    pkg_check_modules(VIPS REQUIRED vips)
-    if (VIPS_FOUND)
-        message (STATUS "VIPS_INCLUDE_DIRS=${VIPS_INCLUDE_DIRS}")
-        message (STATUS "VIPS_LIBRARIES=${VIPS_LIBRARIES}")
-        message (STATUS "VIPS_LIBRARY_DIRS=${VIPS_LIBRARY_DIRS}")
-    endif()
-    link_directories(${VIPS_LIBRARY_DIRS})
-    include_directories(${VIPS_INCLUDE_DIRS})
-endif()
+add_subdirectory(lib)
 
 # Use libspng if WITH_LIBSPNG is ON, libpng otherwise.
 option(WITH_LIBSPNG "Build libvips with libspng" OFF)

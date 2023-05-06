@@ -50,6 +50,12 @@ command -v pkg-config || {
     brew install pkgconfig
 }
 
+command -v meson || {
+    brew install meson
+}
+
+brew install gobject-introspection
+
 [ -z "$GITHUB_ACTIONS" ] || {
     rm /usr/local/bin/2to3
     brew unlink python@3.9

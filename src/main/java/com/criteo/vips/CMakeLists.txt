@@ -22,6 +22,4 @@ file(REMOVE ${JNI_HEADER_DIRECTORY}/com_criteo_vips_Vips.h
 
 add_jar(JVipsWrapper ${JAVA_ENUM_SOURCE_FILES} ${JAVA_OPTIONS_SOURCE_FILES} ${JAVA_SOURCE_FILES} INCLUDE_JARS ${JAVA_CLASSPATH_JARS} GENERATE_NATIVE_HEADERS Vips_header DESTINATION ${JNI_HEADER_DIRECTORY})
 
-if(NOT ${BUILD_TARGET} STREQUAL "macOS")
-    add_dependencies(Vips_header libvips)
-endif()
+add_dependencies(Vips_header libvips)

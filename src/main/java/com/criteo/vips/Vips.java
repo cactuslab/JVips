@@ -45,6 +45,19 @@ public class Vips {
     };
 
     private static final String[] MACOS_LIBRARIES = {
+        "imagequant.0",
+        "cgif.0",
+        "exif.12",
+        "jpeg.8.2.2",
+        "png16.16",
+        "webp.7",
+        "webpmux.3",
+        "webpdemux.2",
+        "tiff.6",
+        "lcms2.2",
+        "aom.3.6.0",
+        "heif.1.16.1",
+        "vips.42"
     };
 
     /**
