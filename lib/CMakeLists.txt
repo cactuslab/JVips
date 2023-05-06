@@ -282,7 +282,7 @@ if (WITH_LIBHEIF)
           -DWITH_AOM_ENCODER=yes
           -DWITH_AOM_DECODER=yes
           -DAOM_INCLUDE_DIR=${EXT_INSTALL_DIR}/include
-          -DAOM_LIBRARY=${EXT_INSTALL_DIR}/lib/libaom.dylib
+          -DAOM_LIBRARY=${EXT_INSTALL_DIR}/lib/libaom${CMAKE_SHARED_LIBRARY_SUFFIX}
           -DWITH_EXAMPLES=no
           -DENABLE_PLUGIN_LOADING=0
           -DWITH_LIBDE265=no
