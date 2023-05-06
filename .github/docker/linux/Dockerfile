@@ -63,4 +63,5 @@ VOLUME /app
 WORKDIR /app
 USER $UNAME
 
-CMD bash -l -ex build.sh --with-linux --without-w64 --without-macos
+# The ls -la fixes git permissions issues on the /app dir
+CMD ls -la && bash -l -ex build.sh --with-linux --without-w64 --without-macos
