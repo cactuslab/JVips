@@ -379,9 +379,16 @@ if(NOT VIPS)
       -Dopenexr=disabled
       -Dopenjpeg=disabled
       -Djpeg-xl=disabled
-      -Drsvg=disabled
+      -Dwebp=enabled
+      -Dlcms=enabled
+      -Dimagequant=enabled
+      -Djpeg=enabled
+      -Dtiff=enabled
+      -Dcgif=enabled
       -Dmagick=disabled
+      -Dorc=disabled
       -Dgsf=disabled
+      -Drsvg=disabled
       build
       DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff glib-2.0
       BUILD_IN_SOURCE 1
