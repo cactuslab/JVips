@@ -55,8 +55,12 @@ ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
 
 # Switch to a non-root user.
 RUN groupadd -g $GID -o $UNAME
-RUN useradd -l -m -u $UID -g $GID -o -s /bin/bash -d /home/$UNAME $UNAME
+RUN useradd -l -m -u $UID -g $GID -o -s /bin/bash -d /home/$UNAME $UNAME && \
+    mkdir -p /app && \
+    chown $UID:$GID /app
 
+VOLUME /app
+WORKDIR /app
 USER $UNAME
 
 CMD bash -l -ex build.sh --with-linux --without-w64 --without-macos
