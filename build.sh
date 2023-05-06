@@ -181,6 +181,11 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
         install_name_tool -id "@loader_path/$(basename "$lib")" "$lib"
     done
 
+    # Make a working vips binary
+    mkdir -p "${BUILDDIR}/bin"
+    cp "${BUILDDIR}/${TARGET}/inst/bin/vips" "${BUILDDIR}/bin"
+    app="${BUILDDIR}/bin/vips"
+
     for targetlib in "${BUILDDIR}/${TARGET}/inst/lib/"*.dylib; do
         if [ -L "$targetlib" ]; then
             targetlibname="$(basename "$(readlink -f "$targetlib")")"
@@ -190,8 +195,11 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
         for lib in "${BUILDDIR}/all/"*.dylib; do
             install_name_tool -change "$targetlib" "@loader_path/$targetlibname" "$lib"
             install_name_tool -change "@rpath/$(basename "$targetlib")" "@loader_path/$targetlibname" "$lib"
+            install_name_tool -change "$targetlib" "@rpath/$targetlibname" "$app"
         done
     done
+
+    install_name_tool -add_rpath "@executable_path/../all" "$app"
 fi
 
 mvn ${MAVEN_ARGS} -DnewVersion=${VERSION} versions:set
