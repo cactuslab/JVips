@@ -29,7 +29,7 @@ AOM_VERSION=3.6.0
 HEIF_VERSION=1.16.1
 
 # renovate: datasource=github-releases depName=little-cms packageName=mm2/Little-CMS
-LCMS2_VERSION=2.14
+LCMS2_VERSION=2.15
 
 # renovate: datasource=gitlab-tags depName=libtiff packageName=libtiff/libtiff
 TIFF_VERSION=4.5.0
