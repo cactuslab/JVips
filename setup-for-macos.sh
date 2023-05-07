@@ -55,6 +55,8 @@ command -v meson || {
 }
 
 brew install gobject-introspection
+# For aom on x86_64
+brew install yasm
 
 [ -z "$GITHUB_ACTIONS" ] || {
     rm /usr/local/bin/2to3
