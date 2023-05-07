@@ -42,6 +42,8 @@ public class Vips {
             "imagequant",
             "lcms2",
             "tiff",
+            "fftw3",
+            "orc-0.4",
             "vips"
     };
 
