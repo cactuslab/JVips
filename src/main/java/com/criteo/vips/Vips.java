@@ -64,6 +64,8 @@ public class Vips {
         "gobject-2.0.0",
         "gmodule-2.0.0",
         "gio-2.0.0",
+        "fftw3.3",
+        "orc-0.4.0",
         "vips.42"
     };
 

@@ -218,6 +218,29 @@ else()
     add_custom_target(cgif "")
 endif()
 
+find_library(ORC orc-0.4 PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+if(NOT ORC)
+  ExternalProject_Add(orc
+    URL "https://gstreamer.freedesktop.org/src/orc/orc-${ORC_VERSION}.tar.xz"
+    PREFIX "${CMAKE_CURRENT_BINARY_DIR}/orc"
+    CONFIGURE_COMMAND ${Meson_EXECUTABLE} setup
+    --pkg-config-path ${EXT_INSTALL_DIR}/lib/pkgconfig
+    --prefix=${EXT_INSTALL_DIR}
+    --libdir lib
+    --buildtype release
+    ${CONFIGURE_HOST}
+    -Dorc-test=disabled
+    -Dexamples=disabled
+    -Dgtk_doc=disabled
+    build
+    BUILD_IN_SOURCE 1
+    BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
+    INSTALL_COMMAND ${Meson_EXECUTABLE} install -C build
+  )
+else()
+    add_custom_target(orc "")
+endif()
+
 find_library(LIBWEBP webp webpmux webpdemux PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 if(NOT LIBWEBP)
     ExternalProject_Add(libwebp
@@ -237,9 +260,6 @@ if(NOT LIBWEBP)
       --disable-static
       --disable-dependency-tracking
       --enable-libwebpmux
-      --without-orc
-      --disable-assert
-      --enable-avx2
       --enable-sse4.1
       --enable-sse2
       --enable-threading
@@ -316,6 +336,21 @@ else()
     add_custom_target(lcms2 "")
 endif()
 
+find_library(FFTW fftw3 EXACT PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+if(NOT FFTW)
+    ExternalProject_Add(fftw
+      URL "https://fftw.org/fftw-${FFTW_VERSION}.tar.gz"
+      PREFIX "${CMAKE_CURRENT_BINARY_DIR}/fftw"
+      CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/fftw/src/fftw/configure
+      ${CONFIGURE_VARS}
+      --enable-shared
+      --disable-static
+      --disable-dependency-tracking
+      )
+else()
+    add_custom_target(fftw "")
+endif()
+
 if(NOT ${BUILD_TARGET} STREQUAL "macOS")
   add_custom_target(glib-2.0 "")
 else()
@@ -386,11 +421,12 @@ if(NOT VIPS)
       -Dtiff=enabled
       -Dcgif=enabled
       -Dmagick=disabled
-      -Dorc=disabled
+      -Dfftw=enabled
+      -Dorc=enabled
       -Dgsf=disabled
       -Drsvg=disabled
       build
-      DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff glib-2.0
+      DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff glib-2.0 orc fftw
       BUILD_IN_SOURCE 1
       BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
       # TEST_COMMAND ${Meson_EXECUTABLE} test -C build
