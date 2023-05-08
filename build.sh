@@ -200,6 +200,24 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
     done
 
     install_name_tool -add_rpath "@executable_path/../all" "$app"
+
+    # Check for inapproriate system dependencies
+    set +e
+    for lib in "${BUILDDIR}/all/"*.dylib; do
+        bad_deps=$(otool -L "$lib" | grep /usr/local)
+        if [ -z "bad_deps" ]; then
+            bad_deps=$(otool -L "$lib" | grep /opt/homebew)
+        fi
+        if [ -z "bad_deps" ]; then
+            bad_deps=$(otool -L "$lib" | grep build/)
+        fi
+        if [ -n "$bad_deps" ]; then
+            echo "Bad dependencies found in ${lib}"
+            echo "$bad_deps"
+            exit 1
+        fi
+    done
+    set -e
 fi
 
 mvn ${MAVEN_ARGS} -DnewVersion=${VERSION} versions:set
