@@ -105,7 +105,6 @@ if(NOT LIBJPEG)
       -DENABLE_STATIC=OFF
       -DWITH_JPEG8=ON
       -DWITH_SIMD=ON
-      BUILD_IN_SOURCE 1
       )
 else()
     add_custom_target(libjpeg "")
@@ -144,7 +143,6 @@ if (WITH_LIBSPNG)
           -DCMAKE_BUILD_TYPE=Release
           -DSPNG_STATIC=OFF
           -DENABLE_OPT=ON
-          BUILD_IN_SOURCE 1
           )
     else()
         add_custom_target(libspng "")
@@ -184,7 +182,6 @@ if (NOT GIFLIB)
       -DCMAKE_INSTALL_LIBDIR=lib
       -DBUILD_SHARED_LIBS=1
       -DENABLE_CCACHE=0
-      BUILD_IN_SOURCE 1
       )
 else()
     add_custom_target(giflib "")
@@ -231,10 +228,9 @@ if(NOT ORC)
     -Dorc-test=disabled
     -Dexamples=disabled
     -Dgtk_doc=disabled
-    build
-    BUILD_IN_SOURCE 1
-    BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
-    INSTALL_COMMAND ${Meson_EXECUTABLE} install -C build
+    <BINARY_DIR> <SOURCE_DIR>
+    BUILD_COMMAND ${Meson_EXECUTABLE} compile -C <BINARY_DIR>
+    INSTALL_COMMAND ${Meson_EXECUTABLE} install -C <BINARY_DIR>
   )
 else()
     add_custom_target(orc "")
@@ -310,7 +306,6 @@ if (WITH_LIBHEIF)
           -DWITH_RAV1E=no
           -DWITH_LIBSHARPYUV=no
           DEPENDS libaom
-          BUILD_IN_SOURCE 1
           )
     else()
         add_custom_target(libheif "")
@@ -366,7 +361,6 @@ else()
       -DPCRE2_BUILD_PCRE2_16=on
       -DPCRE2_BUILD_PCRE2_32=on
       -DPCRE2_SUPPORT_JIT=on
-      BUILD_IN_SOURCE 1
     )
   else()
       add_custom_target(pcre2 "")
@@ -383,10 +377,9 @@ else()
       --libdir lib
       --buildtype release
       ${CONFIGURE_HOST}
-      build
-      BUILD_IN_SOURCE 1
-      BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
-      INSTALL_COMMAND ${Meson_EXECUTABLE} install -C build
+      <BINARY_DIR> <SOURCE_DIR>
+      BUILD_COMMAND ${Meson_EXECUTABLE} compile -C <BINARY_DIR>
+      INSTALL_COMMAND ${Meson_EXECUTABLE} install -C <BINARY_DIR>
       DEPENDS pcre2
     )
   else()
@@ -424,12 +417,11 @@ if(NOT VIPS)
       -Dorc=enabled
       -Dgsf=disabled
       -Drsvg=disabled
-      build
+      <BINARY_DIR> <SOURCE_DIR>
       DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff glib-2.0 orc fftw
-      BUILD_IN_SOURCE 1
-      BUILD_COMMAND ${Meson_EXECUTABLE} compile -C build
-      # TEST_COMMAND ${Meson_EXECUTABLE} test -C build
-      INSTALL_COMMAND ${Meson_EXECUTABLE} install -C build
+      BUILD_COMMAND ${Meson_EXECUTABLE} compile -C <BINARY_DIR>
+      # TEST_COMMAND ${Meson_EXECUTABLE} test -C <BINARY_DIR>
+      INSTALL_COMMAND ${Meson_EXECUTABLE} install -C <BINARY_DIR>
       )
 else()
     add_custom_target(libvips "")
