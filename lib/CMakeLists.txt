@@ -371,6 +371,7 @@ else()
     ExternalProject_Add(glib-2.0
       URL "https://download.gnome.org/sources/glib/2.76/glib-${GLIB_VERSION}.tar.xz"
       PREFIX "${CMAKE_CURRENT_BINARY_DIR}/glib-2.0"
+      PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patches/glib-2.0-meson.build.patch
       CONFIGURE_COMMAND ${Meson_EXECUTABLE} setup
       --pkg-config-path ${EXT_INSTALL_DIR}/lib/pkgconfig
       --prefix=${EXT_INSTALL_DIR}
