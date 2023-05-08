@@ -87,6 +87,7 @@ if(NOT LIBEXIF)
       --disable-static
       --disable-docs
       --disable-dependency-tracking
+      --disable-nls
       )
 else()
     add_custom_target(libexif "")
