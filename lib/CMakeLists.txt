@@ -150,6 +150,7 @@ if (WITH_LIBSPNG)
     --with-libspng
     SPNG_LIBS="-L${EXT_INSTALL_DIR}/lib -lspng"
     SPNG_CFLAGS=-I${EXT_INSTALL_DIR}/include)
+    list(APPEND LIBSPNG_MESON -Dspng=enabled)
     find_library(LIBSPNG spng PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
     if(NOT LIBSPNG)
         ExternalProject_Add(libspng
@@ -167,6 +168,7 @@ if (WITH_LIBSPNG)
 else()
     list(APPEND LIBSPNG_FLAGS
     --without-libspng)
+    list(APPEND LIBSPNG_MESON -Dspng=disabled)
     add_custom_target(libspng "")
 endif()
 
@@ -436,6 +438,11 @@ if(NOT VIPS)
       -Dorc=enabled
       -Dgsf=disabled
       -Drsvg=disabled
+      -Dopenslide=disabled
+      -Dmatio=disabled
+      -Dpoppler=disabled
+      -Dcfitsio=disabled
+      ${LIBSPNG_MESON}
       <BINARY_DIR> <SOURCE_DIR>
       DEPENDS libjpeg libpng libspng giflib cgif libwebp libimagequant lcms2 libheif tiff glib-2.0 orc fftw
       BUILD_COMMAND ${Meson_EXECUTABLE} compile -C <BINARY_DIR>
