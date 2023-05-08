@@ -322,6 +322,7 @@ if (WITH_LIBHEIF)
           -DWITH_SvtEnc=no
           -DWITH_RAV1E=no
           -DWITH_LIBSHARPYUV=no
+          -DWITH_DAV1D=no
           DEPENDS libaom
           )
     else()
