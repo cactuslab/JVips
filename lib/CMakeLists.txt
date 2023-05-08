@@ -387,6 +387,22 @@ else()
       add_custom_target(pcre2 "")
   endif()
 
+  find_library(FFI ffi PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+  if(NOT FFI)
+      ExternalProject_Add(libffi
+        URL "https://github.com/libffi/libffi/releases/download/v${FFI_VERSION}/libffi-${FFI_VERSION}.tar.gz"
+        PREFIX "${CMAKE_CURRENT_BINARY_DIR}/libffi"
+        CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/libffi/src/libffi/configure
+        # ${CONFIGURE_VARS}
+        --prefix=${EXT_INSTALL_DIR}
+        --enable-shared
+        --disable-static
+        --disable-dependency-tracking
+        )
+  else()
+      add_custom_target(libffi "")
+  endif()
+
   find_library(GLIB2 glib-2.0 PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
   if(NOT GLIB2)
     ExternalProject_Add(glib-2.0
@@ -402,7 +418,7 @@ else()
       <BINARY_DIR> <SOURCE_DIR>
       BUILD_COMMAND ${Meson_EXECUTABLE} compile -C <BINARY_DIR>
       INSTALL_COMMAND ${Meson_EXECUTABLE} install -C <BINARY_DIR>
-      DEPENDS pcre2
+      DEPENDS pcre2 libffi
     )
   else()
       add_custom_target(glib-2.0 "")
