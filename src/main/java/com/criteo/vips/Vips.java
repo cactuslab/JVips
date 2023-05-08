@@ -66,6 +66,7 @@ public class Vips {
         "intl.8",
         "pcre2-8.0.11.2",
         "glib-2.0.0",
+        "ffi.8",
         "gobject-2.0.0",
         "gmodule-2.0.0",
         "gio-2.0.0",
