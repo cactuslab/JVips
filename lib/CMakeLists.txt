@@ -110,6 +110,22 @@ else()
     add_custom_target(libjpeg "")
 endif()
 
+find_library(ZSTD zstd PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
+if(NOT ZSTD)
+    ExternalProject_Add(zstd
+      URL "https://github.com/facebook/zstd/archive/v${ZSTD_VERSION}.tar.gz"
+      PREFIX "${CMAKE_CURRENT_BINARY_DIR}/zstd"
+      SOURCE_SUBDIR build/cmake
+      CMAKE_ARGS
+      -DCMAKE_INSTALL_PREFIX=${EXT_INSTALL_DIR}
+      -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+      -DENABLE_SHARED=ON
+      -DENABLE_STATIC=OFF
+      )
+else()
+    add_custom_target(zstd "")
+endif()
+
 find_library(TIFF tiff EXACT PATHS "${EXT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
 if(NOT TIFF)
    ExternalProject_Add(tiff
@@ -122,7 +138,8 @@ if(NOT TIFF)
      --without-x
      --disable-cxx
      --disable-lzma
-     DEPENDS libjpeg
+     --without-webp
+     DEPENDS libjpeg zstd
      )
 else()
    add_custom_target(tiff "")
