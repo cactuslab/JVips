@@ -139,7 +139,7 @@ if(NOT TIFF)
      --without-x
      --disable-cxx
      --disable-lzma
-     --without-webp
+     --disable-webp
      DEPENDS libjpeg zstd
      )
 else()
