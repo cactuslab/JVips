@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 # Set default build arguments.
 ARG NODE_VERSION=18.x
@@ -20,8 +20,6 @@ RUN apt-get update && \
     curl \
     git \
     cmake \
-    meson \
-    ninja-build \
     patch \
     clang \
     nasm \
@@ -44,6 +42,10 @@ RUN apt-get update && \
     openjdk-17-jdk \
     python3-pip \
     libglib2.0-dev
+
+RUN pip3 install meson && \
+    apt-get install ${APT_OPTIONS} \
+        ninja-build
 
 RUN apt-get install ${APT_OPTIONS} curl && \
     cd /opt && \
