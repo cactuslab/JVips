@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 # Set default build arguments.
 ARG NODE_VERSION=18.x
@@ -12,6 +12,12 @@ ARG GID=1000
 ENV PATH="${OSX_CROSS_HOME}/bin:${PATH}"
 ENV APT_OPTIONS="-y --no-install-recommends"
 ENV DEBIAN_FRONTEND noninteractive
+
+# Cmake
+RUN apt-get update && \
+    apt-get install ${APT_OPTIONS} curl ca-certificates && \
+    curl -L -o /usr/share/keyrings/kitware-archive-keyring.asc https://apt.kitware.com/keys/kitware-archive-latest.asc && \
+    echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.asc] https://apt.kitware.com/ubuntu/ bionic main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
 
 # Install system dependencies.
 RUN apt-get update && \
