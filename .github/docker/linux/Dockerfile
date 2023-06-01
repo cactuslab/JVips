@@ -62,6 +62,11 @@ ENV PATH="/opt/apache-maven-3.9.1/bin:${PATH}"
 RUN ln -s /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk
 ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
 
+# Upgrade automake for libwebp build on Ubuntu 18.04
+RUN curl -OL http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.1-4ubuntu6_all.deb &&\
+    dpkg --install automake_1.16.1-4ubuntu6_all.deb &&\
+    rm -f automake_1.16.1-4ubuntu6_all.deb
+
 # Switch to a non-root user.
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -l -m -u $UID -g $GID -o -s /bin/bash -d /home/$UNAME $UNAME && \
