@@ -36,6 +36,7 @@ public class Vips {
             "cgif",
             "jpeg",
             "turbojpeg",
+            "sharpyuv",
             "webp",
             "webpmux",
             "webpdemux",
