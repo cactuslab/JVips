@@ -56,6 +56,7 @@ public class Vips {
         "jpeg.8.2.2",
         "png16.16",
         "spng",
+        "sharpyuv.0",
         "webp.7",
         "webpmux.3",
         "webpdemux.2",
