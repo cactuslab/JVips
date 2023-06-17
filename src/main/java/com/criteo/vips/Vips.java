@@ -18,6 +18,7 @@ package com.criteo.vips;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,8 @@ public class Vips {
             init();
             LOGGER.debug("Loaded JVips");
             available = true;
+
+            cleanTempFiles();
         } catch (IOException e) {
             available = false;
             LOGGER.warn("Can't load JVips library and/or dependencies: {}", e.getMessage());
@@ -157,6 +160,13 @@ public class Vips {
         tempExtractionDir = Files.createTempDirectory("jvips").toFile();
         tempExtractionDir.deleteOnExit();
         return tempExtractionDir;
+    }
+
+    private static void cleanTempFiles() {
+        if (tempExtractionDir != null) {
+            Stream.of(tempExtractionDir.listFiles()).forEach(File::delete);
+            tempExtractionDir.delete();
+        }
     }
 
     private static boolean loadLibraryFromJar(String name) throws IOException {
