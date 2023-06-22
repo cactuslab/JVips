@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-#set -x
+set -x
 
 BASEDIR="$(pwd)"
 
@@ -48,8 +48,6 @@ export DEBUG
 export BUILDDIR="${BASEDIR}/build"
 
 CMAKE_BIN=$(which cmake3 || which cmake)
-PYTHON_BIN=$(which python3 || which python)
-PIP_BIN=$(which pip-3 || which pip3 || which pip)
 
 # Clear the build dir before anything else in the CI
 if [ "${CI}" = "true" ]; then
@@ -63,7 +61,6 @@ mvn ${MAVEN_ARGS} dependency:copy-dependencies -DoutputDirectory="${BUILDDIR}"/a
 # Create the resource directory where all native libraries will be copied.
 mkdir -p "${BUILDDIR}"/all/
 
-source lib/VERSIONS
 VERSION="${VIPS_VERSION}-$(git rev-parse --short HEAD)"
 
 ##########################
@@ -75,7 +72,11 @@ if [ ${BUILD_LINUX} -gt 0 ]; then
     export CXX=g++
     export CPP=cpp
     export RANLIB=ranlib
-    export HOST="--host=x86_64-pc-linux"
+    if [[ $(uname -m) =~ ^arm ]]; then
+        export HOST="--host=aarch64-pc-linux"
+    else
+        export HOST="--host=x86_64-pc-linux"
+    fi
     export TARGET=linux
     export PREFIX="${BUILDDIR}/${TARGET}"/inst/
     export TOOLCHAIN="${BASEDIR}"/Toolchain-linux.cmake
@@ -84,7 +85,7 @@ if [ ${BUILD_LINUX} -gt 0 ]; then
     mkdir -p "${BUILDDIR}/${TARGET}"/JVips
     rm -rf "${BUILDDIR}/${TARGET}"/JVips/*
     pushd "${BUILDDIR}/${TARGET}"/JVips
-    ${CMAKE_BIN} "${BASEDIR}" -DWITH_LIBHEIF=ON -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+    ${CMAKE_BIN} "${BASEDIR}" -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
     make -j ${JOBS} || {
         echo "Linux JVips build failed"
         exit 1
@@ -100,8 +101,6 @@ if [ ${BUILD_LINUX} -gt 0 ]; then
     for LIB in $LIBS; do
         cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/
     done
-    cp "${BUILDDIR}/${TARGET}/inst/lib/"*.so "${BUILDDIR}"/all/
-
 fi
 
 ##########################
@@ -157,7 +156,7 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
     mkdir -p "${BUILDDIR}/${TARGET}"/JVips
     rm -rf "${BUILDDIR}/${TARGET}"/JVips/*
     pushd "${BUILDDIR}/${TARGET}/JVips"
-    ${CMAKE_BIN} "${BASEDIR}" -DWITH_LIBHEIF=ON -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+    ${CMAKE_BIN} "${BASEDIR}" -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
     make -j ${JOBS} || {
         echo "macOS JVips build failed"
         exit 1
@@ -173,51 +172,6 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
     for LIB in $LIBS; do
         cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/
     done
-    # Copy all of the libs, without the symlinks
-    find "${BUILDDIR}/${TARGET}/inst/lib/" -name "*.dylib" ! -type l -exec cp {} "${BUILDDIR}"/all/ \;
-
-    # Fix macOS dynamic library paths to suit bundling
-    for lib in "${BUILDDIR}/all/"*.dylib; do
-        install_name_tool -id "@loader_path/$(basename "$lib")" "$lib"
-    done
-
-    # Make a working vips binary
-    mkdir -p "${BUILDDIR}/bin"
-    cp "${BUILDDIR}/${TARGET}/inst/bin/vips" "${BUILDDIR}/bin"
-    app="${BUILDDIR}/bin/vips"
-
-    for targetlib in "${BUILDDIR}/${TARGET}/inst/lib/"*.dylib; do
-        if [ -L "$targetlib" ]; then
-            targetlibname="$(basename "$(readlink -f "$targetlib")")"
-        else
-            targetlibname="$(basename "$targetlib")"
-        fi
-        for lib in "${BUILDDIR}/all/"*.dylib; do
-            install_name_tool -change "$targetlib" "@loader_path/$targetlibname" "$lib"
-            install_name_tool -change "@rpath/$(basename "$targetlib")" "@loader_path/$targetlibname" "$lib"
-            install_name_tool -change "$targetlib" "@rpath/$targetlibname" "$app"
-        done
-    done
-
-    install_name_tool -add_rpath "@executable_path/../all" "$app"
-
-    # Check for inapproriate system dependencies
-    set +e
-    for lib in "${BUILDDIR}/all/"*.dylib; do
-        bad_deps=$(otool -L "$lib" | grep /usr/local)
-        if [ -z "bad_deps" ]; then
-            bad_deps=$(otool -L "$lib" | grep /opt/homebew)
-        fi
-        if [ -z "bad_deps" ]; then
-            bad_deps=$(otool -L "$lib" | grep build/)
-        fi
-        if [ -n "$bad_deps" ]; then
-            echo "Bad dependencies found in ${lib}"
-            echo "$bad_deps"
-            exit 1
-        fi
-    done
-    set -e
 fi
 
 mvn ${MAVEN_ARGS} -DnewVersion=${VERSION} versions:set

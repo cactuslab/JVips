@@ -48,22 +48,13 @@ link_directories("${EXT_INSTALL_DIR}/lib/")
 
 set(ENV{PKG_CONFIG_PATH} "${EXT_INSTALL_DIR}/lib/pkgconfig/")
 
-add_subdirectory(lib)
-
 pkg_check_modules(GLIB2 REQUIRED glib-2.0)
-if (GLIB2_FOUND)
-    message (STATUS "GLIB2_INCLUDE_DIRS=${GLIB2_INCLUDE_DIRS}")
-    message (STATUS "GLIB2_LIBRARIES=${GLIB2_LIBRARIES}")
-    message (STATUS "GLIB2_LIBRARY_DIRS=${GLIB2_LIBRARY_DIRS}")
-    message (STATUS "GLIB2_LDFLAGS=${GLIB2_LDFLAGS}")
-endif()
 link_directories(${GLIB2_LIBRARY_DIRS})
 include_directories(${GLIB2_INCLUDE_DIRS})
 
-# Use libspng if WITH_LIBSPNG is ON, libpng otherwise.
-option(WITH_LIBSPNG "Build libvips with libspng" OFF)
-# Compile with libheif if WITH_LIBHEIF is ON, without it otherwise. libheif is required to handle the AVIF format.
-option(WITH_LIBHEIF "Build libvips with libheif" OFF)
+pkg_check_modules(LIBVIPS REQUIRED vips)
+link_directories(${LIBVIPS_LIBRARY_DIRS})
+include_directories(${LIBVIPS_INCLUDE_DIRS})
 
 add_subdirectory(src/main/java/com/criteo/vips/)
 add_subdirectory(src/main/c)

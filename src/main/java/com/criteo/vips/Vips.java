@@ -27,57 +27,6 @@ public class Vips {
     private static final Logger LOGGER = LoggerFactory.getLogger("com.criteo.vips.Vips");
     private static final String SYSTEM_NAME = System.getProperty("os.name").toLowerCase();
 
-    private static final String[] LINUX_LIBRARIES = {
-            "aom",
-            "heif",
-            "exif",
-            "png16",
-            "spng",
-            "gif",
-            "cgif",
-            "jpeg",
-            "turbojpeg",
-            "sharpyuv",
-            "webp",
-            "webpmux",
-            "webpdemux",
-            "imagequant",
-            "lcms2",
-            "zstd",
-            "tiff",
-            "fftw3",
-            "orc-0.4",
-            "vips"
-    };
-
-    private static final String[] MACOS_LIBRARIES = {
-        "imagequant.0",
-        "cgif.0",
-        "exif.12",
-        "jpeg.8.2.2",
-        "png16.16",
-        "spng",
-        "sharpyuv.0",
-        "webp.7",
-        "webpmux.3",
-        "webpdemux.2",
-        "zstd.1.5.5",
-        "tiff.6",
-        "lcms2.2",
-        "aom.3.6.0",
-        "heif.1.16.1",
-        "intl.8",
-        "pcre2-8.0.11.2",
-        "glib-2.0.0",
-        "ffi.8",
-        "gobject-2.0.0",
-        "gmodule-2.0.0",
-        "gio-2.0.0",
-        "fftw3.3",
-        "orc-0.4.0",
-        "vips.42"
-    };
-
     /**
      * Actually, loading embedded libraries doesn't work on Windows 64.
      * An UnsatisfiedLinkError exception is thrown with embedded dll:
@@ -95,10 +44,6 @@ public class Vips {
 
     static {
         try {
-            if (tryLoadLibrariesFromJar())
-                LOGGER.debug("JVips dependencies have been loaded from jar");
-            else
-                LOGGER.debug("Using JVips dependencies installed on system");
             LOGGER.debug("Trying to load JVips");
             loadLibraryFromJar("JVips");
             init();
@@ -125,21 +70,6 @@ public class Vips {
      */
     public static boolean isAvailable() {
         return available;
-    }
-
-    private static boolean tryLoadLibrariesFromJar() throws IOException {
-        String[] libraries = isMacOS() ? MACOS_LIBRARIES : isWindows() ? WINDOWS_LIBRARIES : LINUX_LIBRARIES;
-        try {
-            boolean loadedSome = false;
-            for (String library : libraries) {
-                if (loadLibraryFromJar(library)) {
-                    loadedSome = true;
-                }
-            }
-            return loadedSome;
-        } catch (RuntimeException e) {
-            return false;
-        }
     }
 
     private static boolean isWindows() {

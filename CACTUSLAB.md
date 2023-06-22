@@ -1,12 +1,26 @@
 # Cactuslab build instructions
 
-Install 
-The Linux and first macOS parts of the build should be done on an Intel machine:
+First we build for Linux on x86:
 
 ```shell
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
-docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
-docker run --rm -v $(pwd):/app -it jvips-builder-linux
+
+docker pull --platform linux/amd64 ubuntu:20.04
+docker build --platform linux/amd64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
+docker run --platform linux/amd64 --rm -v $(pwd):/app -it jvips-builder-linux
+```
+
+Then we build for Linux on ARM:
+
+```shell
+docker pull --platform linux/arm64 ubuntu:20.04
+docker build --platform linux/arm64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
+docker run --platform linux/arm64 --rm -v $(pwd):/app -it jvips-builder-linux
+```
+
+Then we build for macOS on an Intel machine, and then again on an Apple Silicon:
+
+```shell
 ./build.sh --with-macos --without-linux
 ```
 

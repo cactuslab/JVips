@@ -1,7 +1,7 @@
 file(GLOB SOURCES Vips.c VipsContext.c VipsException.c VipsImage.c AbstractVipsImage.c Max1Result.c)
 
 add_library(JVips SHARED ${SOURCES})
-add_dependencies(JVips Vips_header glib-2.0)
+add_dependencies(JVips Vips_header)
 
 target_link_libraries(JVips ${VIPS_LIBRARIES} "-lgobject-2.0" "-lvips" "-lglib-2.0")
 

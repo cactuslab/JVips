@@ -1,6 +1,6 @@
 add_library(JVipsTest SHARED VipsEnumTest.c ${PROJECT_SOURCE_DIR}/src/main/c/VipsException.c)
 
-add_dependencies(JVipsTest JVips VipsEnumTest_header glib-2.0)
+add_dependencies(JVipsTest JVips VipsEnumTest_header)
 
 target_link_libraries(JVipsTest ${VIPS_LIBRARIES} "-lvips" "-lglib-2.0")
 target_include_directories(JVipsTest PUBLIC ${PROJECT_SOURCE_DIR}/src/main/c)
