@@ -106,6 +106,12 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <argLine>-Djava.library.path=./build/linux/inst/lib/</argLine>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>com.criteo.vips.PrintOutCurrentTestRunListener</value>
+                                </property>
+                            </properties>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -281,6 +287,12 @@
                             <includes>
                                 <include>**/*Test.java</include>
                             </includes>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>com.criteo.vips.PrintOutCurrentTestRunListener</value>
+                                </property>
+                            </properties>
                         </configuration>
                     </execution>
                     <execution>
