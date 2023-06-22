@@ -45,7 +45,7 @@ void throwVipsException(JNIEnv *env, const char *msg)
     jthrowable throwable = (*env)->NewObject(env, cls, ctor, (*env)->NewStringUTF(env, msg), vipsErrorBufferMsg);
 
     if (throwable == NULL) {
-        throwRuntimeExceptionFallback(env, "Failed to instanciate VipsException object");
+        throwRuntimeExceptionFallback(env, "Failed to instantiate VipsException object");
         return;
     }
 
