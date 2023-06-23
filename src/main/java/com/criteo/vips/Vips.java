@@ -27,19 +27,6 @@ public class Vips {
     private static final Logger LOGGER = LoggerFactory.getLogger("com.criteo.vips.Vips");
     private static final String SYSTEM_NAME = System.getProperty("os.name").toLowerCase();
 
-    /**
-     * Actually, loading embedded libraries doesn't work on Windows 64.
-     * An UnsatisfiedLinkError exception is thrown with embedded dll:
-     * "Can't find dependent libraries"
-     * Thus, JVips.dll should use system libraries.
-     * We only provide libimagequant because it's out of windows binaries release.
-     * <p>
-     * TODO: add Windows 64 embedded libraries
-     */
-    private final static String[] WINDOWS_LIBRARIES = {
-            "libimagequant"
-    };
-
     private static boolean available;
 
     static {
