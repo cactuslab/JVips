@@ -68,13 +68,10 @@
                     <resource>
                         <directory>${project.basedir}/build/all/</directory>
                         <includes>
-                            <include>*</include>
+                            <include>*/libJVips.so</include>
+                            <include>*/JVips.dll</include>
+                            <include>*/libJVips.dylib</include>
                         </includes>
-                        <excludes>
-                            <exclude>libJVipsTest.so</exclude>
-                            <exclude>JVipsTest.dll</exclude>
-                            <exclude>libJVipsTest.dylib</exclude>
-                        </excludes>
                     </resource>
                 </resources>
 
@@ -82,7 +79,9 @@
                     <testResource>
                         <directory>${project.basedir}/build/all/</directory>
                         <includes>
-                            <include>*</include>
+                            <include>*/libJVipsTest.so</include>
+                            <include>*/JVipsTest.dll</include>
+                            <include>*/libJVipsTest.dylib</include>
                         </includes>
                     </testResource>
 
@@ -120,9 +119,9 @@
                     <resource>
                         <directory>${project.basedir}/build/all/</directory>
                         <includes>
-                            <include>libJVips.so</include>
-                            <include>JVips.dll</include>
-                            <include>libJVips.dylib</include>
+                            <include>*/libJVips.so</include>
+                            <include>*/JVips.dll</include>
+                            <include>*/libJVips.dylib</include>
                         </includes>
                     </resource>
                 </resources>
@@ -131,9 +130,9 @@
                     <testResource>
                         <directory>${project.basedir}/build/all/</directory>
                         <includes>
-                            <include>libJVipsTest.so</include>
-                            <include>JVipsTest.dll</include>
-                            <include>libJVipsTest.dylib</include>
+                            <include>*/libJVipsTest.so</include>
+                            <include>*/JVipsTest.dll</include>
+                            <include>*/libJVipsTest.dylib</include>
                         </includes>
                     </testResource>
                 </testResources>
@@ -157,8 +156,9 @@
                                 </goals>
                                 <configuration>
                                     <excludes>
-                                        <exclude>*.so</exclude>
-                                        <exclude>*.dylib</exclude>
+                                        <exclude>*/*.so</exclude>
+                                        <exclude>*/*.dll</exclude>
+                                        <exclude>*/*.dylib</exclude>
                                     </excludes>
                                 </configuration>
                             </execution>
@@ -208,13 +208,10 @@
                     <resource>
                         <directory>${project.basedir}/build/all/</directory>
                         <includes>
-                            <include>*</include>
+                            <include>*/libJVips.so</include>
+                            <include>*/JVips.dll</include>
+                            <include>*/libJVips.dylib</include>
                         </includes>
-                        <excludes>
-                            <exclude>libJVipsTest.so</exclude>
-                            <exclude>JVipsTest.dll</exclude>
-                            <exclude>libJVipsTest.dylib</exclude>
-                        </excludes>
                     </resource>
                 </resources>
 
@@ -222,9 +219,9 @@
                     <testResource>
                         <directory>${project.basedir}/build/all/</directory>
                         <includes>
-                            <include>libJVipsTest.so</include>
-                            <include>JVipsTest.dll</include>
-                            <include>libJVipsTest.dylib</include>
+                            <include>*/libJVipsTest.so</include>
+                            <include>*/JVipsTest.dll</include>
+                            <include>*/libJVipsTest.dylib</include>
                         </includes>
                     </testResource>
 

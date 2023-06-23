@@ -89,7 +89,7 @@ public class Vips {
     private static boolean loadLibraryFromJar(String name) throws IOException {
         String libName = System.mapLibraryName(name);
         File temp;
-        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(libName)) {
+        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(System.getProperty("os.arch") + "/" + libName)) {
             if (in == null) {
                 LOGGER.debug("Could not load lib '{}' via classloader", libName);
                 return false;

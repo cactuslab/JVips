@@ -23,7 +23,7 @@ public class VipsEnumTest {
     static {
         ClassLoader classLoader = VipsEnumTest.class.getClassLoader();
         String libName = System.mapLibraryName("JVipsTest");
-        String path = classLoader.getResource(libName).getPath();
+        String path = classLoader.getResource(System.getProperty("os.arch") + "/" + libName).getPath();
 
         System.load(path);
     }

@@ -70,10 +70,12 @@ if [ ${BUILD_LINUX} -gt 0 ]; then
     export CXX=g++
     export CPP=cpp
     export RANLIB=ranlib
-    if [[ $(uname -m) =~ ^arm ]]; then
+    if [[ $(uname -m) =~ ^aarch64 ]]; then
         export HOST="--host=aarch64-pc-linux"
+        ARCH=aarch64
     else
         export HOST="--host=x86_64-pc-linux"
+        ARCH=amd64
     fi
     export TARGET=linux
     export PREFIX="${BUILDDIR}/${TARGET}"/inst/
@@ -96,8 +98,9 @@ if [ ${BUILD_LINUX} -gt 0 ]; then
         LIBS+=" JVips/src/test/c/libJVipsTest.so"
     fi
 
+    mkdir -p "${BUILDDIR}"/all/"${ARCH}"
     for LIB in $LIBS; do
-        cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/
+        cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/"${ARCH}"
     done
 fi
 
@@ -136,8 +139,9 @@ if [ ${BUILD_WIN64} -gt 0 ]; then
         LIBS+=" JVips/src/test/c/JVipsTest.dll"
     fi
 
+    mkdir -p "${BUILDDIR}"/all/x86_64
     for LIB in $LIBS; do
-        cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/
+        cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/x86_64
     done
 fi
 
@@ -167,8 +171,15 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
         LIBS+=" JVips/src/test/c/libJVipsTest.dylib"
     fi
 
+    if [ $(arch) == "arm64" ]; then
+        ARCH=aarch64
+    else
+        ARCH=x86_64
+    fi
+
+    mkdir -p "${BUILDDIR}"/all/$ARCH
     for LIB in $LIBS; do
-        cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/
+        cp "${BUILDDIR}/${TARGET}/${LIB}" "${BUILDDIR}"/all/$ARCH
     done
 fi
 
