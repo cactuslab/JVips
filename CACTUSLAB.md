@@ -10,13 +10,19 @@ docker build --platform linux/amd64 --build-arg UID=$(id -u) --build-arg GID=$(i
 docker run --platform linux/amd64 --rm -v $(pwd):/app -it jvips-builder-linux
 ```
 
+Note that the AVIF tests fail as libheif on Ubuntu 20 doesn't support that codec. As long as it's
+just those tests failing we can move on.
+
 Then we build for Linux on ARM:
 
 ```shell
 docker pull --platform linux/arm64 ubuntu:20.04
-docker build --platform linux/arm64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
-docker run --platform linux/arm64 --rm -v $(pwd):/app -it jvips-builder-linux
+docker build --platform linux/arm64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux-arm .
+docker run --platform linux/arm64 --rm -v $(pwd):/app -it jvips-builder-linux-arm
 ```
+
+Note that Java on Linux on ARM in Docker doesn't work well and will fail.
+See https://github.com/moby/buildkit/issues/2612
 
 Then we build for macOS on an Intel machine, and then again on an Apple Silicon:
 
