@@ -23,6 +23,7 @@
 JNIEXPORT void JNICALL
 Java_com_criteo_vips_Vips_init(__attribute__((unused)) JNIEnv *env, __attribute__((unused)) jobject obj)
 {
-  if (VIPS_INIT("java") != 0)
+  if (VIPS_INIT("java") != 0) {
     throwVipsException(env, "Unable to init vips");
+  }
 }
