@@ -30,26 +30,12 @@ Then we build for macOS on an Intel machine, and then again on an Apple Silicon:
 ./build.sh --with-macos --without-linux
 ```
 
-For macOS we also build on an Apple Silicon machine and then copy the `JVips.jar` to the Intel machine.
-
-On the Intel machine:
-
-```shell
-# In this folder
-mkdir applesilicon
-cd applesilicon
-# Extract the jar from the other machine
-jar xf ~/Desktop/JVips.jar
-mkdir universal
-for i in *.dylib; do lipo ../build/all/$i $i -create -output universal/$i ; done
-cp -f universal/* ../build/all
-cd ..
-```
+Now combine the `build/all` folder from the two macOS machines with the ones from the Linux builds.
 
 The output files are `pom.xml` and `JVips.jar`.
 
 ```shell
-source lib/VERSIONS
+VIPS_VERSION=...
 suffix=CACTUSLAB
 version=${VIPS_VERSION}-$suffix
 mvn -DnewVersion=$version versions:set
