@@ -1,7 +1,4 @@
-#!/bin/bash
-
-set -e
-set -x
+#!/bin/bash -eux
 
 BASEDIR="$(pwd)"
 
@@ -15,9 +12,10 @@ BUILD_TYPE=Release
 RUN_TEST=1
 RUN_BENCHMARK=0
 MAVEN_ARGS="--batch-mode"
+VIPS_VERSION=8.14.2
 
 while true; do
-  case "$1" in
+  case "${1:-}" in
     --with-w64 ) BUILD_WIN64=1; shift;;
     --with-linux ) BUILD_LINUX=1; shift;;
     --with-macos ) BUILD_MACOS=1; shift;;
@@ -50,7 +48,7 @@ export BUILDDIR="${BASEDIR}/build"
 CMAKE_BIN=$(which cmake3 || which cmake)
 
 # Clear the build dir before anything else in the CI
-if [ "${CI}" = "true" ]; then
+if [ "${CI:-}" = "true" ]; then
     rm -rf "${BUILDDIR}"
 fi
 
@@ -195,10 +193,10 @@ if [ ${DIST} -gt 0 ]; then
     fi
 fi
 
-if [ -n "${CI}" ]; then
+if [ -n "${CI:-}" ]; then
     tar czvf "JVips-libs.tar.gz" -C "${BUILDDIR}"/all/ .
 fi
 
-if [ "${CI}" = "true" ]; then
+if [ "${CI:-}" = "true" ]; then
     tar -czvf JVips-libs.tar.gz build/all/*
 fi
