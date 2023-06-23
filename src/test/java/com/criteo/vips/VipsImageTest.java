@@ -76,6 +76,14 @@ public class VipsImageTest {
             0x00, 0x00, 0x00, 0x18,
             'f', 't', 'y', 'p', 'a', 'v', 'i', 'f' 
         }); }});
+        SignaturesByExtension.put(".heic", new ArrayList() {{ add(new Byte[]{(byte)
+            0x00, 0x00, 0x00, 0x1c,
+            'f', 't', 'y', 'p', 'h', 'e', 'i', 'c' 
+        });
+        add(new Byte[]{(byte)
+            0x00, 0x00, 0x00, 0x18,
+            'f', 't', 'y', 'p', 'h', 'e', 'i', 'c' 
+        }); }});
         // TIFF file begins with "II" for little-endian or "MM" for big-endian
         SignaturesByExtension.put(".tiff", new ArrayList() {{
             add(new Byte[]{'I', 'I'});
@@ -766,6 +774,35 @@ public class VipsImageTest {
         int speed = 4;
         try (VipsImage img = new VipsImage(buffer, buffer.length)) {
             byte[] out = img.writeAVIFToArray(Q, false, speed);
+            Assert.assertTrue(buffer.length > out.length);
+        }
+    }
+
+    @Theory
+    public void TestWriteHEICFromByteArrayShouldNotThrows(@FromDataPoints("filenames") String filename,
+                                                         boolean lossless)
+            throws IOException, VipsException {
+        byte[] buffer = VipsTestUtils.getByteArray(filename);
+        // Q 30 gives about the same quality as JPEG Q 75.
+        int Q = 30;
+        // Speed is comprised between 0 and 8.
+        int speed = 4;
+        try (VipsImage img = new VipsImage(buffer, buffer.length)) {
+            byte[] out = img.writeHEICToArray(Q, lossless, speed);
+            assertNotNull(out);
+        }
+    }
+
+    @Test
+    public void TestWriteHEICFromByteArrayShouldShrinkOutputSize()
+            throws IOException, VipsException {
+        byte[] buffer = VipsTestUtils.getByteArray("logo_with_transparent_padding_50x50.png");
+        // Q 30 gives about the same quality as JPEG Q 75.
+        int Q = 30;
+        // Speed is comprised between 0 and 8.
+        int speed = 4;
+        try (VipsImage img = new VipsImage(buffer, buffer.length)) {
+            byte[] out = img.writeHEICToArray(Q, false, speed);
             Assert.assertTrue(buffer.length > out.length);
         }
     }

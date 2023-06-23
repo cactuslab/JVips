@@ -21,6 +21,7 @@ public enum VipsImageFormat {
     PNG(".png"),
     WEBP(".webp"),
     GIF(".gif"),
+    HEIC(".heic"),
     AVIF(".avif"),
     TIFF(".tiff");
 

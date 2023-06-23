@@ -244,6 +244,10 @@ public class VipsImage extends AbstractVipsImage implements Image {
         return heifSaveBuffer(new HEIFSaveBufferOptions().q(Q).lossless(lossless).compression(VipsForeignHeifCompression.Av1).effort(speed));
     }
 
+    public byte[] writeHEICToArray(int Q, boolean lossless, int speed) throws VipsException {
+        return heifSaveBuffer(new HEIFSaveBufferOptions().q(Q).lossless(lossless).compression(VipsForeignHeifCompression.Hevc).effort(speed));
+    }
+
     public byte[] writeWEBPToArray(int Q, boolean lossless, boolean strip) throws VipsException {
         return webpSaveBuffer(new WebpSaveBufferOptions().q(Q).lossless(lossless).strip(strip));
     }
