@@ -46,8 +46,7 @@ public class Vips {
             LOGGER.warn("Failed to init JVips", e);
         } catch (UnsatisfiedLinkError e) {
             available = false;
-            /* We should be able to load the JVips native libraries, as they are always bundled in the jar */
-            LOGGER.warn("JVips native libraries are not available", e);
+            LOGGER.debug("JVips native libraries are not available", e);
         }
     }
 
