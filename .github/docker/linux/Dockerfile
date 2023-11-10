@@ -26,9 +26,9 @@ RUN apt-get update && \
     git
 
 RUN cd /opt && \
-    curl -OL https://dlcdn.apache.org/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.tar.gz && \
-    tar -zxf apache-maven-3.9.2-bin.tar.gz
-ENV PATH="/opt/apache-maven-3.9.2/bin:${PATH}"
+    curl -OL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz && \
+    tar -zxf apache-maven-3.9.5-bin.tar.gz
+ENV PATH="/opt/apache-maven-3.9.5/bin:${PATH}"
 
 RUN ln -s /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk
 ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
