@@ -74,7 +74,6 @@ Now combine the `build/all` folder from the two macOS machines with the ones fro
 The output files are `pom.xml` and `JVips.jar`.
 
 ```shell
-VIPS_VERSION=...
 suffix=CACTUSLAB
 version=${VIPS_VERSION}-$suffix
 mvn -DnewVersion=$version versions:set
