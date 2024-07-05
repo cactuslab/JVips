@@ -12,7 +12,7 @@ BUILD_TYPE=Release
 RUN_TEST=1
 RUN_BENCHMARK=0
 MAVEN_ARGS="--batch-mode"
-VIPS_VERSION=8.14.5
+VIPS_VERSION=8.15.2
 
 while true; do
   case "${1:-}" in
