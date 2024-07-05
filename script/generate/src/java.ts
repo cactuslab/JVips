@@ -16,10 +16,6 @@ const RESERVED_WORDS = [
 ]
 
 function javaTypeForType(p: VipsOperationParameter, purpose: 'return' | 'param', required: boolean = true): string {
-	if (isEnum(p)) {
-		return `com.criteo.vips.enums.${p.type}`
-	}
-
 	switch (p.type) {
 		case 'gboolean': return required ? 'boolean' : 'Boolean'
 		case 'gint': return required ? 'int' : 'Integer'
@@ -32,6 +28,10 @@ function javaTypeForType(p: VipsOperationParameter, purpose: 'return' | 'param',
 		case 'VipsArrayImage': return purpose === 'return' ? 'VipsImage[]' : 'com.criteo.vips.Image[]'
 		case 'VipsBlob': return 'byte[]'
 		case 'Rectangle': return 'Rectangle'
+	}
+
+	if (isEnum(p)) {
+		return `com.criteo.vips.enums.${p.type}`
 	}
 	throw new Error(`Unsupported Java parameter type '${p.type} for parameter '${p.name}'`)
 }

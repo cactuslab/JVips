@@ -1,14 +1,14 @@
 import { exec, spawn, SpawnOptionsWithoutStdio } from 'child_process'
-import fs from 'fs/promises'
+import fs from 'node:fs/promises'
 import util from 'util'
-import path from 'path'
+import path from 'node:path'
 import { VipsEnum, VipsEnumMember } from "./type"
 import { pascalCase } from './utils'
 
 export async function inspectEnums(): Promise<VipsEnum[]> {
 	const result: VipsEnum[] = []
 
-	const includePath = '/usr/local/include/vips'
+	const includePath = await findIncludePath()
 	const files = await fs.readdir(includePath)
 	for (const file of files) {
 		if ('almostdeprecated.h' === file) {
@@ -22,7 +22,7 @@ export async function inspectEnums(): Promise<VipsEnum[]> {
 		let members: VipsEnumMember[] = []
 		let nextEnumValue = 0
 		let inEnum = false
-		for (const line of lines) {
+		for (let line of lines) {
 			if (!inEnum) {
 				if (line.startsWith('typedef enum')) {
 					inEnum = true
@@ -51,23 +51,39 @@ export async function inspectEnums(): Promise<VipsEnum[]> {
 
 					// console.log(members)
 				} else {
+					/* Remove comments from the enum value line */
 					let docs = line.match(/\/\*.*\*\//)
 					let comment: string | undefined
 					if (docs) {
 						comment = docs[0].substring(2, docs[0].length - 2).trim()
 					}
+
+					/* Convert bit shifts */
+					const matchShifts = line.match(/(.*) 1 << (\d+)(.*)/)
+					if (matchShifts) {
+						const shiftedValue = 1 << parseInt(matchShifts[2])
+						line = matchShifts[1] + ' ' + shiftedValue + matchShifts[3]
+					}
+
+					/* Split the line into either "name" or "name" "=" "value" */
 					let working = line.replace(/\/\*.*\*\//g, '').trim().replace(/,$/, '').split(' ')
 					if (working.length === 1) {
-						members.push({ name: working[0], nativeName: working[0], value: nextEnumValue++, comment })
+						if (!working[0]) {
+							/* Skip empty line */
+						} else if (working[0].match(/^[a-zA-Z_0-9]+$/)) {
+							members.push({ name: working[0], nativeName: working[0], value: nextEnumValue++, comment })
+						} else {
+							console.warn(`Invalid enum line in ${file}:`, line.trim())
+						}
 					} else if (working.length === 3) {
 						if (working[1] !== '=') {
-							console.warn('Invalid enum line:', line.trim())
+							console.warn(`Invalid enum line in ${file}:`, line.trim())
 						} else {
 							nextEnumValue = Number(working[2])
 							members.push({ name: working[0], nativeName: working[0], value: nextEnumValue++, comment })
 						}
 					} else {
-						console.warn('Invalid enum line:', line.trim())
+						console.warn(`Invalid enum line in ${file}:`, line.trim())
 					}
 				}
 			}
@@ -77,6 +93,21 @@ export async function inspectEnums(): Promise<VipsEnum[]> {
 	return result
 }
 
+async function findIncludePath(): Promise<string> {
+	try {
+		await fs.stat('/usr/local/include/vips')
+		return '/usr/local/include/vips'
+	} catch {
+		
+	}
+	try {
+		await fs.stat('/opt/homebrew/include/vips')
+		return '/opt/homebrew/include/vips'
+	} catch {
+
+	}
+	throw new Error('Cannot find vips include directory, is vips installed using Homebrew?')
+}
 function tidyVipsEnum(e: VipsEnum): void {
 	let best: string[] | undefined
 

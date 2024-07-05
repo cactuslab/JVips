@@ -5,10 +5,6 @@ import { VipsOperation, VipsOperationInfo, VipsOperationOptions, VipsOperationPa
 import { indent, isEnum, camelCase } from "./utils"
 
 function jniTypeForParameter(p: VipsOperationParameter): string {
-	if (isEnum(p)) {
-		return 'jobject'
-	}
-
 	switch (p.type) {
 		case 'gboolean': return 'jboolean'
 		case 'gint': return 'jint'
@@ -22,14 +18,14 @@ function jniTypeForParameter(p: VipsOperationParameter): string {
 		case 'VipsBlob': return 'jbyteArray'
 		case 'Rectangle': return 'jobject' /* A special handling for find_trim, which returns a Rectangle */
 	}
+
+	if (isEnum(p)) {
+		return 'jobject'
+	}
 	throw new Error(`Unsupported JNI parameter type '${p.type}' for parameter '${p.name}'`)
 }
 
 function wrappedJniTypeCodeForParameter(p: VipsOperationParameter): string {
-	if (isEnum(p)) {
-		return `Lcom/criteo/vips/enums/${p.type};`
-	}
-
 	switch (p.type) {
 		case 'gboolean': return 'Ljava/lang/Boolean;'
 		case 'gint': return 'Ljava/lang/Integer;'
@@ -40,6 +36,10 @@ function wrappedJniTypeCodeForParameter(p: VipsOperationParameter): string {
 		case 'VipsArrayInt': return '[I'
 		case 'VipsArrayDouble': return '[D'
 		case 'VipsArrayImage': return '[Lcom/criteo/vips/Image;'
+	}
+
+	if (isEnum(p)) {
+		return `Lcom/criteo/vips/enums/${p.type};`
 	}
 	throw new Error(`Unsupported JNI wrapping parameter type '${p.type}' for parameter '${p.name}'`)
 }
@@ -64,16 +64,6 @@ ${indent(applyParameterInternal(), '\t')}
 	}
 
 	function applyParameterInternal() {
-		if (isEnum(p)) {
-			return `jclass ${camelCase(p.name)}Cls = (*env)->GetObjectClass(env, ${camelCase(p.name)});
-jfieldID ${camelCase(p.name)}ValueFid = (*env)->GetFieldID(env, ${camelCase(p.name)}Cls, "value", "I");
-jint ${camelCase(p.name)}Value = (*env)->GetIntField(env, ${camelCase(p.name)}, ${camelCase(p.name)}ValueFid);
-g_value_init(&gvalue, G_TYPE_INT);
-g_value_set_int(&gvalue, ${camelCase(p.name)}Value);
-g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
-g_value_unset(&gvalue);`
-		}
-
 		/*
 		Reference VImage.cpp for G_TYPEs etc
 		*/
@@ -157,9 +147,19 @@ vips_value_set_blob_free(&gvalue, ${camelCase(p.name)}Data, ${camelCase(p.name)}
 g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);
 `
-			default:
-				throw new Error(`Unsupported JNI input parameter type '${p.type}' for parameter '${p.name}'`)
 		}
+
+		if (isEnum(p)) {
+			return `jclass ${camelCase(p.name)}Cls = (*env)->GetObjectClass(env, ${camelCase(p.name)});
+jfieldID ${camelCase(p.name)}ValueFid = (*env)->GetFieldID(env, ${camelCase(p.name)}Cls, "value", "I");
+jint ${camelCase(p.name)}Value = (*env)->GetIntField(env, ${camelCase(p.name)}, ${camelCase(p.name)}ValueFid);
+g_value_init(&gvalue, G_TYPE_INT);
+g_value_set_int(&gvalue, ${camelCase(p.name)}Value);
+g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
+g_value_unset(&gvalue);`
+		}
+
+		throw new Error(`Unsupported JNI input parameter type '${p.type}' for parameter '${p.name}'`)
 	}
 }
 

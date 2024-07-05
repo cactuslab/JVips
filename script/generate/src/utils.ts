@@ -6,7 +6,12 @@ import { VipsOperationParameter } from "./type";
  * @returns whether the parameter is an enum type
  */
 export function isEnum(p: VipsOperationParameter): boolean {
-	if (!!p.properties['allowed'] && !!p.properties['default']) {
+	/* Enums contain the "allowed enums" and "default enum" properties */
+	if (!!p.properties['allowed enums'] && !!p.properties['default enum']) {
+		return true
+	}
+	/* Enums sometimes contain the "allowed flags" and "default flags" properties, see VipsForeignKeep */
+	if (!!p.properties['allowed flags'] && !!p.properties['default flags']) {
 		return true
 	}
 
