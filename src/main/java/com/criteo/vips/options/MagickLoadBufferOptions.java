@@ -27,6 +27,7 @@ public class MagickLoadBufferOptions {
 	private Boolean memory;
 	private com.criteo.vips.enums.VipsAccess access;
 	private com.criteo.vips.enums.VipsFailOn failOn;
+	private Boolean revalidate;
 
 	/**
 	 * Optional argument: density
@@ -217,6 +218,38 @@ public class MagickLoadBufferOptions {
 	 */
 	public MagickLoadBufferOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
+		return this;
+	}
+
+	/**
+	 * Optional argument: revalidate
+	 * <p>
+	 * Don't use a cached result for this operation
+	 * @return the value of {@code revalidate}
+	 */
+	public Boolean getRevalidate() {
+		return this.revalidate;
+	}
+
+	/**
+	 * Set the optional "revalidate" argument.
+	 * <p>
+	 * Don't use a cached result for this operation
+	 * @param revalidate the new value of {@code revalidate}
+	 */
+	public void setRevalidate(Boolean revalidate) {
+		this.revalidate = revalidate;
+	}
+
+	/**
+	 * Set the optional "revalidate" argument.
+	 * <p>
+	 * Don't use a cached result for this operation
+	 * @param revalidate the new value of {@code revalidate}
+	 * @return this object for chaining
+	 */
+	public MagickLoadBufferOptions revalidate(Boolean revalidate) {
+		setRevalidate(revalidate);
 		return this;
 	}
 

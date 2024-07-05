@@ -21,7 +21,7 @@ package com.criteo.vips.options;
  */
 public class DZSaveOptions {
 
-	private String basename;
+	private String imagename;
 	private com.criteo.vips.enums.VipsForeignDzLayout layout;
 	private String suffix;
 	private Integer overlap;
@@ -33,42 +33,43 @@ public class DZSaveOptions {
 	private Integer compression;
 	private com.criteo.vips.enums.VipsRegionShrink regionShrink;
 	private Integer skipBlanks;
-	private Boolean noStrip;
 	private String id;
-	private Boolean strip;
+	private Integer q;
+	private com.criteo.vips.enums.VipsForeignKeep keep;
 	private double[] background;
 	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
+	private String profile;
 
 	/**
-	 * Optional argument: basename
+	 * Optional argument: imagename
 	 * <p>
-	 * Base name to save to
-	 * @return the value of {@code basename}
+	 * Image name
+	 * @return the value of {@code imagename}
 	 */
-	public String getBasename() {
-		return this.basename;
+	public String getImagename() {
+		return this.imagename;
 	}
 
 	/**
-	 * Set the optional "basename" argument.
+	 * Set the optional "imagename" argument.
 	 * <p>
-	 * Base name to save to
-	 * @param basename the new value of {@code basename}
+	 * Image name
+	 * @param imagename the new value of {@code imagename}
 	 */
-	public void setBasename(String basename) {
-		this.basename = basename;
+	public void setImagename(String imagename) {
+		this.imagename = imagename;
 	}
 
 	/**
-	 * Set the optional "basename" argument.
+	 * Set the optional "imagename" argument.
 	 * <p>
-	 * Base name to save to
-	 * @param basename the new value of {@code basename}
+	 * Image name
+	 * @param imagename the new value of {@code imagename}
 	 * @return this object for chaining
 	 */
-	public DZSaveOptions basename(String basename) {
-		setBasename(basename);
+	public DZSaveOptions imagename(String imagename) {
+		setImagename(imagename);
 		return this;
 	}
 
@@ -425,38 +426,6 @@ public class DZSaveOptions {
 	}
 
 	/**
-	 * Optional argument: no-strip
-	 * <p>
-	 * Don't strip tile metadata
-	 * @return the value of {@code noStrip}
-	 */
-	public Boolean getNoStrip() {
-		return this.noStrip;
-	}
-
-	/**
-	 * Set the optional "no-strip" argument.
-	 * <p>
-	 * Don't strip tile metadata
-	 * @param noStrip the new value of {@code noStrip}
-	 */
-	public void setNoStrip(Boolean noStrip) {
-		this.noStrip = noStrip;
-	}
-
-	/**
-	 * Set the optional "no-strip" argument.
-	 * <p>
-	 * Don't strip tile metadata
-	 * @param noStrip the new value of {@code noStrip}
-	 * @return this object for chaining
-	 */
-	public DZSaveOptions noStrip(Boolean noStrip) {
-		setNoStrip(noStrip);
-		return this;
-	}
-
-	/**
 	 * Optional argument: id
 	 * <p>
 	 * Resource ID
@@ -489,34 +458,66 @@ public class DZSaveOptions {
 	}
 
 	/**
-	 * Optional argument: strip
+	 * Optional argument: Q
 	 * <p>
-	 * Strip all metadata from image
-	 * @return the value of {@code strip}
+	 * Q factor
+	 * @return the value of {@code q}
 	 */
-	public Boolean getStrip() {
-		return this.strip;
+	public Integer getQ() {
+		return this.q;
 	}
 
 	/**
-	 * Set the optional "strip" argument.
+	 * Set the optional "Q" argument.
 	 * <p>
-	 * Strip all metadata from image
-	 * @param strip the new value of {@code strip}
+	 * Q factor
+	 * @param q the new value of {@code q}
 	 */
-	public void setStrip(Boolean strip) {
-		this.strip = strip;
+	public void setQ(Integer q) {
+		this.q = q;
 	}
 
 	/**
-	 * Set the optional "strip" argument.
+	 * Set the optional "Q" argument.
 	 * <p>
-	 * Strip all metadata from image
-	 * @param strip the new value of {@code strip}
+	 * Q factor
+	 * @param q the new value of {@code q}
 	 * @return this object for chaining
 	 */
-	public DZSaveOptions strip(Boolean strip) {
-		setStrip(strip);
+	public DZSaveOptions q(Integer q) {
+		setQ(q);
+		return this;
+	}
+
+	/**
+	 * Optional argument: keep
+	 * <p>
+	 * Which metadata to retain
+	 * @return the value of {@code keep}
+	 */
+	public com.criteo.vips.enums.VipsForeignKeep getKeep() {
+		return this.keep;
+	}
+
+	/**
+	 * Set the optional "keep" argument.
+	 * <p>
+	 * Which metadata to retain
+	 * @param keep the new value of {@code keep}
+	 */
+	public void setKeep(com.criteo.vips.enums.VipsForeignKeep keep) {
+		this.keep = keep;
+	}
+
+	/**
+	 * Set the optional "keep" argument.
+	 * <p>
+	 * Which metadata to retain
+	 * @param keep the new value of {@code keep}
+	 * @return this object for chaining
+	 */
+	public DZSaveOptions keep(com.criteo.vips.enums.VipsForeignKeep keep) {
+		setKeep(keep);
 		return this;
 	}
 
@@ -644,6 +645,38 @@ public class DZSaveOptions {
 	 */
 	public DZSaveOptions pageHeight(Integer pageHeight) {
 		setPageHeight(pageHeight);
+		return this;
+	}
+
+	/**
+	 * Optional argument: profile
+	 * <p>
+	 * Filename of ICC profile to embed
+	 * @return the value of {@code profile}
+	 */
+	public String getProfile() {
+		return this.profile;
+	}
+
+	/**
+	 * Set the optional "profile" argument.
+	 * <p>
+	 * Filename of ICC profile to embed
+	 * @param profile the new value of {@code profile}
+	 */
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	/**
+	 * Set the optional "profile" argument.
+	 * <p>
+	 * Filename of ICC profile to embed
+	 * @param profile the new value of {@code profile}
+	 * @return this object for chaining
+	 */
+	public DZSaveOptions profile(String profile) {
+		setProfile(profile);
 		return this;
 	}
 

@@ -30,6 +30,7 @@ public enum VipsArgumentFlags {
 	Output(32),
 	Deprecated(64),
 	Modify(128),
+	NonHashable(256),
 	;
 
 	private int value;

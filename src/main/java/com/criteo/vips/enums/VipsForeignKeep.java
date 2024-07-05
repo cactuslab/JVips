@@ -19,32 +19,30 @@ package com.criteo.vips.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum VipsOperationFlags {
+public enum VipsForeignKeep {
 
 	None(0),
-	Sequential(1),
-	SequentialUnbuffered(2),
-	Nocache(4),
-	Deprecated(8),
-	Untrusted(16),
-	Blocked(32),
-	Revalidate(64),
+	Exif(1),
+	Xmp(2),
+	Iptc(4),
+	Icc(8),
+	Other(16),
 	;
 
 	private int value;
-	private static Map<Integer, VipsOperationFlags> map = new HashMap<>();
+	private static Map<Integer, VipsForeignKeep> map = new HashMap<>();
 
-	private VipsOperationFlags(int i) {
+	private VipsForeignKeep(int i) {
 		value = i;
 	}
 
 	static {
-		for (VipsOperationFlags e : VipsOperationFlags.values()) {
+		for (VipsForeignKeep e : VipsForeignKeep.values()) {
 			map.put(e.value, e);
 		}
 	}
 
-	public static VipsOperationFlags valueOf(int i) {
+	public static VipsForeignKeep valueOf(int i) {
 		return map.get(i);
 	}
 

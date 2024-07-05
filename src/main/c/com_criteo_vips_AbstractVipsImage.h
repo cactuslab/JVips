@@ -2305,6 +2305,22 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_premultiply
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    applyPrewitt
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyPrewitt
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    prewitt
+ * Signature: ()Lcom/criteo/vips/VipsImage;
+ */
+JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_prewitt
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    profileLoad
  * Signature: (Ljava/lang/String;)[B
  */
@@ -2622,6 +2638,22 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyScale
  */
 JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_scale
   (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    applyScharr
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyScharr
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    scharr
+ * Signature: ()Lcom/criteo/vips/VipsImage;
+ */
+JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_scharr
+  (JNIEnv *, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage

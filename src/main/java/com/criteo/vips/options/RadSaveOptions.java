@@ -21,40 +21,41 @@ package com.criteo.vips.options;
  */
 public class RadSaveOptions {
 
-	private Boolean strip;
+	private com.criteo.vips.enums.VipsForeignKeep keep;
 	private double[] background;
 	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
+	private String profile;
 
 	/**
-	 * Optional argument: strip
+	 * Optional argument: keep
 	 * <p>
-	 * Strip all metadata from image
-	 * @return the value of {@code strip}
+	 * Which metadata to retain
+	 * @return the value of {@code keep}
 	 */
-	public Boolean getStrip() {
-		return this.strip;
+	public com.criteo.vips.enums.VipsForeignKeep getKeep() {
+		return this.keep;
 	}
 
 	/**
-	 * Set the optional "strip" argument.
+	 * Set the optional "keep" argument.
 	 * <p>
-	 * Strip all metadata from image
-	 * @param strip the new value of {@code strip}
+	 * Which metadata to retain
+	 * @param keep the new value of {@code keep}
 	 */
-	public void setStrip(Boolean strip) {
-		this.strip = strip;
+	public void setKeep(com.criteo.vips.enums.VipsForeignKeep keep) {
+		this.keep = keep;
 	}
 
 	/**
-	 * Set the optional "strip" argument.
+	 * Set the optional "keep" argument.
 	 * <p>
-	 * Strip all metadata from image
-	 * @param strip the new value of {@code strip}
+	 * Which metadata to retain
+	 * @param keep the new value of {@code keep}
 	 * @return this object for chaining
 	 */
-	public RadSaveOptions strip(Boolean strip) {
-		setStrip(strip);
+	public RadSaveOptions keep(com.criteo.vips.enums.VipsForeignKeep keep) {
+		setKeep(keep);
 		return this;
 	}
 
@@ -182,6 +183,38 @@ public class RadSaveOptions {
 	 */
 	public RadSaveOptions pageHeight(Integer pageHeight) {
 		setPageHeight(pageHeight);
+		return this;
+	}
+
+	/**
+	 * Optional argument: profile
+	 * <p>
+	 * Filename of ICC profile to embed
+	 * @return the value of {@code profile}
+	 */
+	public String getProfile() {
+		return this.profile;
+	}
+
+	/**
+	 * Set the optional "profile" argument.
+	 * <p>
+	 * Filename of ICC profile to embed
+	 * @param profile the new value of {@code profile}
+	 */
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	/**
+	 * Set the optional "profile" argument.
+	 * <p>
+	 * Filename of ICC profile to embed
+	 * @param profile the new value of {@code profile}
+	 * @return this object for chaining
+	 */
+	public RadSaveOptions profile(String profile) {
+		setProfile(profile);
 		return this;
 	}
 

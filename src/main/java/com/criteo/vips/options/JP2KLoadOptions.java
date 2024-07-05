@@ -25,6 +25,7 @@ public class JP2KLoadOptions {
 	private Boolean memory;
 	private com.criteo.vips.enums.VipsAccess access;
 	private com.criteo.vips.enums.VipsFailOn failOn;
+	private Boolean revalidate;
 
 	/**
 	 * Optional argument: page
@@ -151,6 +152,38 @@ public class JP2KLoadOptions {
 	 */
 	public JP2KLoadOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
+		return this;
+	}
+
+	/**
+	 * Optional argument: revalidate
+	 * <p>
+	 * Don't use a cached result for this operation
+	 * @return the value of {@code revalidate}
+	 */
+	public Boolean getRevalidate() {
+		return this.revalidate;
+	}
+
+	/**
+	 * Set the optional "revalidate" argument.
+	 * <p>
+	 * Don't use a cached result for this operation
+	 * @param revalidate the new value of {@code revalidate}
+	 */
+	public void setRevalidate(Boolean revalidate) {
+		this.revalidate = revalidate;
+	}
+
+	/**
+	 * Set the optional "revalidate" argument.
+	 * <p>
+	 * Don't use a cached result for this operation
+	 * @param revalidate the new value of {@code revalidate}
+	 * @return this object for chaining
+	 */
+	public JP2KLoadOptions revalidate(Boolean revalidate) {
+		setRevalidate(revalidate);
 		return this;
 	}
 

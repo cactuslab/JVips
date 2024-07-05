@@ -22,6 +22,7 @@ package com.criteo.vips.options;
 public class SmartcropOptions {
 
 	private com.criteo.vips.enums.VipsInteresting interesting;
+	private Boolean premultiplied;
 
 	/**
 	 * Optional argument: interesting
@@ -52,6 +53,38 @@ public class SmartcropOptions {
 	 */
 	public SmartcropOptions interesting(com.criteo.vips.enums.VipsInteresting interesting) {
 		setInteresting(interesting);
+		return this;
+	}
+
+	/**
+	 * Optional argument: premultiplied
+	 * <p>
+	 * Input image already has premultiplied alpha
+	 * @return the value of {@code premultiplied}
+	 */
+	public Boolean getPremultiplied() {
+		return this.premultiplied;
+	}
+
+	/**
+	 * Set the optional "premultiplied" argument.
+	 * <p>
+	 * Input image already has premultiplied alpha
+	 * @param premultiplied the new value of {@code premultiplied}
+	 */
+	public void setPremultiplied(Boolean premultiplied) {
+		this.premultiplied = premultiplied;
+	}
+
+	/**
+	 * Set the optional "premultiplied" argument.
+	 * <p>
+	 * Input image already has premultiplied alpha
+	 * @param premultiplied the new value of {@code premultiplied}
+	 * @return this object for chaining
+	 */
+	public SmartcropOptions premultiplied(Boolean premultiplied) {
+		setPremultiplied(premultiplied);
 		return this;
 	}
 

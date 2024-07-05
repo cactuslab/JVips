@@ -778,7 +778,7 @@ abstract class AbstractVipsImage extends Vips {
 	public native VipsImage convi(com.criteo.vips.Image mask) throws VipsException;
 	
 	/**
-	 * VipsConvsep (convsep): seperable convolution operation
+	 * VipsConvsep (convsep): separable convolution operation
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 * @param options optional arguments
@@ -786,7 +786,7 @@ abstract class AbstractVipsImage extends Vips {
 	public native void applyConvsep(com.criteo.vips.Image mask, com.criteo.vips.options.ConvsepOptions options) throws VipsException;
 	
 	/**
-	 * VipsConvsep (convsep): seperable convolution operation
+	 * VipsConvsep (convsep): separable convolution operation
 	 * Mutates the image inplace.
 	 * @param mask Input matrix image
 	 */
@@ -796,7 +796,7 @@ abstract class AbstractVipsImage extends Vips {
 	
 	
 	/**
-	 * VipsConvsep (convsep): seperable convolution operation
+	 * VipsConvsep (convsep): separable convolution operation
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 * @param options optional arguments
@@ -804,7 +804,7 @@ abstract class AbstractVipsImage extends Vips {
 	public native VipsImage convsep(com.criteo.vips.Image mask, com.criteo.vips.options.ConvsepOptions options) throws VipsException;
 	
 	/**
-	 * VipsConvsep (convsep): seperable convolution operation
+	 * VipsConvsep (convsep): separable convolution operation
 	 * Returns a new image.
 	 * @param mask Input matrix image
 	 */
@@ -3661,6 +3661,19 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
+	 * VipsPrewitt (prewitt): Prewitt edge detector
+	 * Mutates the image inplace.
+	 */
+	public native void applyPrewitt() throws VipsException;
+	
+	
+	/**
+	 * VipsPrewitt (prewitt): Prewitt edge detector
+	 * Returns a new image.
+	 */
+	public native VipsImage prewitt() throws VipsException;
+	
+	/**
 	 * VipsProfileLoad (profile_load): load named ICC profile
 	 * @param name Profile name
 	 */
@@ -4138,6 +4151,19 @@ abstract class AbstractVipsImage extends Vips {
 	public VipsImage scale() throws VipsException {
 		return scale(null);
 	}
+	
+	/**
+	 * VipsScharr (scharr): Scharr edge detector
+	 * Mutates the image inplace.
+	 */
+	public native void applyScharr() throws VipsException;
+	
+	
+	/**
+	 * VipsScharr (scharr): Scharr edge detector
+	 * Returns a new image.
+	 */
+	public native VipsImage scharr() throws VipsException;
 	
 	/**
 	 * VipsscRGB2BW (scRGB2BW): convert scRGB to BW

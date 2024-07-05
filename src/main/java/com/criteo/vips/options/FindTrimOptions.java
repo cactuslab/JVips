@@ -24,6 +24,7 @@ public class FindTrimOptions {
 	private Double threshold;
 	private double[] background;
 	private com.criteo.vips.PixelPacket backgroundPixelPacket;
+	private Boolean lineArt;
 
 	/**
 	 * Optional argument: threshold
@@ -149,6 +150,38 @@ public class FindTrimOptions {
 	 */
 	public FindTrimOptions background(java.awt.Color background) {
 		setBackground(background);
+		return this;
+	}
+
+	/**
+	 * Optional argument: line-art
+	 * <p>
+	 * Enable line art mode
+	 * @return the value of {@code lineArt}
+	 */
+	public Boolean getLineArt() {
+		return this.lineArt;
+	}
+
+	/**
+	 * Set the optional "line-art" argument.
+	 * <p>
+	 * Enable line art mode
+	 * @param lineArt the new value of {@code lineArt}
+	 */
+	public void setLineArt(Boolean lineArt) {
+		this.lineArt = lineArt;
+	}
+
+	/**
+	 * Set the optional "line-art" argument.
+	 * <p>
+	 * Enable line art mode
+	 * @param lineArt the new value of {@code lineArt}
+	 * @return this object for chaining
+	 */
+	public FindTrimOptions lineArt(Boolean lineArt) {
+		setLineArt(lineArt);
 		return this;
 	}
 

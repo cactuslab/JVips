@@ -298,6 +298,17 @@ Java_com_criteo_vips_AbstractVipsImage_analyzeLoad(JNIEnv *env, jclass cls, jstr
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -4919,6 +4930,17 @@ Java_com_criteo_vips_AbstractVipsImage_csvLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -4988,14 +5010,16 @@ Java_com_criteo_vips_AbstractVipsImage_csvSave(JNIEnv *env, jobject in, jstring 
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -5035,6 +5059,18 @@ Java_com_criteo_vips_AbstractVipsImage_csvSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -6014,15 +6050,15 @@ Java_com_criteo_vips_AbstractVipsImage_dzSave(JNIEnv *env, jobject in, jstring f
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// basename
-		jfieldID basenameFid = (*env)->GetFieldID(env, optionsCls, "basename", "Ljava/lang/String;");
-		jstring basename = (jstring) (*env)->GetObjectField(env, options, basenameFid);
-		if (basename != NULL) {
-			const char *basenameChars = (*env)->GetStringUTFChars(env, basename, NULL);
+		// imagename
+		jfieldID imagenameFid = (*env)->GetFieldID(env, optionsCls, "imagename", "Ljava/lang/String;");
+		jstring imagename = (jstring) (*env)->GetObjectField(env, options, imagenameFid);
+		if (imagename != NULL) {
+			const char *imagenameChars = (*env)->GetStringUTFChars(env, imagename, NULL);
 			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, basenameChars);
-			(*env)->ReleaseStringUTFChars(env, basename, basenameChars);
-			g_object_set_property(G_OBJECT(op), "basename", &gvalue);
+			g_value_set_string(&gvalue, imagenameChars);
+			(*env)->ReleaseStringUTFChars(env, imagename, imagenameChars);
+			g_object_set_property(G_OBJECT(op), "imagename", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -6158,17 +6194,6 @@ Java_com_criteo_vips_AbstractVipsImage_dzSave(JNIEnv *env, jobject in, jstring f
 			g_value_unset(&gvalue);
 		}
 
-		// no-strip
-		jfieldID noStripFid = (*env)->GetFieldID(env, optionsCls, "noStrip", "Ljava/lang/Boolean;");
-		jobject noStripObjectValue = (*env)->GetObjectField(env, options, noStripFid);
-		if (noStripObjectValue != NULL) {
-			jboolean noStrip = (*env)->CallBooleanMethod(env, noStripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, noStrip);
-			g_object_set_property(G_OBJECT(op), "no-strip", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// id
 		jfieldID idFid = (*env)->GetFieldID(env, optionsCls, "id", "Ljava/lang/String;");
 		jstring id = (jstring) (*env)->GetObjectField(env, options, idFid);
@@ -6181,14 +6206,27 @@ Java_com_criteo_vips_AbstractVipsImage_dzSave(JNIEnv *env, jobject in, jstring f
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// Q
+		jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "Ljava/lang/Integer;");
+		jobject qObjectValue = (*env)->GetObjectField(env, options, qFid);
+		if (qObjectValue != NULL) {
+			jint q = (*env)->CallIntMethod(env, qObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, q);
+			g_object_set_property(G_OBJECT(op), "Q", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -6228,6 +6266,18 @@ Java_com_criteo_vips_AbstractVipsImage_dzSave(JNIEnv *env, jobject in, jstring f
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -6268,15 +6318,15 @@ Java_com_criteo_vips_AbstractVipsImage_dzSaveBuffer(JNIEnv *env, jobject in, job
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// basename
-		jfieldID basenameFid = (*env)->GetFieldID(env, optionsCls, "basename", "Ljava/lang/String;");
-		jstring basename = (jstring) (*env)->GetObjectField(env, options, basenameFid);
-		if (basename != NULL) {
-			const char *basenameChars = (*env)->GetStringUTFChars(env, basename, NULL);
+		// imagename
+		jfieldID imagenameFid = (*env)->GetFieldID(env, optionsCls, "imagename", "Ljava/lang/String;");
+		jstring imagename = (jstring) (*env)->GetObjectField(env, options, imagenameFid);
+		if (imagename != NULL) {
+			const char *imagenameChars = (*env)->GetStringUTFChars(env, imagename, NULL);
 			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, basenameChars);
-			(*env)->ReleaseStringUTFChars(env, basename, basenameChars);
-			g_object_set_property(G_OBJECT(op), "basename", &gvalue);
+			g_value_set_string(&gvalue, imagenameChars);
+			(*env)->ReleaseStringUTFChars(env, imagename, imagenameChars);
+			g_object_set_property(G_OBJECT(op), "imagename", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -6412,17 +6462,6 @@ Java_com_criteo_vips_AbstractVipsImage_dzSaveBuffer(JNIEnv *env, jobject in, job
 			g_value_unset(&gvalue);
 		}
 
-		// no-strip
-		jfieldID noStripFid = (*env)->GetFieldID(env, optionsCls, "noStrip", "Ljava/lang/Boolean;");
-		jobject noStripObjectValue = (*env)->GetObjectField(env, options, noStripFid);
-		if (noStripObjectValue != NULL) {
-			jboolean noStrip = (*env)->CallBooleanMethod(env, noStripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, noStrip);
-			g_object_set_property(G_OBJECT(op), "no-strip", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// id
 		jfieldID idFid = (*env)->GetFieldID(env, optionsCls, "id", "Ljava/lang/String;");
 		jstring id = (jstring) (*env)->GetObjectField(env, options, idFid);
@@ -6435,14 +6474,27 @@ Java_com_criteo_vips_AbstractVipsImage_dzSaveBuffer(JNIEnv *env, jobject in, job
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// Q
+		jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "Ljava/lang/Integer;");
+		jobject qObjectValue = (*env)->GetObjectField(env, options, qFid);
+		if (qObjectValue != NULL) {
+			jint q = (*env)->CallIntMethod(env, qObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, q);
+			g_object_set_property(G_OBJECT(op), "Q", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -6482,6 +6534,18 @@ Java_com_criteo_vips_AbstractVipsImage_dzSaveBuffer(JNIEnv *env, jobject in, job
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -7396,6 +7460,17 @@ Java_com_criteo_vips_AbstractVipsImage_findTrim(JNIEnv *env, jobject in, jobject
 			g_value_unset(&gvalue);
 		}
 
+		// line-art
+		jfieldID lineArtFid = (*env)->GetFieldID(env, optionsCls, "lineArt", "Ljava/lang/Boolean;");
+		jobject lineArtObjectValue = (*env)->GetObjectField(env, options, lineArtFid);
+		if (lineArtObjectValue != NULL) {
+			jboolean lineArt = (*env)->CallBooleanMethod(env, lineArtObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, lineArt);
+			g_object_set_property(G_OBJECT(op), "line-art", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -7487,6 +7562,17 @@ Java_com_criteo_vips_AbstractVipsImage_fitsLoad(JNIEnv *env, jclass cls, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -7544,14 +7630,16 @@ Java_com_criteo_vips_AbstractVipsImage_fitsSave(JNIEnv *env, jobject in, jstring
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -7591,6 +7679,18 @@ Java_com_criteo_vips_AbstractVipsImage_fitsSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -8771,6 +8871,17 @@ Java_com_criteo_vips_AbstractVipsImage_gifLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -8882,6 +8993,17 @@ Java_com_criteo_vips_AbstractVipsImage_gifLoadBuffer(JNIEnv *env, jclass cls, jb
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9019,14 +9141,16 @@ Java_com_criteo_vips_AbstractVipsImage_gifSave(JNIEnv *env, jobject in, jstring 
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9066,6 +9190,18 @@ Java_com_criteo_vips_AbstractVipsImage_gifSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9183,14 +9319,16 @@ Java_com_criteo_vips_AbstractVipsImage_gifSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9230,6 +9368,18 @@ Java_com_criteo_vips_AbstractVipsImage_gifSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -9908,6 +10058,17 @@ Java_com_criteo_vips_AbstractVipsImage_heifLoad(JNIEnv *env, jclass cls, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -10041,6 +10202,17 @@ Java_com_criteo_vips_AbstractVipsImage_heifLoadBuffer(JNIEnv *env, jclass cls, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -10184,14 +10356,16 @@ Java_com_criteo_vips_AbstractVipsImage_heifSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -10231,6 +10405,18 @@ Java_com_criteo_vips_AbstractVipsImage_heifSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -10354,14 +10540,16 @@ Java_com_criteo_vips_AbstractVipsImage_heifSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -10401,6 +10589,18 @@ Java_com_criteo_vips_AbstractVipsImage_heifSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -13638,6 +13838,17 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kLoad(JNIEnv *env, jclass cls, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -13738,6 +13949,17 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kLoadBuffer(JNIEnv *env, jclass cls, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -13855,14 +14077,16 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -13902,6 +14126,18 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -13999,14 +14235,16 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14046,6 +14284,18 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14167,6 +14417,17 @@ Java_com_criteo_vips_AbstractVipsImage_jpegLoad(JNIEnv *env, jclass cls, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14295,6 +14556,17 @@ Java_com_criteo_vips_AbstractVipsImage_jpegLoadBuffer(JNIEnv *env, jclass cls, j
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -14363,18 +14635,6 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// optimize-coding
 		jfieldID optimizeCodingFid = (*env)->GetFieldID(env, optionsCls, "optimizeCoding", "Ljava/lang/Boolean;");
 		jobject optimizeCodingObjectValue = (*env)->GetObjectField(env, options, optimizeCodingFid);
@@ -14465,14 +14725,16 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14512,6 +14774,18 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14563,18 +14837,6 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// optimize-coding
 		jfieldID optimizeCodingFid = (*env)->GetFieldID(env, optionsCls, "optimizeCoding", "Ljava/lang/Boolean;");
 		jobject optimizeCodingObjectValue = (*env)->GetObjectField(env, options, optimizeCodingFid);
@@ -14665,14 +14927,16 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14712,6 +14976,18 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14775,18 +15051,6 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveMime(JNIEnv *env, jobject in, job
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// optimize-coding
 		jfieldID optimizeCodingFid = (*env)->GetFieldID(env, optionsCls, "optimizeCoding", "Ljava/lang/Boolean;");
 		jobject optimizeCodingObjectValue = (*env)->GetObjectField(env, options, optimizeCodingFid);
@@ -14877,14 +15141,16 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveMime(JNIEnv *env, jobject in, job
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -14924,6 +15190,18 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveMime(JNIEnv *env, jobject in, job
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -15000,6 +15278,17 @@ Java_com_criteo_vips_AbstractVipsImage_jxlLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -15092,6 +15381,17 @@ Java_com_criteo_vips_AbstractVipsImage_jxlLoadBuffer(JNIEnv *env, jclass cls, jb
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -15207,14 +15507,16 @@ Java_com_criteo_vips_AbstractVipsImage_jxlSave(JNIEnv *env, jobject in, jstring 
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -15254,6 +15556,18 @@ Java_com_criteo_vips_AbstractVipsImage_jxlSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -15349,14 +15663,16 @@ Java_com_criteo_vips_AbstractVipsImage_jxlSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -15396,6 +15712,18 @@ Java_com_criteo_vips_AbstractVipsImage_jxlSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -17008,6 +17336,17 @@ Java_com_criteo_vips_AbstractVipsImage_magickLoad(JNIEnv *env, jclass cls, jstri
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -17134,6 +17473,17 @@ Java_com_criteo_vips_AbstractVipsImage_magickLoadBuffer(JNIEnv *env, jclass cls,
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -17247,14 +17597,16 @@ Java_com_criteo_vips_AbstractVipsImage_magickSave(JNIEnv *env, jobject in, jstri
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -17294,6 +17646,18 @@ Java_com_criteo_vips_AbstractVipsImage_magickSave(JNIEnv *env, jobject in, jstri
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -17390,14 +17754,16 @@ Java_com_criteo_vips_AbstractVipsImage_magickSaveBuffer(JNIEnv *env, jobject in,
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -17437,6 +17803,18 @@ Java_com_criteo_vips_AbstractVipsImage_magickSaveBuffer(JNIEnv *env, jobject in,
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -19132,6 +19510,17 @@ Java_com_criteo_vips_AbstractVipsImage_matLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -19301,6 +19690,17 @@ Java_com_criteo_vips_AbstractVipsImage_matrixLoad(JNIEnv *env, jclass cls, jstri
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -19348,14 +19748,16 @@ Java_com_criteo_vips_AbstractVipsImage_matrixprint(JNIEnv *env, jobject in, jobj
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -19395,6 +19797,18 @@ Java_com_criteo_vips_AbstractVipsImage_matrixprint(JNIEnv *env, jobject in, jobj
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -19445,14 +19859,16 @@ Java_com_criteo_vips_AbstractVipsImage_matrixSave(JNIEnv *env, jobject in, jstri
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -19492,6 +19908,18 @@ Java_com_criteo_vips_AbstractVipsImage_matrixSave(JNIEnv *env, jobject in, jstri
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -20675,6 +21103,17 @@ Java_com_criteo_vips_AbstractVipsImage_openexrLoad(JNIEnv *env, jclass cls, jstr
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -20814,6 +21253,17 @@ Java_com_criteo_vips_AbstractVipsImage_openslideLoad(JNIEnv *env, jclass cls, js
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -20980,6 +21430,17 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -21152,6 +21613,17 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoadBuffer(JNIEnv *env, jclass cls, jb
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -21480,6 +21952,17 @@ Java_com_criteo_vips_AbstractVipsImage_pngLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -21583,6 +22066,17 @@ Java_com_criteo_vips_AbstractVipsImage_pngLoadBuffer(JNIEnv *env, jclass cls, jb
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -21662,18 +22156,6 @@ Java_com_criteo_vips_AbstractVipsImage_pngSave(JNIEnv *env, jobject in, jstring 
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// filter
 		jfieldID filterFid = (*env)->GetFieldID(env, optionsCls, "filter", "Lcom/criteo/vips/enums/VipsForeignPngFilter;");
 		jobject filter = (*env)->GetObjectField(env, options, filterFid);
@@ -21742,14 +22224,16 @@ Java_com_criteo_vips_AbstractVipsImage_pngSave(JNIEnv *env, jobject in, jstring 
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -21789,6 +22273,18 @@ Java_com_criteo_vips_AbstractVipsImage_pngSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -21851,18 +22347,6 @@ Java_com_criteo_vips_AbstractVipsImage_pngSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// filter
 		jfieldID filterFid = (*env)->GetFieldID(env, optionsCls, "filter", "Lcom/criteo/vips/enums/VipsForeignPngFilter;");
 		jobject filter = (*env)->GetObjectField(env, options, filterFid);
@@ -21931,14 +22415,16 @@ Java_com_criteo_vips_AbstractVipsImage_pngSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -21978,6 +22464,18 @@ Java_com_criteo_vips_AbstractVipsImage_pngSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -22066,6 +22564,17 @@ Java_com_criteo_vips_AbstractVipsImage_ppmLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -22161,14 +22670,16 @@ Java_com_criteo_vips_AbstractVipsImage_ppmSave(JNIEnv *env, jobject in, jstring 
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -22208,6 +22719,18 @@ Java_com_criteo_vips_AbstractVipsImage_ppmSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -22325,6 +22848,89 @@ Java_com_criteo_vips_AbstractVipsImage_premultiply(JNIEnv *env, jobject in, jobj
 	if (!(new_op = vips_cache_operation_build(op))) {
 		g_object_unref(op);
 		throwVipsException(env, "premultiply failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_applyPrewitt(JNIEnv *env, jobject in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("prewitt");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "prewitt failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Mutating image result
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+	(*env)->SetLongField(env, in, handle_fid, (jlong) out);
+}
+
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_prewitt(JNIEnv *env, jobject in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("prewitt");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "prewitt failed");
 		return NULL;
 	}
 	g_object_unref(op);
@@ -22532,6 +23138,17 @@ Java_com_criteo_vips_AbstractVipsImage_radLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -22624,6 +23241,17 @@ Java_com_criteo_vips_AbstractVipsImage_radLoadBuffer(JNIEnv *env, jclass cls, jb
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -22681,14 +23309,16 @@ Java_com_criteo_vips_AbstractVipsImage_radSave(JNIEnv *env, jobject in, jstring 
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -22728,6 +23358,18 @@ Java_com_criteo_vips_AbstractVipsImage_radSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -22768,14 +23410,16 @@ Java_com_criteo_vips_AbstractVipsImage_radSaveBuffer(JNIEnv *env, jobject in, jo
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -22815,6 +23459,18 @@ Java_com_criteo_vips_AbstractVipsImage_radSaveBuffer(JNIEnv *env, jobject in, jo
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -23080,6 +23736,17 @@ Java_com_criteo_vips_AbstractVipsImage_rawLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -23137,14 +23804,16 @@ Java_com_criteo_vips_AbstractVipsImage_rawSave(JNIEnv *env, jobject in, jstring 
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -23184,6 +23853,18 @@ Java_com_criteo_vips_AbstractVipsImage_rawSave(JNIEnv *env, jobject in, jstring 
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -23230,14 +23911,16 @@ Java_com_criteo_vips_AbstractVipsImage_rawSaveFd(JNIEnv *env, jobject in, jint f
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -23277,6 +23960,18 @@ Java_com_criteo_vips_AbstractVipsImage_rawSaveFd(JNIEnv *env, jobject in, jint f
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -25081,6 +25776,89 @@ Java_com_criteo_vips_AbstractVipsImage_scale(JNIEnv *env, jobject in, jobject op
 }
 
 JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_applyScharr(JNIEnv *env, jobject in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("scharr");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "scharr failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Mutating image result
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+	(*env)->SetLongField(env, in, handle_fid, (jlong) out);
+}
+
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_scharr(JNIEnv *env, jobject in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("scharr");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "scharr failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT void JNICALL
 Java_com_criteo_vips_AbstractVipsImage_applyScRGB2BW(JNIEnv *env, jobject in, jobject options)
 {
 	GValue gvalue = { 0 };
@@ -26351,6 +27129,17 @@ Java_com_criteo_vips_AbstractVipsImage_applySmartcrop(JNIEnv *env, jobject input
 			g_value_unset(&gvalue);
 		}
 
+		// premultiplied
+		jfieldID premultipliedFid = (*env)->GetFieldID(env, optionsCls, "premultiplied", "Ljava/lang/Boolean;");
+		jobject premultipliedObjectValue = (*env)->GetObjectField(env, options, premultipliedFid);
+		if (premultipliedObjectValue != NULL) {
+			jboolean premultiplied = (*env)->CallBooleanMethod(env, premultipliedObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, premultiplied);
+			g_object_set_property(G_OBJECT(op), "premultiplied", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -26421,6 +27210,17 @@ Java_com_criteo_vips_AbstractVipsImage_smartcrop(JNIEnv *env, jobject input, jin
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, interestingValue);
 			g_object_set_property(G_OBJECT(op), "interesting", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// premultiplied
+		jfieldID premultipliedFid = (*env)->GetFieldID(env, optionsCls, "premultiplied", "Ljava/lang/Boolean;");
+		jobject premultipliedObjectValue = (*env)->GetObjectField(env, options, premultipliedFid);
+		if (premultipliedObjectValue != NULL) {
+			jboolean premultiplied = (*env)->CallBooleanMethod(env, premultipliedObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, premultiplied);
+			g_object_set_property(G_OBJECT(op), "premultiplied", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -27550,6 +28350,17 @@ Java_com_criteo_vips_AbstractVipsImage_svgLoad(JNIEnv *env, jclass cls, jstring 
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -27672,6 +28483,17 @@ Java_com_criteo_vips_AbstractVipsImage_svgLoadBuffer(JNIEnv *env, jclass cls, jb
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -28765,6 +29587,17 @@ Java_com_criteo_vips_AbstractVipsImage_tiffLoad(JNIEnv *env, jclass cls, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -28901,6 +29734,17 @@ Java_com_criteo_vips_AbstractVipsImage_tiffLoadBuffer(JNIEnv *env, jclass cls, j
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -28995,18 +29839,6 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// tile
 		jfieldID tileFid = (*env)->GetFieldID(env, optionsCls, "tile", "Ljava/lang/Boolean;");
 		jobject tileObjectValue = (*env)->GetObjectField(env, options, tileFid);
@@ -29200,14 +30032,16 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -29247,6 +30081,18 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -29324,18 +30170,6 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// tile
 		jfieldID tileFid = (*env)->GetFieldID(env, optionsCls, "tile", "Ljava/lang/Boolean;");
 		jobject tileObjectValue = (*env)->GetObjectField(env, options, tileFid);
@@ -29529,14 +30363,16 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -29576,6 +30412,18 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -30303,6 +31151,17 @@ Java_com_criteo_vips_AbstractVipsImage_vipsLoad(JNIEnv *env, jclass cls, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 	}
 
 	// Operation
@@ -30360,14 +31219,16 @@ Java_com_criteo_vips_AbstractVipsImage_vipsSave(JNIEnv *env, jobject in, jstring
 	if (options != NULL) {
 		jclass optionsCls = (*env)->GetObjectClass(env, options);
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -30407,6 +31268,18 @@ Java_com_criteo_vips_AbstractVipsImage_vipsSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -30516,6 +31389,17 @@ Java_com_criteo_vips_AbstractVipsImage_webpLoad(JNIEnv *env, jclass cls, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -30641,6 +31525,17 @@ Java_com_criteo_vips_AbstractVipsImage_webpLoadBuffer(JNIEnv *env, jclass cls, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, failOnValue);
 			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// revalidate
+		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
+		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
+		if (revalidateObjectValue != NULL) {
+			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, revalidate);
+			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -30813,18 +31708,6 @@ Java_com_criteo_vips_AbstractVipsImage_webpSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// mixed
 		jfieldID mixedFid = (*env)->GetFieldID(env, optionsCls, "mixed", "Ljava/lang/Boolean;");
 		jobject mixedObjectValue = (*env)->GetObjectField(env, options, mixedFid);
@@ -30836,14 +31719,16 @@ Java_com_criteo_vips_AbstractVipsImage_webpSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -30883,6 +31768,18 @@ Java_com_criteo_vips_AbstractVipsImage_webpSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -31035,18 +31932,6 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// mixed
 		jfieldID mixedFid = (*env)->GetFieldID(env, optionsCls, "mixed", "Ljava/lang/Boolean;");
 		jobject mixedObjectValue = (*env)->GetObjectField(env, options, mixedFid);
@@ -31058,14 +31943,16 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -31105,6 +31992,18 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -31269,18 +32168,6 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveMime(JNIEnv *env, jobject in, job
 			g_value_unset(&gvalue);
 		}
 
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
 		// mixed
 		jfieldID mixedFid = (*env)->GetFieldID(env, optionsCls, "mixed", "Ljava/lang/Boolean;");
 		jobject mixedObjectValue = (*env)->GetObjectField(env, options, mixedFid);
@@ -31292,14 +32179,16 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveMime(JNIEnv *env, jobject in, job
 			g_value_unset(&gvalue);
 		}
 
-		// strip
-		jfieldID stripFid = (*env)->GetFieldID(env, optionsCls, "strip", "Ljava/lang/Boolean;");
-		jobject stripObjectValue = (*env)->GetObjectField(env, options, stripFid);
-		if (stripObjectValue != NULL) {
-			jboolean strip = (*env)->CallBooleanMethod(env, stripObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, strip);
-			g_object_set_property(G_OBJECT(op), "strip", &gvalue);
+		// keep
+		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
+		jobject keep = (*env)->GetObjectField(env, options, keepFid);
+		if (keep != NULL) {
+			jclass keepCls = (*env)->GetObjectClass(env, keep);
+			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
+			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, keepValue);
+			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -31339,6 +32228,18 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveMime(JNIEnv *env, jobject in, job
 			g_value_init(&gvalue, G_TYPE_INT);
 			g_value_set_int(&gvalue, pageHeight);
 			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// profile
+		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
+		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
+		if (profile != NULL) {
+			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
+			g_value_init(&gvalue, G_TYPE_STRING);
+			g_value_set_string(&gvalue, profileChars);
+			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
+			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
 			g_value_unset(&gvalue);
 		}
 

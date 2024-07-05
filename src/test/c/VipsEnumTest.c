@@ -262,6 +262,14 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_ANY, "com/criteo/vips/enums/VipsSaveable", "Any");
 	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_LAST, "com/criteo/vips/enums/VipsSaveable", "Last");
 
+	// VipsForeignKeep
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_NONE, "com/criteo/vips/enums/VipsForeignKeep", "None");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_EXIF, "com/criteo/vips/enums/VipsForeignKeep", "Exif");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_XMP, "com/criteo/vips/enums/VipsForeignKeep", "Xmp");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_IPTC, "com/criteo/vips/enums/VipsForeignKeep", "Iptc");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_ICC, "com/criteo/vips/enums/VipsForeignKeep", "Icc");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_OTHER, "com/criteo/vips/enums/VipsForeignKeep", "Other");
+
 	// VipsForeignSubsample
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SUBSAMPLE_AUTO, "com/criteo/vips/enums/VipsForeignSubsample", "Auto");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SUBSAMPLE_ON, "com/criteo/vips/enums/VipsForeignSubsample", "On");
@@ -445,6 +453,7 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_ARGUMENT_OUTPUT, "com/criteo/vips/enums/VipsArgumentFlags", "Output");
 	assertEqualsNativeEnumValue(env, VIPS_ARGUMENT_DEPRECATED, "com/criteo/vips/enums/VipsArgumentFlags", "Deprecated");
 	assertEqualsNativeEnumValue(env, VIPS_ARGUMENT_MODIFY, "com/criteo/vips/enums/VipsArgumentFlags", "Modify");
+	assertEqualsNativeEnumValue(env, VIPS_ARGUMENT_NON_HASHABLE, "com/criteo/vips/enums/VipsArgumentFlags", "NonHashable");
 
 	// VipsOperationFlags
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_NONE, "com/criteo/vips/enums/VipsOperationFlags", "None");
@@ -454,6 +463,7 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_DEPRECATED, "com/criteo/vips/enums/VipsOperationFlags", "Deprecated");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_UNTRUSTED, "com/criteo/vips/enums/VipsOperationFlags", "Untrusted");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_BLOCKED, "com/criteo/vips/enums/VipsOperationFlags", "Blocked");
+	assertEqualsNativeEnumValue(env, VIPS_OPERATION_REVALIDATE, "com/criteo/vips/enums/VipsOperationFlags", "Revalidate");
 
 	// VipsRegionShrink
 	assertEqualsNativeEnumValue(env, VIPS_REGION_SHRINK_MEAN, "com/criteo/vips/enums/VipsRegionShrink", "Mean");
