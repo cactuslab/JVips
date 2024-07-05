@@ -213,12 +213,12 @@ public class VipsImage extends AbstractVipsImage implements Image {
     }
 
     public byte[] writePNGToArray(int compression, boolean palette, int colors, boolean strip) throws VipsException {
-        return pngSaveBuffer(new PNGSaveBufferOptions().compression(compression).palette(palette).bitdepth(colorsToBitdepth(colors)).strip(strip));
+        return pngSaveBuffer(new PNGSaveBufferOptions().compression(compression).palette(palette).bitdepth(colorsToBitdepth(colors)).keep(strip ? VipsForeignKeep.None : null));
     }
 
     @Override
     public void writePNGToFile(String name, int compression, boolean palette, int colors, boolean strip) throws VipsException {
-       writePNGToFile(name, new PNGSaveOptions().compression(compression).palette(palette).bitdepth(colorsToBitdepth(colors)).strip(strip));
+       writePNGToFile(name, new PNGSaveOptions().compression(compression).palette(palette).bitdepth(colorsToBitdepth(colors)).keep(strip ? VipsForeignKeep.None : null));
     }
 
     @Override
@@ -227,12 +227,12 @@ public class VipsImage extends AbstractVipsImage implements Image {
     }
 
     public byte[] writeJPEGToArray(int quality, boolean strip) throws VipsException {
-        return jpegSaveBuffer(new JPEGSaveBufferOptions().q(quality).strip(strip));
+        return jpegSaveBuffer(new JPEGSaveBufferOptions().q(quality).keep(strip ? VipsForeignKeep.None : null));
     }
 
     @Override
     public void writeJPEGToFile(String name, int quality, boolean strip) throws VipsException {
-        jpegSave(name, new JPEGSaveOptions().q(quality).strip(strip));
+        jpegSave(name, new JPEGSaveOptions().q(quality).keep(strip ? VipsForeignKeep.None : null));
     }
 
     @Override
@@ -249,7 +249,7 @@ public class VipsImage extends AbstractVipsImage implements Image {
     }
 
     public byte[] writeWEBPToArray(int Q, boolean lossless, boolean strip) throws VipsException {
-        return webpSaveBuffer(new WebpSaveBufferOptions().q(Q).lossless(lossless).strip(strip));
+        return webpSaveBuffer(new WebpSaveBufferOptions().q(Q).lossless(lossless).keep(strip ? VipsForeignKeep.None : null));
     }
 
     public native void writeToFile(String name) throws VipsException;

@@ -1056,7 +1056,7 @@ public class VipsImageTest {
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
             path = path.resolve(filename);
             File file = path.toAbsolutePath().toFile();
-            img.writePNGToFile(file.getAbsolutePath(), new PNGSaveOptions().bitdepth(8).interlace(true).strip(true));
+            img.writePNGToFile(file.getAbsolutePath(), new PNGSaveOptions().bitdepth(8).interlace(true).keep(VipsForeignKeep.None));
             assertTrue(file.exists());
             assertTrue(file.isFile());
             assertTrue(file.delete());
@@ -1086,7 +1086,7 @@ public class VipsImageTest {
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
             path = path.resolve(filename);
             File file = path.toAbsolutePath().toFile();
-            img.writeJPEGToFile(file.getAbsolutePath(), new JPEGSaveOptions().q(75).strip(true));
+            img.writeJPEGToFile(file.getAbsolutePath(), new JPEGSaveOptions().q(75).keep(VipsForeignKeep.None));
             assertTrue(file.exists());
             assertTrue(file.isFile());
             assertTrue(file.delete());
