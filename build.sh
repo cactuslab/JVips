@@ -59,6 +59,7 @@ mvn ${MAVEN_ARGS} dependency:copy-dependencies -DoutputDirectory="${BUILDDIR}"/a
 # Create the resource directory where all native libraries will be copied.
 mkdir -p "${BUILDDIR}"/all/
 
+git config --global --add safe.directory /app
 VERSION="${VIPS_VERSION}-$(git rev-parse --short HEAD)"
 
 ##########################
