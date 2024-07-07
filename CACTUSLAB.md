@@ -5,11 +5,11 @@
 Specify the vips version to build with in `./CMakeLists.txt` and `./build.sh`:
 
 ```
-set(JVIPS_VERSION 8.14.5)
+set(JVIPS_VERSION 8.15.2)
 ```
 
 ```bash
-VIPS_VERSION=8.14.5
+VIPS_VERSION=8.15.2
 ```
 
 ## Generate
