@@ -1137,4 +1137,14 @@ public class VipsImageTest {
             assertEquals(h + 20, img.getHeight());
         }
     }
+
+    @Test
+    public void TestAddAlpha() throws IOException, VipsException {
+        ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("in_vips.jpg");
+        try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
+            assertEquals(3, img.getBands());
+            img.applyAddAlpha();
+            assertEquals(4, img.getBands());
+        }
+    }
 }
