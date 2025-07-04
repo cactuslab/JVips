@@ -21,16 +21,29 @@ public class PixelPacket extends Vips {
     double g;
     double b;
     double a;
+    private int components;
 
     public PixelPacket(double r, double g, double b, double a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
+        this.components = 4;
     }
 
     public PixelPacket(double r, double g, double b) {
         this(r, g, b, 255.0);
+        this.components = 3;
+    }
+
+    public PixelPacket(double r) {
+        this(r, r, r, 255.0);
+        this.components = 1;
+    }
+
+    public PixelPacket(double r, double a) {
+        this(r, r, r, a);
+        this.components = 2;
     }
 
     public PixelPacket(double[] pixel) {
@@ -47,6 +60,7 @@ public class PixelPacket extends Vips {
             this.b = pixel[2];
             this.a = hasAlpha ? pixel[3] : 255.0;
         }
+        this.components = pixel.length;
     }
 
     public double getRed() {
@@ -82,7 +96,47 @@ public class PixelPacket extends Vips {
     }
 
     public double[] getComponents() {
-        return new double[] { r, g, b, a };
+        return getComponents(this.components);
+    }
+
+    public double[] getComponents(int count) {
+        if (count == 1) {
+            return new double[] { r };
+        } else if (count == 2) {
+            return new double[] { r, a };
+        } else if (count == 3) {
+            return new double[] { r, g, b };
+        } else if (count == 4) {
+            return new double[] { r, g, b, a };
+        } else {
+            throw new IllegalArgumentException("Unsupported component count: " + count);
+        }
+    }
+
+    /**
+     * Some operations sometimes require no alpha component in the pixel vector.
+     */
+    public double[] getComponentsNoAlpha() {
+        if (components == 1 || components == 2) {
+            return new double[] { r };
+        } else if (components == 3 || components == 4) {
+            return new double[] { r, g, b };
+        } else {
+            throw new IllegalArgumentException("Unsupported component count: " + components);
+        }
+    }
+
+    /**
+     * Some operations sometimes require an alpha component in the pixel vector.
+     */
+    public double[] getComponentsWithAlpha() {
+        if (components == 1 || components == 2) {
+            return new double[] { r, a };
+        } else if (components == 3 || components == 4) {
+            return new double[] { r, g, b, a };
+        } else {
+            throw new IllegalArgumentException("Unsupported component count: " + components);
+        }
     }
 
     @Override
@@ -90,8 +144,23 @@ public class PixelPacket extends Vips {
         if (o instanceof PixelPacket) {
             PixelPacket pixelPacket = (PixelPacket) o;
 
-            return r == pixelPacket.r && g == pixelPacket.g && b == pixelPacket.b && a == pixelPacket.a;
+            return r == pixelPacket.r && g == pixelPacket.g && b == pixelPacket.b && a == pixelPacket.a && components == pixelPacket.components;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        if (components == 4) {
+            return "[r = " + r + ", g = " + g + ", b = " + b + ", a = " + a + "]";
+        } else if (components == 3) {
+            return "[r = " + r + ", g = " + g + ", b = " + b + "]";
+        } else if (components == 2) {
+            return "[r = " + r + ", a = " + a + "]";
+        } else if (components == 1) {
+            return "[r = " + r + ", g = " + g + ", b = " + b + "]";
+        } else {
+            return super.toString();
+        }
     }
 }

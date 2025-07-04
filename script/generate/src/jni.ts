@@ -99,24 +99,6 @@ g_value_unset(&gvalue);`
 			case 'VipsArrayDouble':
 				let result = `jdouble *${camelCase(p.name)}Elements = (*env)->GetDoubleArrayElements(env, ${camelCase(p.name)}, NULL);
 jint ${camelCase(p.name)}Length = (*env)->GetArrayLength(env, ${camelCase(p.name)});`
-				if (!p.required) {
-					result += `
-if (${camelCase(p.name)}IsPixelPacket) {`
-					if (options.operationRequiresNoAlpha) {
-						result += `
-	/* Operation requires no alpha component */
-	if (${camelCase(p.name)}Length == 4) {
-		${camelCase(p.name)}Length = 3;
-	}`
-					} else if (options.imageProperty) {
-						result += `
-	/* Strip alpha component if the image doesn't have alpha */
-	if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, ${camelCase(options.imageProperty.name)}, handle_fid)) && ${camelCase(p.name)}Length == 4) {
-		${camelCase(p.name)}Length = 3;
-	}`
-					}
-					result += `\n}`
-				}
 				result += `
 g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 vips_value_set_array_double(&gvalue, ${camelCase(p.name)}Elements, ${camelCase(p.name)}Length);
@@ -178,7 +160,19 @@ if (${camelCase(p.name)} == NULL) {
 	jfieldID ${camelCase(p.name)}PixelPacketFid = (*env)->GetFieldID(env, optionsCls, "${javaParameterIdentifier(p)}PixelPacket", "Lcom/criteo/vips/PixelPacket;");
 	jobject ${camelCase(p.name)}PixelPacket = (*env)->GetObjectField(env, options, ${camelCase(p.name)}PixelPacketFid);
 	if (${camelCase(p.name)}PixelPacket != NULL) {
-		${camelCase(p.name)} = (jdoubleArray) (*env)->CallObjectMethod(env, ${camelCase(p.name)}PixelPacket, pixelPacket_getComponents_mid);
+		${options.operationRequiresNoAlpha
+			?
+			`${camelCase(p.name)} = (jdoubleArray) (*env)->CallObjectMethod(env, ${camelCase(p.name)}PixelPacket, pixelPacket_getComponentsNoAlpha_mid); /* Operation requires no alpha component */`
+			: options.imageProperty ?
+			`/* Choose the appropriate PixelPacket components for the source image */
+		if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, ${camelCase(options.imageProperty.name)}, handle_fid))) {
+			${camelCase(p.name)} = (jdoubleArray) (*env)->CallObjectMethod(env, ${camelCase(p.name)}PixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+		} else {
+			${camelCase(p.name)} = (jdoubleArray) (*env)->CallObjectMethod(env, ${camelCase(p.name)}PixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+		}`
+			:
+			`${camelCase(p.name)} = (jdoubleArray) (*env)->CallObjectMethod(env, ${camelCase(p.name)}PixelPacket, pixelPacket_getComponents_mid);`
+		}
 		${camelCase(p.name)}IsPixelPacket = JNI_TRUE;
 	}
 }`
@@ -220,7 +214,9 @@ static jmethodID longValue_mid = NULL;
 static jmethodID doubleValue_mid = NULL;
 static jclass rectangleClass = NULL;
 static jmethodID rectangle_ctor_mid = NULL;
-static jmethodID pixelPacket_getComponents_mid = NULL;`
+static jmethodID pixelPacket_getComponents_mid = NULL;
+static jmethodID pixelPacket_getComponentsNoAlpha_mid = NULL;
+static jmethodID pixelPacket_getComponentsWithAlpha_mid = NULL;`
 }
 
 function initFields(): string {
@@ -242,7 +238,9 @@ rectangleClass = (*env)->FindClass(env, "java/awt/Rectangle");
 rectangle_ctor_mid = (*env)->GetMethodID(env, rectangleClass, "<init>", "(IIII)V");
 
 jclass pixelPacketClass = (*env)->FindClass(env, "com/criteo/vips/PixelPacket");
-pixelPacket_getComponents_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponents", "()[D");`
+pixelPacket_getComponents_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponents", "()[D");
+pixelPacket_getComponentsNoAlpha_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponentsNoAlpha", "()[D");
+pixelPacket_getComponentsWithAlpha_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponentsWithAlpha", "()[D");`
 }
 
 function applyPrimitiveParameter(p: VipsOperationParameter, vipsType: string, vipsValueSetFunction: string) {

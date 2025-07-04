@@ -59,6 +59,7 @@ public class VipsImageTest {
     private static double Delta = 0.0001;
     private static double TrimThreshold = 30.0;
     private static PixelPacket WhitePixel = new PixelPacket(255.0, 255.0, 255.0);
+    private static PixelPacket WhitePixelWithAlpha = new PixelPacket(255.0, 255.0, 255.0, 255.0);
     private static PixelPacket TransparentPixel = new PixelPacket(255.0, 255.0, 255.0, 0.0);
 
     private static Map<String, ArrayList<Byte[]>> SignaturesByExtension = new HashMap<>();
@@ -156,7 +157,7 @@ public class VipsImageTest {
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer(filename);
         try (VipsImage img = new VipsImage(buffer, buffer.capacity());
              VipsImage copy = new VipsImage(img, WhitePixel)) {
-            assertEquals(WhitePixel, copy.getPointPixelPacket(new Point(0, 0)));
+            assertEquals(copy.hasAlpha() ? WhitePixelWithAlpha : WhitePixel, copy.getPointPixelPacket(new Point(0, 0)));
             assertEquals(img.getWidth(), copy.getWidth());
             assertEquals(img.getHeight(), copy.getHeight());
         }
@@ -314,7 +315,7 @@ public class VipsImageTest {
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("in_vips.jpg");
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
             PixelPacket pixel = img.getPointPixelPacket(new Point(0, 0));
-            PixelPacket expected = new PixelPacket(0.0, 81.0, 216.0, 255.0);
+            PixelPacket expected = new PixelPacket(0.0, 81.0, 216.0);
             assertEquals(expected, pixel);
         }
     }
@@ -449,7 +450,7 @@ public class VipsImageTest {
 
     @Test
     public void TestShouldPadCorrectly() throws IOException, VipsException {
-        PixelPacket pixel = new PixelPacket(255.0, 255.0, 255.0, 255.0);
+        PixelPacket pixel = new PixelPacket(255.0, 255.0, 255.0);
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("in_vips.jpg");
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
             int w = img.getWidth();
@@ -482,7 +483,7 @@ public class VipsImageTest {
 
     @Test
     public void TestShouldPadJPGAndIgnoreAlphaChannel() throws IOException, VipsException {
-        PixelPacket expected = new PixelPacket(0.0, 0.0, 255.0, 255.0);
+        PixelPacket expected = new PixelPacket(0.0, 0.0, 255.0);
         PixelPacket pixel = new PixelPacket(0.0, 0.0, 255.0, 50.0);
         ByteBuffer buffer = VipsTestUtils.getDirectByteBuffer("in_vips.jpg");
         try (VipsImage img = new VipsImage(buffer, buffer.capacity())) {
@@ -657,7 +658,7 @@ public class VipsImageTest {
         try (VipsImage img = new VipsImage(buffer, buffer.capacity());
              VipsImage background = new VipsImage(img, WhitePixel)) {
             background.applyCompose(img);
-            assertEquals(WhitePixel, background.getPointPixelPacket(new Point(0, 0)));
+            assertEquals(WhitePixelWithAlpha, background.getPointPixelPacket(new Point(0, 0)));
         }
     }
 
