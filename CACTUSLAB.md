@@ -2,17 +2,11 @@
 
 # Vips version
 
-Specify the vips version to build with in `./CMakeLists.txt` and `./build.sh`:
+We build using the version of Vips that's installed in our Docker container, and on the macOS machine where we build.
+So to upgrade Vips, first upgrade the version of Vips in the libvips PPA that we use.
 
-```
-set(JVIPS_VERSION 8.15.2)
-```
-
-```bash
-VIPS_VERSION=8.15.2
-```
-
-Ensure that version has been published to the PPA we use to install Vips.
+We should run the generate script on the OLDEST version of Vips that we're supporting with this release, and that's the
+version that we should use to version the JVips package.
 
 ## Build
 
@@ -61,6 +55,12 @@ Then we build for macOS on an Intel machine, and then again on an Apple Silicon:
 ```
 
 Now combine the `build/all` folder from the two macOS machines with the ones from the Linux builds.
+
+Decide the version number of the JVips library to publish, based on the minimum libvips you've built with:
+
+```shell
+VIPS_VERSION=8.16.1
+```
 
 The output files are `pom.xml` and `JVips.jar`.
 

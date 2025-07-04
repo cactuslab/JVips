@@ -6,11 +6,6 @@ endif()
 
 project(JVIPS C Java)
 
-set(JVIPS_VERSION 8.15.2)
-
-set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${JVIPS_VERSION}")
-set(CPACK_SOURCE_GENERATOR "TGZ")
-
 find_package(PkgConfig REQUIRED)
 
 find_package(Java 1.8 REQUIRED)

@@ -12,7 +12,6 @@ BUILD_TYPE=Release
 RUN_TEST=1
 RUN_BENCHMARK=0
 MAVEN_ARGS="--batch-mode"
-VIPS_VERSION=8.15.2
 
 while true; do
   case "${1:-}" in
@@ -60,7 +59,6 @@ mvn ${MAVEN_ARGS} dependency:copy-dependencies -DoutputDirectory="${BUILDDIR}"/a
 mkdir -p "${BUILDDIR}"/all/
 
 git config --global --add safe.directory /app
-VERSION="${VIPS_VERSION}-$(git rev-parse --short HEAD)"
 
 ##########################
 ###### Build Linux #######
@@ -184,9 +182,7 @@ if [ ${BUILD_MACOS} -gt 0 ]; then
     done
 fi
 
-mvn ${MAVEN_ARGS} -DnewVersion=${VERSION} versions:set
 mvn ${MAVEN_ARGS} -DskipTests clean package
-mvn ${MAVEN_ARGS} versions:revert
 
 if [ ${RUN_TEST} -gt 0 ]; then
     mvn ${MAVEN_ARGS} -Dmaven.test.failure.ignore=true surefire:test@utest
