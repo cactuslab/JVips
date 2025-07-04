@@ -29,7 +29,7 @@ assertEqualsNativeEnumValue(JNIEnv *env, const int expected, const char *classNa
     if (expected != actual)
     {
         char msg[BUF_SIZE] = { 0 };
-        sprintf(msg, "%s:%s is not equal to expected value (%d)", className, name, expected);
+        sprintf(msg, "%s:%s is not equal to expected value (%d vs %d)", className, name, actual, expected);
         throwVipsException(env, msg);
     }
     return;
@@ -43,11 +43,18 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
     }
 `
 	for (const anEnum of enums) {
+		/* Skip deprecated enums that don't match */
+		if (anEnum.name === 'VipsSaveable') {
+			continue
+		}
+
 		result += `
 	// ${anEnum.name}
 `
 		for (const member of anEnum.members) {
-			result += `\tassertEqualsNativeEnumValue(env, ${member.nativeName}, "com/criteo/vips/enums/${anEnum.name}", "${member.name}");\n`
+			if (member.name !== 'Last') { /* We don't test Last, as that moves between versions when more enums are added and we may test with a newer version of Vips than we build with (e.g. between macOS and Linux) */
+			    result += `\tassertEqualsNativeEnumValue(env, ${member.nativeName}, "com/criteo/vips/enums/${anEnum.name}", "${member.name}");\n`
+			}
 		}
 	}
 	result += `
