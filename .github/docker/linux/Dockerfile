@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 # Set default build arguments.
-ARG NODE_VERSION=18.x
+ARG NODE_VERSION=22.x
 
 # Set default user (overriden in the command line with Jenkins' actual user).
 ARG UNAME=jenkins
@@ -34,7 +34,12 @@ RUN ln -s /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk
 ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
 
 RUN add-apt-repository -y ppa:0k53d-karl-f830m/vips && \
-    apt-get install ${APT_OPTIONS} libvips42 libvips-dev
+    apt-get install ${APT_OPTIONS} libvips42 libvips-dev libvips-tools
+
+RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} -o /tmp/nodesource_setup.sh && \
+    bash /tmp/nodesource_setup.sh && \
+    apt-get install ${APT_OPTIONS} nodejs && \
+    npm install -g pnpm
 
 # Switch to a non-root user.
 RUN groupadd -g $GID -o $UNAME

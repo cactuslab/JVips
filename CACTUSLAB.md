@@ -12,24 +12,7 @@ set(JVIPS_VERSION 8.15.2)
 VIPS_VERSION=8.15.2
 ```
 
-## Generate
-
-Update the installation of vips on your local machine, such as by using Homebrew, to the version specified above.
-
-Confirm by running and comparing against the files listed above:
-
-```shell
-vips --version
-```
-
-Then generate updated files:
-
-```shell
-cd script/generate
-nvm use
-pnpm install
-pnpm start
-```
+Ensure that version has been published to the PPA we use to install Vips.
 
 ## Build
 
@@ -39,13 +22,21 @@ Start with a clean:
 ./clean.sh
 ```
 
+We build with an old version of Ubuntu to ensure that the native library we creates works on that version, and any later versions.
+
 First we build for Linux on x86:
 
 ```shell
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
+# Build the Docker image
 docker pull --platform linux/amd64 ubuntu:20.04
 docker build --platform linux/amd64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
+
+# Generate source files
+docker run --platform linux/amd64 --rm -v $(pwd):/app -it jvips-builder-linux ./generate.sh
+
+# Build
 docker run --platform linux/amd64 --rm -v $(pwd):/app -it jvips-builder-linux
 ```
 
