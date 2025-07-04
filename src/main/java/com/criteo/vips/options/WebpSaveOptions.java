@@ -31,7 +31,10 @@ public class WebpSaveOptions {
 	private Integer kmin;
 	private Integer kmax;
 	private Integer effort;
+	private Integer targetSize;
 	private Boolean mixed;
+	private Boolean smartDeblock;
+	private Integer passes;
 	private com.criteo.vips.enums.VipsForeignKeep keep;
 	private double[] background;
 	private com.criteo.vips.PixelPacket backgroundPixelPacket;
@@ -359,6 +362,38 @@ public class WebpSaveOptions {
 	}
 
 	/**
+	 * Optional argument: target-size
+	 * <p>
+	 * Desired target size in bytes
+	 * @return the value of {@code targetSize}
+	 */
+	public Integer getTargetSize() {
+		return this.targetSize;
+	}
+
+	/**
+	 * Set the optional "target-size" argument.
+	 * <p>
+	 * Desired target size in bytes
+	 * @param targetSize the new value of {@code targetSize}
+	 */
+	public void setTargetSize(Integer targetSize) {
+		this.targetSize = targetSize;
+	}
+
+	/**
+	 * Set the optional "target-size" argument.
+	 * <p>
+	 * Desired target size in bytes
+	 * @param targetSize the new value of {@code targetSize}
+	 * @return this object for chaining
+	 */
+	public WebpSaveOptions targetSize(Integer targetSize) {
+		setTargetSize(targetSize);
+		return this;
+	}
+
+	/**
 	 * Optional argument: mixed
 	 * <p>
 	 * Allow mixed encoding (might reduce file size)
@@ -387,6 +422,70 @@ public class WebpSaveOptions {
 	 */
 	public WebpSaveOptions mixed(Boolean mixed) {
 		setMixed(mixed);
+		return this;
+	}
+
+	/**
+	 * Optional argument: smart-deblock
+	 * <p>
+	 * Enable auto-adjusting of the deblocking filter
+	 * @return the value of {@code smartDeblock}
+	 */
+	public Boolean getSmartDeblock() {
+		return this.smartDeblock;
+	}
+
+	/**
+	 * Set the optional "smart-deblock" argument.
+	 * <p>
+	 * Enable auto-adjusting of the deblocking filter
+	 * @param smartDeblock the new value of {@code smartDeblock}
+	 */
+	public void setSmartDeblock(Boolean smartDeblock) {
+		this.smartDeblock = smartDeblock;
+	}
+
+	/**
+	 * Set the optional "smart-deblock" argument.
+	 * <p>
+	 * Enable auto-adjusting of the deblocking filter
+	 * @param smartDeblock the new value of {@code smartDeblock}
+	 * @return this object for chaining
+	 */
+	public WebpSaveOptions smartDeblock(Boolean smartDeblock) {
+		setSmartDeblock(smartDeblock);
+		return this;
+	}
+
+	/**
+	 * Optional argument: passes
+	 * <p>
+	 * Number of entropy-analysis passes (in [1..10])
+	 * @return the value of {@code passes}
+	 */
+	public Integer getPasses() {
+		return this.passes;
+	}
+
+	/**
+	 * Set the optional "passes" argument.
+	 * <p>
+	 * Number of entropy-analysis passes (in [1..10])
+	 * @param passes the new value of {@code passes}
+	 */
+	public void setPasses(Integer passes) {
+		this.passes = passes;
+	}
+
+	/**
+	 * Set the optional "passes" argument.
+	 * <p>
+	 * Number of entropy-analysis passes (in [1..10])
+	 * @param passes the new value of {@code passes}
+	 * @return this object for chaining
+	 */
+	public WebpSaveOptions passes(Integer passes) {
+		setPasses(passes);
 		return this;
 	}
 
@@ -498,7 +597,7 @@ public class WebpSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background);
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

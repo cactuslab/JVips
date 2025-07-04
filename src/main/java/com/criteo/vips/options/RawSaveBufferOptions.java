@@ -17,180 +17,15 @@ limitations under the License.
 package com.criteo.vips.options;
 
 /**
- * Optional arguments for the "jxlsave" operation.
+ * Optional arguments for the "rawsave_buffer" operation.
  */
-public class JXLSaveOptions {
+public class RawSaveBufferOptions {
 
-	private Integer tier;
-	private Double distance;
-	private Integer effort;
-	private Boolean lossless;
-	private Integer q;
 	private com.criteo.vips.enums.VipsForeignKeep keep;
 	private double[] background;
 	private com.criteo.vips.PixelPacket backgroundPixelPacket;
 	private Integer pageHeight;
 	private String profile;
-
-	/**
-	 * Optional argument: tier
-	 * <p>
-	 * Decode speed tier
-	 * @return the value of {@code tier}
-	 */
-	public Integer getTier() {
-		return this.tier;
-	}
-
-	/**
-	 * Set the optional "tier" argument.
-	 * <p>
-	 * Decode speed tier
-	 * @param tier the new value of {@code tier}
-	 */
-	public void setTier(Integer tier) {
-		this.tier = tier;
-	}
-
-	/**
-	 * Set the optional "tier" argument.
-	 * <p>
-	 * Decode speed tier
-	 * @param tier the new value of {@code tier}
-	 * @return this object for chaining
-	 */
-	public JXLSaveOptions tier(Integer tier) {
-		setTier(tier);
-		return this;
-	}
-
-	/**
-	 * Optional argument: distance
-	 * <p>
-	 * Target butteraugli distance
-	 * @return the value of {@code distance}
-	 */
-	public Double getDistance() {
-		return this.distance;
-	}
-
-	/**
-	 * Set the optional "distance" argument.
-	 * <p>
-	 * Target butteraugli distance
-	 * @param distance the new value of {@code distance}
-	 */
-	public void setDistance(Double distance) {
-		this.distance = distance;
-	}
-
-	/**
-	 * Set the optional "distance" argument.
-	 * <p>
-	 * Target butteraugli distance
-	 * @param distance the new value of {@code distance}
-	 * @return this object for chaining
-	 */
-	public JXLSaveOptions distance(Double distance) {
-		setDistance(distance);
-		return this;
-	}
-
-	/**
-	 * Optional argument: effort
-	 * <p>
-	 * Encoding effort
-	 * @return the value of {@code effort}
-	 */
-	public Integer getEffort() {
-		return this.effort;
-	}
-
-	/**
-	 * Set the optional "effort" argument.
-	 * <p>
-	 * Encoding effort
-	 * @param effort the new value of {@code effort}
-	 */
-	public void setEffort(Integer effort) {
-		this.effort = effort;
-	}
-
-	/**
-	 * Set the optional "effort" argument.
-	 * <p>
-	 * Encoding effort
-	 * @param effort the new value of {@code effort}
-	 * @return this object for chaining
-	 */
-	public JXLSaveOptions effort(Integer effort) {
-		setEffort(effort);
-		return this;
-	}
-
-	/**
-	 * Optional argument: lossless
-	 * <p>
-	 * Enable lossless compression
-	 * @return the value of {@code lossless}
-	 */
-	public Boolean getLossless() {
-		return this.lossless;
-	}
-
-	/**
-	 * Set the optional "lossless" argument.
-	 * <p>
-	 * Enable lossless compression
-	 * @param lossless the new value of {@code lossless}
-	 */
-	public void setLossless(Boolean lossless) {
-		this.lossless = lossless;
-	}
-
-	/**
-	 * Set the optional "lossless" argument.
-	 * <p>
-	 * Enable lossless compression
-	 * @param lossless the new value of {@code lossless}
-	 * @return this object for chaining
-	 */
-	public JXLSaveOptions lossless(Boolean lossless) {
-		setLossless(lossless);
-		return this;
-	}
-
-	/**
-	 * Optional argument: Q
-	 * <p>
-	 * Quality factor
-	 * @return the value of {@code q}
-	 */
-	public Integer getQ() {
-		return this.q;
-	}
-
-	/**
-	 * Set the optional "Q" argument.
-	 * <p>
-	 * Quality factor
-	 * @param q the new value of {@code q}
-	 */
-	public void setQ(Integer q) {
-		this.q = q;
-	}
-
-	/**
-	 * Set the optional "Q" argument.
-	 * <p>
-	 * Quality factor
-	 * @param q the new value of {@code q}
-	 * @return this object for chaining
-	 */
-	public JXLSaveOptions q(Integer q) {
-		setQ(q);
-		return this;
-	}
 
 	/**
 	 * Optional argument: keep
@@ -219,7 +54,7 @@ public class JXLSaveOptions {
 	 * @param keep the new value of {@code keep}
 	 * @return this object for chaining
 	 */
-	public JXLSaveOptions keep(com.criteo.vips.enums.VipsForeignKeep keep) {
+	public RawSaveBufferOptions keep(com.criteo.vips.enums.VipsForeignKeep keep) {
 		setKeep(keep);
 		return this;
 	}
@@ -251,7 +86,7 @@ public class JXLSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public JXLSaveOptions background(double[] background) {
+	public RawSaveBufferOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}
@@ -287,7 +122,7 @@ public class JXLSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public JXLSaveOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
+	public RawSaveBufferOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -300,7 +135,7 @@ public class JXLSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background);
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);
@@ -314,7 +149,7 @@ public class JXLSaveOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public JXLSaveOptions background(java.awt.Color background) {
+	public RawSaveBufferOptions background(java.awt.Color background) {
 		setBackground(background);
 		return this;
 	}
@@ -346,7 +181,7 @@ public class JXLSaveOptions {
 	 * @param pageHeight the new value of {@code pageHeight}
 	 * @return this object for chaining
 	 */
-	public JXLSaveOptions pageHeight(Integer pageHeight) {
+	public RawSaveBufferOptions pageHeight(Integer pageHeight) {
 		setPageHeight(pageHeight);
 		return this;
 	}
@@ -378,7 +213,7 @@ public class JXLSaveOptions {
 	 * @param profile the new value of {@code profile}
 	 * @return this object for chaining
 	 */
-	public JXLSaveOptions profile(String profile) {
+	public RawSaveBufferOptions profile(String profile) {
 		setProfile(profile);
 		return this;
 	}

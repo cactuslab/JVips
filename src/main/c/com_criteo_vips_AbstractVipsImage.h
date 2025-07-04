@@ -49,6 +49,22 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_add
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    applyAddAlpha
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyAddAlpha
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    addAlpha
+ * Signature: ()Lcom/criteo/vips/VipsImage;
+ */
+JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_addAlpha
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    analyzeLoad
  * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/AnalyzeLoadOptions;)Lcom/criteo/vips/VipsImage;
  */
@@ -257,22 +273,6 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_byteswap
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    applyCache
- * Signature: (Lcom/criteo/vips/options/CacheOptions;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyCache
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    cache
- * Signature: (Lcom/criteo/vips/options/CacheOptions;)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_cache
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    applyCanny
  * Signature: (Lcom/criteo/vips/options/CannyOptions;)V
  */
@@ -318,6 +318,22 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyCast
  */
 JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_cast
   (JNIEnv *, jobject, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    applyClamp
+ * Signature: (Lcom/criteo/vips/options/ClampOptions;)V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyClamp
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    clamp
+ * Signature: (Lcom/criteo/vips/options/ClampOptions;)Lcom/criteo/vips/VipsImage;
+ */
+JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_clamp
+  (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
@@ -1018,10 +1034,10 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_gaussNoise
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    getPoint
- * Signature: (II)[D
+ * Signature: (IILcom/criteo/vips/options/GetPointOptions;)[D
  */
 JNIEXPORT jdoubleArray JNICALL Java_com_criteo_vips_AbstractVipsImage_getPoint
-  (JNIEnv *, jobject, jint, jint);
+  (JNIEnv *, jobject, jint, jint, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
@@ -1505,38 +1521,6 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_join
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jp2kLoad
- * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/JP2KLoadOptions;)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_jp2kLoad
-  (JNIEnv *, jclass, jstring, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jp2kLoadBuffer
- * Signature: ([BLcom/criteo/vips/options/JP2KLoadBufferOptions;)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_jp2kLoadBuffer
-  (JNIEnv *, jclass, jbyteArray, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jp2kSave
- * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/JP2KSaveOptions;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_jp2kSave
-  (JNIEnv *, jobject, jstring, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jp2kSaveBuffer
- * Signature: (Lcom/criteo/vips/options/JP2KSaveBufferOptions;)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_AbstractVipsImage_jp2kSaveBuffer
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    jpegLoad
  * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/JPEGLoadOptions;)Lcom/criteo/vips/VipsImage;
  */
@@ -1573,38 +1557,6 @@ JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_AbstractVipsImage_jpegSaveBuff
  * Signature: (Lcom/criteo/vips/options/JPEGSaveMimeOptions;)V
  */
 JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_jpegSaveMime
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jxlLoad
- * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/JXLLoadOptions;)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_jxlLoad
-  (JNIEnv *, jclass, jstring, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jxlLoadBuffer
- * Signature: ([BLcom/criteo/vips/options/JXLLoadBufferOptions;)Lcom/criteo/vips/VipsImage;
- */
-JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_jxlLoadBuffer
-  (JNIEnv *, jclass, jbyteArray, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jxlSave
- * Signature: (Ljava/lang/String;Lcom/criteo/vips/options/JXLSaveOptions;)V
- */
-JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_jxlSave
-  (JNIEnv *, jobject, jstring, jobject);
-
-/*
- * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    jxlSaveBuffer
- * Signature: (Lcom/criteo/vips/options/JXLSaveBufferOptions;)[B
- */
-JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_AbstractVipsImage_jxlSaveBuffer
   (JNIEnv *, jobject, jobject);
 
 /*
@@ -2073,6 +2025,22 @@ JNIEXPORT jdouble JNICALL Java_com_criteo_vips_AbstractVipsImage_max
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    applyMaxpair
+ * Signature: (Lcom/criteo/vips/Image;)V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyMaxpair
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    MaxPair
+ * Signature: (Lcom/criteo/vips/Image;)Lcom/criteo/vips/VipsImage;
+ */
+JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_MaxPair
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
  * Method:    applyMeasure
  * Signature: (IILcom/criteo/vips/options/MeasureOptions;)V
  */
@@ -2109,6 +2077,22 @@ JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_merge
  * Signature: (Lcom/criteo/vips/options/MinOptions;)D
  */
 JNIEXPORT jdouble JNICALL Java_com_criteo_vips_AbstractVipsImage_min
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    applyMinpair
+ * Signature: (Lcom/criteo/vips/Image;)V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyMinpair
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    MinPair
+ * Signature: (Lcom/criteo/vips/Image;)Lcom/criteo/vips/VipsImage;
+ */
+JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_MinPair
   (JNIEnv *, jobject, jobject);
 
 /*
@@ -2409,11 +2393,11 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_rawSave
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
- * Method:    rawSaveFd
- * Signature: (ILcom/criteo/vips/options/RawSaveFdOptions;)V
+ * Method:    rawSaveBuffer
+ * Signature: (Lcom/criteo/vips/options/RawSaveBufferOptions;)[B
  */
-JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_rawSaveFd
-  (JNIEnv *, jobject, jint, jobject);
+JNIEXPORT jbyteArray JNICALL Java_com_criteo_vips_AbstractVipsImage_rawSaveBuffer
+  (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage
@@ -2702,6 +2686,14 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_AbstractVipsImage_applyScRGB2XYZ
  */
 JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_scRGB2XYZ
   (JNIEnv *, jobject);
+
+/*
+ * Class:     com_criteo_vips_AbstractVipsImage
+ * Method:    sdf
+ * Signature: (IILcom/criteo/vips/enums/VipsSdfShape;Lcom/criteo/vips/options/SdfOptions;)Lcom/criteo/vips/VipsImage;
+ */
+JNIEXPORT jobject JNICALL Java_com_criteo_vips_AbstractVipsImage_sdf
+  (JNIEnv *, jclass, jint, jint, jobject, jobject);
 
 /*
  * Class:     com_criteo_vips_AbstractVipsImage

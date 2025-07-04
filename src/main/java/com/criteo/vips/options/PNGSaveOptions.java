@@ -102,7 +102,7 @@ public class PNGSaveOptions {
 	/**
 	 * Optional argument: filter
 	 * <p>
-	 * libspng row filter flag(s)
+	 * libpng row filter flag(s)
 	 * @return the value of {@code filter}
 	 */
 	public com.criteo.vips.enums.VipsForeignPngFilter getFilter() {
@@ -112,7 +112,7 @@ public class PNGSaveOptions {
 	/**
 	 * Set the optional "filter" argument.
 	 * <p>
-	 * libspng row filter flag(s)
+	 * libpng row filter flag(s)
 	 * @param filter the new value of {@code filter}
 	 */
 	public void setFilter(com.criteo.vips.enums.VipsForeignPngFilter filter) {
@@ -122,7 +122,7 @@ public class PNGSaveOptions {
 	/**
 	 * Set the optional "filter" argument.
 	 * <p>
-	 * libspng row filter flag(s)
+	 * libpng row filter flag(s)
 	 * @param filter the new value of {@code filter}
 	 * @return this object for chaining
 	 */
@@ -399,7 +399,7 @@ public class PNGSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background);
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

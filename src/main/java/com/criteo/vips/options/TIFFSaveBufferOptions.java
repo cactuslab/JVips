@@ -530,7 +530,7 @@ public class TIFFSaveBufferOptions {
 	/**
 	 * Optional argument: level
 	 * <p>
-	 * ZSTD compression level
+	 * Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level
 	 * @return the value of {@code level}
 	 */
 	public Integer getLevel() {
@@ -540,7 +540,7 @@ public class TIFFSaveBufferOptions {
 	/**
 	 * Set the optional "level" argument.
 	 * <p>
-	 * ZSTD compression level
+	 * Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level
 	 * @param level the new value of {@code level}
 	 */
 	public void setLevel(Integer level) {
@@ -550,7 +550,7 @@ public class TIFFSaveBufferOptions {
 	/**
 	 * Set the optional "level" argument.
 	 * <p>
-	 * ZSTD compression level
+	 * Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level
 	 * @param level the new value of {@code level}
 	 * @return this object for chaining
 	 */
@@ -795,7 +795,7 @@ public class TIFFSaveBufferOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background);
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

@@ -100,7 +100,7 @@ public class LAB2XYZOptions {
 	 */
 	public void setTemp(java.awt.Color temp) {
 		if (temp != null) {
-			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(temp.getRed(), temp.getGreen(), temp.getBlue(), temp.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(temp);
 			setTempPixelPacket(pixelPacket);
 		} else {
 			setTempPixelPacket(null);

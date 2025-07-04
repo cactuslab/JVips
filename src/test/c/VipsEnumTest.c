@@ -39,7 +39,7 @@ assertEqualsNativeEnumValue(JNIEnv *env, const int expected, const char *classNa
     if (expected != actual)
     {
         char msg[BUF_SIZE] = { 0 };
-        sprintf(msg, "%s:%s is not equal to expected value (%d)", className, name, expected);
+        sprintf(msg, "%s:%s is not equal to expected value (%d vs %d)", className, name, actual, expected);
         throwVipsException(env, msg);
     }
     return;
@@ -69,19 +69,16 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH_ASINH, "com/criteo/vips/enums/VipsOperationMath", "Asinh");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH_ACOSH, "com/criteo/vips/enums/VipsOperationMath", "Acosh");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH_ATANH, "com/criteo/vips/enums/VipsOperationMath", "Atanh");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH_LAST, "com/criteo/vips/enums/VipsOperationMath", "Last");
 
 	// VipsOperationMath2
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH2_POW, "com/criteo/vips/enums/VipsOperationMath2", "Pow");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH2_WOP, "com/criteo/vips/enums/VipsOperationMath2", "Wop");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH2_ATAN2, "com/criteo/vips/enums/VipsOperationMath2", "Atan2");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MATH2_LAST, "com/criteo/vips/enums/VipsOperationMath2", "Last");
 
 	// VipsOperationRound
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_ROUND_RINT, "com/criteo/vips/enums/VipsOperationRound", "Rint");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_ROUND_CEIL, "com/criteo/vips/enums/VipsOperationRound", "Ceil");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_ROUND_FLOOR, "com/criteo/vips/enums/VipsOperationRound", "Floor");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_ROUND_LAST, "com/criteo/vips/enums/VipsOperationRound", "Last");
 
 	// VipsOperationRelational
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_RELATIONAL_EQUAL, "com/criteo/vips/enums/VipsOperationRelational", "Equal");
@@ -90,7 +87,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_RELATIONAL_LESSEQ, "com/criteo/vips/enums/VipsOperationRelational", "Lesseq");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_RELATIONAL_MORE, "com/criteo/vips/enums/VipsOperationRelational", "More");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_RELATIONAL_MOREEQ, "com/criteo/vips/enums/VipsOperationRelational", "Moreeq");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_RELATIONAL_LAST, "com/criteo/vips/enums/VipsOperationRelational", "Last");
 
 	// VipsOperationBoolean
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_BOOLEAN_AND, "com/criteo/vips/enums/VipsOperationBoolean", "And");
@@ -98,40 +94,33 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_BOOLEAN_EOR, "com/criteo/vips/enums/VipsOperationBoolean", "Eor");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_BOOLEAN_LSHIFT, "com/criteo/vips/enums/VipsOperationBoolean", "Lshift");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_BOOLEAN_RSHIFT, "com/criteo/vips/enums/VipsOperationBoolean", "Rshift");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_BOOLEAN_LAST, "com/criteo/vips/enums/VipsOperationBoolean", "Last");
 
 	// VipsOperationComplex
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEX_POLAR, "com/criteo/vips/enums/VipsOperationComplex", "Polar");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEX_RECT, "com/criteo/vips/enums/VipsOperationComplex", "Rect");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEX_CONJ, "com/criteo/vips/enums/VipsOperationComplex", "Conj");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEX_LAST, "com/criteo/vips/enums/VipsOperationComplex", "Last");
 
 	// VipsOperationComplex2
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEX2_CROSS_PHASE, "com/criteo/vips/enums/VipsOperationComplex2", "CrossPhase");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEX2_LAST, "com/criteo/vips/enums/VipsOperationComplex2", "Last");
 
 	// VipsOperationComplexget
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEXGET_REAL, "com/criteo/vips/enums/VipsOperationComplexget", "Real");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEXGET_IMAG, "com/criteo/vips/enums/VipsOperationComplexget", "Imag");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_COMPLEXGET_LAST, "com/criteo/vips/enums/VipsOperationComplexget", "Last");
 
 	// VipsPrecision
 	assertEqualsNativeEnumValue(env, VIPS_PRECISION_INTEGER, "com/criteo/vips/enums/VipsPrecision", "Integer");
 	assertEqualsNativeEnumValue(env, VIPS_PRECISION_FLOAT, "com/criteo/vips/enums/VipsPrecision", "Float");
 	assertEqualsNativeEnumValue(env, VIPS_PRECISION_APPROXIMATE, "com/criteo/vips/enums/VipsPrecision", "Approximate");
-	assertEqualsNativeEnumValue(env, VIPS_PRECISION_LAST, "com/criteo/vips/enums/VipsPrecision", "Last");
 
 	// VipsIntent
 	assertEqualsNativeEnumValue(env, VIPS_INTENT_PERCEPTUAL, "com/criteo/vips/enums/VipsIntent", "Perceptual");
 	assertEqualsNativeEnumValue(env, VIPS_INTENT_RELATIVE, "com/criteo/vips/enums/VipsIntent", "Relative");
 	assertEqualsNativeEnumValue(env, VIPS_INTENT_SATURATION, "com/criteo/vips/enums/VipsIntent", "Saturation");
 	assertEqualsNativeEnumValue(env, VIPS_INTENT_ABSOLUTE, "com/criteo/vips/enums/VipsIntent", "Absolute");
-	assertEqualsNativeEnumValue(env, VIPS_INTENT_LAST, "com/criteo/vips/enums/VipsIntent", "Last");
 
 	// VipsPCS
 	assertEqualsNativeEnumValue(env, VIPS_PCS_LAB, "com/criteo/vips/enums/VipsPCS", "Lab");
 	assertEqualsNativeEnumValue(env, VIPS_PCS_XYZ, "com/criteo/vips/enums/VipsPCS", "Xyz");
-	assertEqualsNativeEnumValue(env, VIPS_PCS_LAST, "com/criteo/vips/enums/VipsPCS", "Last");
 
 	// VipsExtend
 	assertEqualsNativeEnumValue(env, VIPS_EXTEND_BLACK, "com/criteo/vips/enums/VipsExtend", "Black");
@@ -140,7 +129,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_EXTEND_MIRROR, "com/criteo/vips/enums/VipsExtend", "Mirror");
 	assertEqualsNativeEnumValue(env, VIPS_EXTEND_WHITE, "com/criteo/vips/enums/VipsExtend", "White");
 	assertEqualsNativeEnumValue(env, VIPS_EXTEND_BACKGROUND, "com/criteo/vips/enums/VipsExtend", "Background");
-	assertEqualsNativeEnumValue(env, VIPS_EXTEND_LAST, "com/criteo/vips/enums/VipsExtend", "Last");
 
 	// VipsCompassDirection
 	assertEqualsNativeEnumValue(env, VIPS_COMPASS_DIRECTION_CENTRE, "com/criteo/vips/enums/VipsCompassDirection", "Centre");
@@ -152,25 +140,21 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_COMPASS_DIRECTION_SOUTH_EAST, "com/criteo/vips/enums/VipsCompassDirection", "SouthEast");
 	assertEqualsNativeEnumValue(env, VIPS_COMPASS_DIRECTION_SOUTH_WEST, "com/criteo/vips/enums/VipsCompassDirection", "SouthWest");
 	assertEqualsNativeEnumValue(env, VIPS_COMPASS_DIRECTION_NORTH_WEST, "com/criteo/vips/enums/VipsCompassDirection", "NorthWest");
-	assertEqualsNativeEnumValue(env, VIPS_COMPASS_DIRECTION_LAST, "com/criteo/vips/enums/VipsCompassDirection", "Last");
 
 	// VipsDirection
 	assertEqualsNativeEnumValue(env, VIPS_DIRECTION_HORIZONTAL, "com/criteo/vips/enums/VipsDirection", "Horizontal");
 	assertEqualsNativeEnumValue(env, VIPS_DIRECTION_VERTICAL, "com/criteo/vips/enums/VipsDirection", "Vertical");
-	assertEqualsNativeEnumValue(env, VIPS_DIRECTION_LAST, "com/criteo/vips/enums/VipsDirection", "Last");
 
 	// VipsAlign
 	assertEqualsNativeEnumValue(env, VIPS_ALIGN_LOW, "com/criteo/vips/enums/VipsAlign", "Low");
 	assertEqualsNativeEnumValue(env, VIPS_ALIGN_CENTRE, "com/criteo/vips/enums/VipsAlign", "Centre");
 	assertEqualsNativeEnumValue(env, VIPS_ALIGN_HIGH, "com/criteo/vips/enums/VipsAlign", "High");
-	assertEqualsNativeEnumValue(env, VIPS_ALIGN_LAST, "com/criteo/vips/enums/VipsAlign", "Last");
 
 	// VipsAngle
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE_D0, "com/criteo/vips/enums/VipsAngle", "D0");
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE_D90, "com/criteo/vips/enums/VipsAngle", "D90");
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE_D180, "com/criteo/vips/enums/VipsAngle", "D180");
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE_D270, "com/criteo/vips/enums/VipsAngle", "D270");
-	assertEqualsNativeEnumValue(env, VIPS_ANGLE_LAST, "com/criteo/vips/enums/VipsAngle", "Last");
 
 	// VipsAngle45
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE45_D0, "com/criteo/vips/enums/VipsAngle45", "D0");
@@ -181,7 +165,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE45_D225, "com/criteo/vips/enums/VipsAngle45", "D225");
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE45_D270, "com/criteo/vips/enums/VipsAngle45", "D270");
 	assertEqualsNativeEnumValue(env, VIPS_ANGLE45_D315, "com/criteo/vips/enums/VipsAngle45", "D315");
-	assertEqualsNativeEnumValue(env, VIPS_ANGLE45_LAST, "com/criteo/vips/enums/VipsAngle45", "Last");
 
 	// VipsInteresting
 	assertEqualsNativeEnumValue(env, VIPS_INTERESTING_NONE, "com/criteo/vips/enums/VipsInteresting", "None");
@@ -191,7 +174,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_INTERESTING_LOW, "com/criteo/vips/enums/VipsInteresting", "Low");
 	assertEqualsNativeEnumValue(env, VIPS_INTERESTING_HIGH, "com/criteo/vips/enums/VipsInteresting", "High");
 	assertEqualsNativeEnumValue(env, VIPS_INTERESTING_ALL, "com/criteo/vips/enums/VipsInteresting", "All");
-	assertEqualsNativeEnumValue(env, VIPS_INTERESTING_LAST, "com/criteo/vips/enums/VipsInteresting", "Last");
 
 	// VipsBlendMode
 	assertEqualsNativeEnumValue(env, VIPS_BLEND_MODE_CLEAR, "com/criteo/vips/enums/VipsBlendMode", "Clear");
@@ -219,25 +201,27 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_BLEND_MODE_SOFT_LIGHT, "com/criteo/vips/enums/VipsBlendMode", "SoftLight");
 	assertEqualsNativeEnumValue(env, VIPS_BLEND_MODE_DIFFERENCE, "com/criteo/vips/enums/VipsBlendMode", "Difference");
 	assertEqualsNativeEnumValue(env, VIPS_BLEND_MODE_EXCLUSION, "com/criteo/vips/enums/VipsBlendMode", "Exclusion");
-	assertEqualsNativeEnumValue(env, VIPS_BLEND_MODE_LAST, "com/criteo/vips/enums/VipsBlendMode", "Last");
 
 	// VipsCombine
 	assertEqualsNativeEnumValue(env, VIPS_COMBINE_MAX, "com/criteo/vips/enums/VipsCombine", "Max");
 	assertEqualsNativeEnumValue(env, VIPS_COMBINE_SUM, "com/criteo/vips/enums/VipsCombine", "Sum");
 	assertEqualsNativeEnumValue(env, VIPS_COMBINE_MIN, "com/criteo/vips/enums/VipsCombine", "Min");
-	assertEqualsNativeEnumValue(env, VIPS_COMBINE_LAST, "com/criteo/vips/enums/VipsCombine", "Last");
 
 	// VipsTextWrap
 	assertEqualsNativeEnumValue(env, VIPS_TEXT_WRAP_WORD, "com/criteo/vips/enums/VipsTextWrap", "Word");
 	assertEqualsNativeEnumValue(env, VIPS_TEXT_WRAP_CHAR, "com/criteo/vips/enums/VipsTextWrap", "Char");
 	assertEqualsNativeEnumValue(env, VIPS_TEXT_WRAP_WORD_CHAR, "com/criteo/vips/enums/VipsTextWrap", "WordChar");
 	assertEqualsNativeEnumValue(env, VIPS_TEXT_WRAP_NONE, "com/criteo/vips/enums/VipsTextWrap", "None");
-	assertEqualsNativeEnumValue(env, VIPS_TEXT_WRAP_LAST, "com/criteo/vips/enums/VipsTextWrap", "Last");
+
+	// VipsSdfShape
+	assertEqualsNativeEnumValue(env, VIPS_SDF_SHAPE_CIRCLE, "com/criteo/vips/enums/VipsSdfShape", "Circle");
+	assertEqualsNativeEnumValue(env, VIPS_SDF_SHAPE_BOX, "com/criteo/vips/enums/VipsSdfShape", "Box");
+	assertEqualsNativeEnumValue(env, VIPS_SDF_SHAPE_ROUNDED_BOX, "com/criteo/vips/enums/VipsSdfShape", "RoundedBox");
+	assertEqualsNativeEnumValue(env, VIPS_SDF_SHAPE_LINE, "com/criteo/vips/enums/VipsSdfShape", "Line");
 
 	// VipsCombineMode
 	assertEqualsNativeEnumValue(env, VIPS_COMBINE_MODE_SET, "com/criteo/vips/enums/VipsCombineMode", "Set");
 	assertEqualsNativeEnumValue(env, VIPS_COMBINE_MODE_ADD, "com/criteo/vips/enums/VipsCombineMode", "Add");
-	assertEqualsNativeEnumValue(env, VIPS_COMBINE_MODE_LAST, "com/criteo/vips/enums/VipsCombineMode", "Last");
 
 	// VipsForeignFlags
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_NONE, "com/criteo/vips/enums/VipsForeignFlags", "None");
@@ -251,16 +235,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FAIL_ON_TRUNCATED, "com/criteo/vips/enums/VipsFailOn", "Truncated");
 	assertEqualsNativeEnumValue(env, VIPS_FAIL_ON_ERROR, "com/criteo/vips/enums/VipsFailOn", "Error");
 	assertEqualsNativeEnumValue(env, VIPS_FAIL_ON_WARNING, "com/criteo/vips/enums/VipsFailOn", "Warning");
-	assertEqualsNativeEnumValue(env, VIPS_FAIL_ON_LAST, "com/criteo/vips/enums/VipsFailOn", "Last");
-
-	// VipsSaveable
-	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_MONO, "com/criteo/vips/enums/VipsSaveable", "Mono");
-	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_RGB, "com/criteo/vips/enums/VipsSaveable", "Rgb");
-	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_RGBA, "com/criteo/vips/enums/VipsSaveable", "Rgba");
-	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_RGBA_ONLY, "com/criteo/vips/enums/VipsSaveable", "RgbaOnly");
-	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_RGB_CMYK, "com/criteo/vips/enums/VipsSaveable", "RgbCmyk");
-	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_ANY, "com/criteo/vips/enums/VipsSaveable", "Any");
-	assertEqualsNativeEnumValue(env, VIPS_SAVEABLE_LAST, "com/criteo/vips/enums/VipsSaveable", "Last");
 
 	// VipsForeignKeep
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_NONE, "com/criteo/vips/enums/VipsForeignKeep", "None");
@@ -274,13 +248,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SUBSAMPLE_AUTO, "com/criteo/vips/enums/VipsForeignSubsample", "Auto");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SUBSAMPLE_ON, "com/criteo/vips/enums/VipsForeignSubsample", "On");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SUBSAMPLE_OFF, "com/criteo/vips/enums/VipsForeignSubsample", "Off");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SUBSAMPLE_LAST, "com/criteo/vips/enums/VipsForeignSubsample", "Last");
-
-	// VipsForeignJpegSubsample
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_JPEG_SUBSAMPLE_AUTO, "com/criteo/vips/enums/VipsForeignJpegSubsample", "Auto");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_JPEG_SUBSAMPLE_ON, "com/criteo/vips/enums/VipsForeignJpegSubsample", "On");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_JPEG_SUBSAMPLE_OFF, "com/criteo/vips/enums/VipsForeignJpegSubsample", "Off");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_JPEG_SUBSAMPLE_LAST, "com/criteo/vips/enums/VipsForeignJpegSubsample", "Last");
 
 	// VipsForeignWebpPreset
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_WEBP_PRESET_DEFAULT, "com/criteo/vips/enums/VipsForeignWebpPreset", "Default");
@@ -289,7 +256,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_WEBP_PRESET_DRAWING, "com/criteo/vips/enums/VipsForeignWebpPreset", "Drawing");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_WEBP_PRESET_ICON, "com/criteo/vips/enums/VipsForeignWebpPreset", "Icon");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_WEBP_PRESET_TEXT, "com/criteo/vips/enums/VipsForeignWebpPreset", "Text");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_WEBP_PRESET_LAST, "com/criteo/vips/enums/VipsForeignWebpPreset", "Last");
 
 	// VipsForeignTiffCompression
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_COMPRESSION_NONE, "com/criteo/vips/enums/VipsForeignTiffCompression", "None");
@@ -301,18 +267,15 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_COMPRESSION_WEBP, "com/criteo/vips/enums/VipsForeignTiffCompression", "Webp");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_COMPRESSION_ZSTD, "com/criteo/vips/enums/VipsForeignTiffCompression", "Zstd");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_COMPRESSION_JP2K, "com/criteo/vips/enums/VipsForeignTiffCompression", "Jp2k");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_COMPRESSION_LAST, "com/criteo/vips/enums/VipsForeignTiffCompression", "Last");
 
 	// VipsForeignTiffPredictor
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_PREDICTOR_NONE, "com/criteo/vips/enums/VipsForeignTiffPredictor", "None");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_PREDICTOR_HORIZONTAL, "com/criteo/vips/enums/VipsForeignTiffPredictor", "Horizontal");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_PREDICTOR_FLOAT, "com/criteo/vips/enums/VipsForeignTiffPredictor", "Float");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_PREDICTOR_LAST, "com/criteo/vips/enums/VipsForeignTiffPredictor", "Last");
 
 	// VipsForeignTiffResunit
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_RESUNIT_CM, "com/criteo/vips/enums/VipsForeignTiffResunit", "Cm");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_RESUNIT_INCH, "com/criteo/vips/enums/VipsForeignTiffResunit", "Inch");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_TIFF_RESUNIT_LAST, "com/criteo/vips/enums/VipsForeignTiffResunit", "Last");
 
 	// VipsForeignPngFilter
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_PNG_FILTER_NONE, "com/criteo/vips/enums/VipsForeignPngFilter", "None");
@@ -328,7 +291,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_PPM_FORMAT_PPM, "com/criteo/vips/enums/VipsForeignPpmFormat", "Ppm");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_PPM_FORMAT_PFM, "com/criteo/vips/enums/VipsForeignPpmFormat", "Pfm");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_PPM_FORMAT_PNM, "com/criteo/vips/enums/VipsForeignPpmFormat", "Pnm");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_PPM_FORMAT_LAST, "com/criteo/vips/enums/VipsForeignPpmFormat", "Last");
 
 	// VipsForeignDzLayout
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_LAYOUT_DZ, "com/criteo/vips/enums/VipsForeignDzLayout", "Dz");
@@ -336,26 +298,22 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_LAYOUT_GOOGLE, "com/criteo/vips/enums/VipsForeignDzLayout", "Google");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_LAYOUT_IIIF, "com/criteo/vips/enums/VipsForeignDzLayout", "Iiif");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_LAYOUT_IIIF3, "com/criteo/vips/enums/VipsForeignDzLayout", "Iiif3");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_LAYOUT_LAST, "com/criteo/vips/enums/VipsForeignDzLayout", "Last");
 
 	// VipsForeignDzDepth
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_DEPTH_ONEPIXEL, "com/criteo/vips/enums/VipsForeignDzDepth", "Onepixel");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_DEPTH_ONETILE, "com/criteo/vips/enums/VipsForeignDzDepth", "Onetile");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_DEPTH_ONE, "com/criteo/vips/enums/VipsForeignDzDepth", "One");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_DEPTH_LAST, "com/criteo/vips/enums/VipsForeignDzDepth", "Last");
 
 	// VipsForeignDzContainer
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_CONTAINER_FS, "com/criteo/vips/enums/VipsForeignDzContainer", "Fs");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_CONTAINER_ZIP, "com/criteo/vips/enums/VipsForeignDzContainer", "Zip");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_CONTAINER_SZI, "com/criteo/vips/enums/VipsForeignDzContainer", "Szi");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_DZ_CONTAINER_LAST, "com/criteo/vips/enums/VipsForeignDzContainer", "Last");
 
 	// VipsForeignHeifCompression
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_COMPRESSION_HEVC, "com/criteo/vips/enums/VipsForeignHeifCompression", "Hevc");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_COMPRESSION_AVC, "com/criteo/vips/enums/VipsForeignHeifCompression", "Avc");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_COMPRESSION_JPEG, "com/criteo/vips/enums/VipsForeignHeifCompression", "Jpeg");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_COMPRESSION_AV1, "com/criteo/vips/enums/VipsForeignHeifCompression", "Av1");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_COMPRESSION_LAST, "com/criteo/vips/enums/VipsForeignHeifCompression", "Last");
 
 	// VipsForeignHeifEncoder
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_ENCODER_AUTO, "com/criteo/vips/enums/VipsForeignHeifEncoder", "Auto");
@@ -363,7 +321,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_ENCODER_RAV1E, "com/criteo/vips/enums/VipsForeignHeifEncoder", "Rav1e");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_ENCODER_SVT, "com/criteo/vips/enums/VipsForeignHeifEncoder", "Svt");
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_ENCODER_X265, "com/criteo/vips/enums/VipsForeignHeifEncoder", "X265");
-	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_HEIF_ENCODER_LAST, "com/criteo/vips/enums/VipsForeignHeifEncoder", "Last");
 
 	// VipsFormatFlags
 	assertEqualsNativeEnumValue(env, VIPS_FORMAT_NONE, "com/criteo/vips/enums/VipsFormatFlags", "None");
@@ -409,7 +366,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_INTERPRETATION_MATRIX, "com/criteo/vips/enums/VipsInterpretation", "Matrix");
 	assertEqualsNativeEnumValue(env, VIPS_INTERPRETATION_scRGB, "com/criteo/vips/enums/VipsInterpretation", "Scrgb");
 	assertEqualsNativeEnumValue(env, VIPS_INTERPRETATION_HSV, "com/criteo/vips/enums/VipsInterpretation", "Hsv");
-	assertEqualsNativeEnumValue(env, VIPS_INTERPRETATION_LAST, "com/criteo/vips/enums/VipsInterpretation", "Last");
 
 	// VipsBandFormat
 	assertEqualsNativeEnumValue(env, VIPS_FORMAT_NOTSET, "com/criteo/vips/enums/VipsBandFormat", "Notset");
@@ -423,25 +379,21 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FORMAT_COMPLEX, "com/criteo/vips/enums/VipsBandFormat", "Complex");
 	assertEqualsNativeEnumValue(env, VIPS_FORMAT_DOUBLE, "com/criteo/vips/enums/VipsBandFormat", "Double");
 	assertEqualsNativeEnumValue(env, VIPS_FORMAT_DPCOMPLEX, "com/criteo/vips/enums/VipsBandFormat", "Dpcomplex");
-	assertEqualsNativeEnumValue(env, VIPS_FORMAT_LAST, "com/criteo/vips/enums/VipsBandFormat", "Last");
 
 	// VipsCoding
 	assertEqualsNativeEnumValue(env, VIPS_CODING_ERROR, "com/criteo/vips/enums/VipsCoding", "Error");
 	assertEqualsNativeEnumValue(env, VIPS_CODING_NONE, "com/criteo/vips/enums/VipsCoding", "None");
 	assertEqualsNativeEnumValue(env, VIPS_CODING_LABQ, "com/criteo/vips/enums/VipsCoding", "Labq");
 	assertEqualsNativeEnumValue(env, VIPS_CODING_RAD, "com/criteo/vips/enums/VipsCoding", "Rad");
-	assertEqualsNativeEnumValue(env, VIPS_CODING_LAST, "com/criteo/vips/enums/VipsCoding", "Last");
 
 	// VipsAccess
 	assertEqualsNativeEnumValue(env, VIPS_ACCESS_RANDOM, "com/criteo/vips/enums/VipsAccess", "Random");
 	assertEqualsNativeEnumValue(env, VIPS_ACCESS_SEQUENTIAL, "com/criteo/vips/enums/VipsAccess", "Sequential");
 	assertEqualsNativeEnumValue(env, VIPS_ACCESS_SEQUENTIAL_UNBUFFERED, "com/criteo/vips/enums/VipsAccess", "SequentialUnbuffered");
-	assertEqualsNativeEnumValue(env, VIPS_ACCESS_LAST, "com/criteo/vips/enums/VipsAccess", "Last");
 
 	// VipsOperationMorphology
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MORPHOLOGY_ERODE, "com/criteo/vips/enums/VipsOperationMorphology", "Erode");
 	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MORPHOLOGY_DILATE, "com/criteo/vips/enums/VipsOperationMorphology", "Dilate");
-	assertEqualsNativeEnumValue(env, VIPS_OPERATION_MORPHOLOGY_LAST, "com/criteo/vips/enums/VipsOperationMorphology", "Last");
 
 	// VipsArgumentFlags
 	assertEqualsNativeEnumValue(env, VIPS_ARGUMENT_NONE, "com/criteo/vips/enums/VipsArgumentFlags", "None");
@@ -472,7 +424,6 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_REGION_SHRINK_MAX, "com/criteo/vips/enums/VipsRegionShrink", "Max");
 	assertEqualsNativeEnumValue(env, VIPS_REGION_SHRINK_MIN, "com/criteo/vips/enums/VipsRegionShrink", "Min");
 	assertEqualsNativeEnumValue(env, VIPS_REGION_SHRINK_NEAREST, "com/criteo/vips/enums/VipsRegionShrink", "Nearest");
-	assertEqualsNativeEnumValue(env, VIPS_REGION_SHRINK_LAST, "com/criteo/vips/enums/VipsRegionShrink", "Last");
 
 	// VipsKernel
 	assertEqualsNativeEnumValue(env, VIPS_KERNEL_NEAREST, "com/criteo/vips/enums/VipsKernel", "Nearest");
@@ -481,14 +432,12 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_KERNEL_MITCHELL, "com/criteo/vips/enums/VipsKernel", "Mitchell");
 	assertEqualsNativeEnumValue(env, VIPS_KERNEL_LANCZOS2, "com/criteo/vips/enums/VipsKernel", "Lanczos2");
 	assertEqualsNativeEnumValue(env, VIPS_KERNEL_LANCZOS3, "com/criteo/vips/enums/VipsKernel", "Lanczos3");
-	assertEqualsNativeEnumValue(env, VIPS_KERNEL_LAST, "com/criteo/vips/enums/VipsKernel", "Last");
 
 	// VipsSize
 	assertEqualsNativeEnumValue(env, VIPS_SIZE_BOTH, "com/criteo/vips/enums/VipsSize", "Both");
 	assertEqualsNativeEnumValue(env, VIPS_SIZE_UP, "com/criteo/vips/enums/VipsSize", "Up");
 	assertEqualsNativeEnumValue(env, VIPS_SIZE_DOWN, "com/criteo/vips/enums/VipsSize", "Down");
 	assertEqualsNativeEnumValue(env, VIPS_SIZE_FORCE, "com/criteo/vips/enums/VipsSize", "Force");
-	assertEqualsNativeEnumValue(env, VIPS_SIZE_LAST, "com/criteo/vips/enums/VipsSize", "Last");
 
 	// VipsToken
 	assertEqualsNativeEnumValue(env, VIPS_TOKEN_LEFT, "com/criteo/vips/enums/VipsToken", "Left");

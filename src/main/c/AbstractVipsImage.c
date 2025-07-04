@@ -33,6 +33,8 @@ static jmethodID doubleValue_mid = NULL;
 static jclass rectangleClass = NULL;
 static jmethodID rectangle_ctor_mid = NULL;
 static jmethodID pixelPacket_getComponents_mid = NULL;
+static jmethodID pixelPacket_getComponentsNoAlpha_mid = NULL;
+static jmethodID pixelPacket_getComponentsWithAlpha_mid = NULL;
 
 JNIEXPORT void JNICALL
 Java_com_criteo_vips_AbstractVipsImage_initFieldIDs(JNIEnv *env, jobject cls)
@@ -56,6 +58,8 @@ Java_com_criteo_vips_AbstractVipsImage_initFieldIDs(JNIEnv *env, jobject cls)
 	
 	jclass pixelPacketClass = (*env)->FindClass(env, "com/criteo/vips/PixelPacket");
 	pixelPacket_getComponents_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponents", "()[D");
+	pixelPacket_getComponentsNoAlpha_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponentsNoAlpha", "()[D");
+	pixelPacket_getComponentsWithAlpha_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponentsWithAlpha", "()[D");
 }
 
 JNIEXPORT void JNICALL
@@ -240,6 +244,89 @@ Java_com_criteo_vips_AbstractVipsImage_add(JNIEnv *env, jobject left, jobject ri
 	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_applyAddAlpha(JNIEnv *env, jobject in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("addalpha");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "addalpha failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Mutating image result
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+	(*env)->SetLongField(env, in, handle_fid, (jlong) out);
+}
+
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_addAlpha(JNIEnv *env, jobject in)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("addalpha");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "addalpha failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
 JNIEXPORT jobject JNICALL
 Java_com_criteo_vips_AbstractVipsImage_analyzeLoad(JNIEnv *env, jclass cls, jstring filename, jobject options)
 {
@@ -398,8 +485,6 @@ Java_com_criteo_vips_AbstractVipsImage_arrayjoin(JNIEnv *env, jclass cls, jobjec
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -1718,167 +1803,6 @@ Java_com_criteo_vips_AbstractVipsImage_byteswap(JNIEnv *env, jobject in)
 }
 
 JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_applyCache(JNIEnv *env, jobject in, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("cache");
-
-	// in
-	if (in != NULL) {
-		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
-		g_object_set_property(G_OBJECT(op), "in", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// max-tiles
-		jfieldID maxTilesFid = (*env)->GetFieldID(env, optionsCls, "maxTiles", "Ljava/lang/Integer;");
-		jobject maxTilesObjectValue = (*env)->GetObjectField(env, options, maxTilesFid);
-		if (maxTilesObjectValue != NULL) {
-			jint maxTiles = (*env)->CallIntMethod(env, maxTilesObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, maxTiles);
-			g_object_set_property(G_OBJECT(op), "max-tiles", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// tile-height
-		jfieldID tileHeightFid = (*env)->GetFieldID(env, optionsCls, "tileHeight", "Ljava/lang/Integer;");
-		jobject tileHeightObjectValue = (*env)->GetObjectField(env, options, tileHeightFid);
-		if (tileHeightObjectValue != NULL) {
-			jint tileHeight = (*env)->CallIntMethod(env, tileHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileHeight);
-			g_object_set_property(G_OBJECT(op), "tile-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// tile-width
-		jfieldID tileWidthFid = (*env)->GetFieldID(env, optionsCls, "tileWidth", "Ljava/lang/Integer;");
-		jobject tileWidthObjectValue = (*env)->GetObjectField(env, options, tileWidthFid);
-		if (tileWidthObjectValue != NULL) {
-			jint tileWidth = (*env)->CallIntMethod(env, tileWidthObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileWidth);
-			g_object_set_property(G_OBJECT(op), "tile-width", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "cache failed");
-		return;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// out	
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "out", &gvalue);
-	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(out);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Mutating image result
-	g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
-	(*env)->SetLongField(env, in, handle_fid, (jlong) out);
-}
-
-
-JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_cache(JNIEnv *env, jobject in, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("cache");
-
-	// in
-	if (in != NULL) {
-		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
-		g_object_set_property(G_OBJECT(op), "in", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// max-tiles
-		jfieldID maxTilesFid = (*env)->GetFieldID(env, optionsCls, "maxTiles", "Ljava/lang/Integer;");
-		jobject maxTilesObjectValue = (*env)->GetObjectField(env, options, maxTilesFid);
-		if (maxTilesObjectValue != NULL) {
-			jint maxTiles = (*env)->CallIntMethod(env, maxTilesObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, maxTiles);
-			g_object_set_property(G_OBJECT(op), "max-tiles", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// tile-height
-		jfieldID tileHeightFid = (*env)->GetFieldID(env, optionsCls, "tileHeight", "Ljava/lang/Integer;");
-		jobject tileHeightObjectValue = (*env)->GetObjectField(env, options, tileHeightFid);
-		if (tileHeightObjectValue != NULL) {
-			jint tileHeight = (*env)->CallIntMethod(env, tileHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileHeight);
-			g_object_set_property(G_OBJECT(op), "tile-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// tile-width
-		jfieldID tileWidthFid = (*env)->GetFieldID(env, optionsCls, "tileWidth", "Ljava/lang/Integer;");
-		jobject tileWidthObjectValue = (*env)->GetObjectField(env, options, tileWidthFid);
-		if (tileWidthObjectValue != NULL) {
-			jint tileWidth = (*env)->CallIntMethod(env, tileWidthObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileWidth);
-			g_object_set_property(G_OBJECT(op), "tile-width", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "cache failed");
-		return NULL;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// out	
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "out", &gvalue);
-	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(out);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Output
-	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
-	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
-}
-
-JNIEXPORT void JNICALL
 Java_com_criteo_vips_AbstractVipsImage_applyCanny(JNIEnv *env, jobject in, jobject options)
 {
 	GValue gvalue = { 0 };
@@ -2248,6 +2172,145 @@ Java_com_criteo_vips_AbstractVipsImage_cast(JNIEnv *env, jobject in, jobject for
 	if (!(new_op = vips_cache_operation_build(op))) {
 		g_object_unref(op);
 		throwVipsException(env, "cast failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_applyClamp(JNIEnv *env, jobject in, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("clamp");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// min
+		jfieldID minFid = (*env)->GetFieldID(env, optionsCls, "min", "Ljava/lang/Double;");
+		jobject minObjectValue = (*env)->GetObjectField(env, options, minFid);
+		if (minObjectValue != NULL) {
+			jdouble min = (*env)->CallDoubleMethod(env, minObjectValue, doubleValue_mid);
+			g_value_init(&gvalue, G_TYPE_DOUBLE);
+			g_value_set_double(&gvalue, min);
+			g_object_set_property(G_OBJECT(op), "min", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// max
+		jfieldID maxFid = (*env)->GetFieldID(env, optionsCls, "max", "Ljava/lang/Double;");
+		jobject maxObjectValue = (*env)->GetObjectField(env, options, maxFid);
+		if (maxObjectValue != NULL) {
+			jdouble max = (*env)->CallDoubleMethod(env, maxObjectValue, doubleValue_mid);
+			g_value_init(&gvalue, G_TYPE_DOUBLE);
+			g_value_set_double(&gvalue, max);
+			g_object_set_property(G_OBJECT(op), "max", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "clamp failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Mutating image result
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+	(*env)->SetLongField(env, in, handle_fid, (jlong) out);
+}
+
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_clamp(JNIEnv *env, jobject in, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("clamp");
+
+	// in
+	if (in != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
+		g_object_set_property(G_OBJECT(op), "in", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// min
+		jfieldID minFid = (*env)->GetFieldID(env, optionsCls, "min", "Ljava/lang/Double;");
+		jobject minObjectValue = (*env)->GetObjectField(env, options, minFid);
+		if (minObjectValue != NULL) {
+			jdouble min = (*env)->CallDoubleMethod(env, minObjectValue, doubleValue_mid);
+			g_value_init(&gvalue, G_TYPE_DOUBLE);
+			g_value_set_double(&gvalue, min);
+			g_object_set_property(G_OBJECT(op), "min", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// max
+		jfieldID maxFid = (*env)->GetFieldID(env, optionsCls, "max", "Ljava/lang/Double;");
+		jobject maxObjectValue = (*env)->GetObjectField(env, options, maxFid);
+		if (maxObjectValue != NULL) {
+			jdouble max = (*env)->CallDoubleMethod(env, maxObjectValue, doubleValue_mid);
+			g_value_init(&gvalue, G_TYPE_DOUBLE);
+			g_value_set_double(&gvalue, max);
+			g_object_set_property(G_OBJECT(op), "max", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "clamp failed");
 		return NULL;
 	}
 	g_object_unref(op);
@@ -5031,19 +5094,18 @@ Java_com_criteo_vips_AbstractVipsImage_csvSave(JNIEnv *env, jobject in, jstring 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -6238,19 +6300,18 @@ Java_com_criteo_vips_AbstractVipsImage_dzSave(JNIEnv *env, jobject in, jstring f
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -6506,19 +6567,18 @@ Java_com_criteo_vips_AbstractVipsImage_dzSaveBuffer(JNIEnv *env, jobject in, job
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -6643,19 +6703,18 @@ Java_com_criteo_vips_AbstractVipsImage_applyEmbed(JNIEnv *env, jobject in, jint 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -6756,19 +6815,18 @@ Java_com_criteo_vips_AbstractVipsImage_embed(JNIEnv *env, jobject in, jint x, ji
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -7440,19 +7498,13 @@ Java_com_criteo_vips_AbstractVipsImage_findTrim(JNIEnv *env, jobject in, jobject
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid); /* Operation requires no alpha component */
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Operation requires no alpha component */
-				if (backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -7651,19 +7703,18 @@ Java_com_criteo_vips_AbstractVipsImage_fitsSave(JNIEnv *env, jobject in, jstring
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -7739,19 +7790,13 @@ Java_com_criteo_vips_AbstractVipsImage_applyFlatten(JNIEnv *env, jobject in, job
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid); /* Operation requires no alpha component */
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Operation requires no alpha component */
-				if (backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -7826,19 +7871,13 @@ Java_com_criteo_vips_AbstractVipsImage_flatten(JNIEnv *env, jobject in, jobject 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid); /* Operation requires no alpha component */
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Operation requires no alpha component */
-				if (backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -8738,7 +8777,7 @@ Java_com_criteo_vips_AbstractVipsImage_gaussNoise(JNIEnv *env, jclass cls, jint 
 }
 
 JNIEXPORT jdoubleArray JNICALL
-Java_com_criteo_vips_AbstractVipsImage_getPoint(JNIEnv *env, jobject in, jint x, jint y)
+Java_com_criteo_vips_AbstractVipsImage_getPoint(JNIEnv *env, jobject in, jint x, jint y, jobject options)
 {
 	GValue gvalue = { 0 };
 
@@ -8763,6 +8802,23 @@ Java_com_criteo_vips_AbstractVipsImage_getPoint(JNIEnv *env, jobject in, jint x,
 	g_value_set_int(&gvalue, y);
 	g_object_set_property(G_OBJECT(op), "y", &gvalue);
 	g_value_unset(&gvalue);
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// unpack-complex
+		jfieldID unpackComplexFid = (*env)->GetFieldID(env, optionsCls, "unpackComplex", "Ljava/lang/Boolean;");
+		jobject unpackComplexObjectValue = (*env)->GetObjectField(env, options, unpackComplexFid);
+		if (unpackComplexObjectValue != NULL) {
+			jboolean unpackComplex = (*env)->CallBooleanMethod(env, unpackComplexObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, unpackComplex);
+			g_object_set_property(G_OBJECT(op), "unpack-complex", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
 
 	// Operation
 	VipsOperation *new_op;
@@ -9162,19 +9218,18 @@ Java_com_criteo_vips_AbstractVipsImage_gifSave(JNIEnv *env, jobject in, jstring 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -9340,19 +9395,18 @@ Java_com_criteo_vips_AbstractVipsImage_gifSaveBuffer(JNIEnv *env, jobject in, jo
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -9615,19 +9669,18 @@ Java_com_criteo_vips_AbstractVipsImage_applyGravity(JNIEnv *env, jobject in, job
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -9727,19 +9780,18 @@ Java_com_criteo_vips_AbstractVipsImage_gravity(JNIEnv *env, jobject in, jobject 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -10377,19 +10429,18 @@ Java_com_criteo_vips_AbstractVipsImage_heifSave(JNIEnv *env, jobject in, jstring
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -10561,19 +10612,18 @@ Java_com_criteo_vips_AbstractVipsImage_heifSaveBuffer(JNIEnv *env, jobject in, j
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -13038,19 +13088,18 @@ Java_com_criteo_vips_AbstractVipsImage_applyInsert(JNIEnv *env, jobject main, jo
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, main, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, main, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -13145,19 +13194,18 @@ Java_com_criteo_vips_AbstractVipsImage_insert(JNIEnv *env, jobject main, jobject
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, main, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, main, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -13578,19 +13626,18 @@ Java_com_criteo_vips_AbstractVipsImage_applyJoin(JNIEnv *env, jobject in1, jobje
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in1, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in1, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -13708,19 +13755,18 @@ Java_com_criteo_vips_AbstractVipsImage_join(JNIEnv *env, jobject in1, jobject in
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in1, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in1, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -13767,566 +13813,6 @@ Java_com_criteo_vips_AbstractVipsImage_join(JNIEnv *env, jobject in1, jobject in
 	// Output
 	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
 	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
-}
-
-JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jp2kLoad(JNIEnv *env, jclass cls, jstring filename, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jp2kload");
-
-	// filename
-	if (filename != NULL) {
-		const char *filenameChars = (*env)->GetStringUTFChars(env, filename, NULL);
-		g_value_init(&gvalue, G_TYPE_STRING);
-		g_value_set_string(&gvalue, filenameChars);
-		(*env)->ReleaseStringUTFChars(env, filename, filenameChars);
-		g_object_set_property(G_OBJECT(op), "filename", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// page
-		jfieldID pageFid = (*env)->GetFieldID(env, optionsCls, "page", "Ljava/lang/Integer;");
-		jobject pageObjectValue = (*env)->GetObjectField(env, options, pageFid);
-		if (pageObjectValue != NULL) {
-			jint page = (*env)->CallIntMethod(env, pageObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, page);
-			g_object_set_property(G_OBJECT(op), "page", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// memory
-		jfieldID memoryFid = (*env)->GetFieldID(env, optionsCls, "memory", "Ljava/lang/Boolean;");
-		jobject memoryObjectValue = (*env)->GetObjectField(env, options, memoryFid);
-		if (memoryObjectValue != NULL) {
-			jboolean memory = (*env)->CallBooleanMethod(env, memoryObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, memory);
-			g_object_set_property(G_OBJECT(op), "memory", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// access
-		jfieldID accessFid = (*env)->GetFieldID(env, optionsCls, "access", "Lcom/criteo/vips/enums/VipsAccess;");
-		jobject access = (*env)->GetObjectField(env, options, accessFid);
-		if (access != NULL) {
-			jclass accessCls = (*env)->GetObjectClass(env, access);
-			jfieldID accessValueFid = (*env)->GetFieldID(env, accessCls, "value", "I");
-			jint accessValue = (*env)->GetIntField(env, access, accessValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, accessValue);
-			g_object_set_property(G_OBJECT(op), "access", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// fail-on
-		jfieldID failOnFid = (*env)->GetFieldID(env, optionsCls, "failOn", "Lcom/criteo/vips/enums/VipsFailOn;");
-		jobject failOn = (*env)->GetObjectField(env, options, failOnFid);
-		if (failOn != NULL) {
-			jclass failOnCls = (*env)->GetObjectClass(env, failOn);
-			jfieldID failOnValueFid = (*env)->GetFieldID(env, failOnCls, "value", "I");
-			jint failOnValue = (*env)->GetIntField(env, failOn, failOnValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, failOnValue);
-			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// revalidate
-		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
-		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
-		if (revalidateObjectValue != NULL) {
-			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, revalidate);
-			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jp2kload failed");
-		return NULL;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// out	
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "out", &gvalue);
-	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(out);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Output
-	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
-	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
-}
-
-JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jp2kLoadBuffer(JNIEnv *env, jclass cls, jbyteArray buffer, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jp2kload_buffer");
-
-	// buffer
-	if (buffer != NULL) {
-		jint bufferLength = (*env)->GetArrayLength(env, buffer);
-		size_t bufferSize = bufferLength * sizeof(jbyte);
-		void *bufferData = vips_tracked_malloc(bufferSize);
-		if (bufferData == NULL) {
-			throwVipsException(env, "Failed to allocate memory for buffer");
-		}
-		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
-		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
-		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
-		g_value_unset(&gvalue);
-	
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// page
-		jfieldID pageFid = (*env)->GetFieldID(env, optionsCls, "page", "Ljava/lang/Integer;");
-		jobject pageObjectValue = (*env)->GetObjectField(env, options, pageFid);
-		if (pageObjectValue != NULL) {
-			jint page = (*env)->CallIntMethod(env, pageObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, page);
-			g_object_set_property(G_OBJECT(op), "page", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// memory
-		jfieldID memoryFid = (*env)->GetFieldID(env, optionsCls, "memory", "Ljava/lang/Boolean;");
-		jobject memoryObjectValue = (*env)->GetObjectField(env, options, memoryFid);
-		if (memoryObjectValue != NULL) {
-			jboolean memory = (*env)->CallBooleanMethod(env, memoryObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, memory);
-			g_object_set_property(G_OBJECT(op), "memory", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// access
-		jfieldID accessFid = (*env)->GetFieldID(env, optionsCls, "access", "Lcom/criteo/vips/enums/VipsAccess;");
-		jobject access = (*env)->GetObjectField(env, options, accessFid);
-		if (access != NULL) {
-			jclass accessCls = (*env)->GetObjectClass(env, access);
-			jfieldID accessValueFid = (*env)->GetFieldID(env, accessCls, "value", "I");
-			jint accessValue = (*env)->GetIntField(env, access, accessValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, accessValue);
-			g_object_set_property(G_OBJECT(op), "access", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// fail-on
-		jfieldID failOnFid = (*env)->GetFieldID(env, optionsCls, "failOn", "Lcom/criteo/vips/enums/VipsFailOn;");
-		jobject failOn = (*env)->GetObjectField(env, options, failOnFid);
-		if (failOn != NULL) {
-			jclass failOnCls = (*env)->GetObjectClass(env, failOn);
-			jfieldID failOnValueFid = (*env)->GetFieldID(env, failOnCls, "value", "I");
-			jint failOnValue = (*env)->GetIntField(env, failOn, failOnValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, failOnValue);
-			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// revalidate
-		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
-		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
-		if (revalidateObjectValue != NULL) {
-			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, revalidate);
-			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jp2kload_buffer failed");
-		return NULL;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// out	
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "out", &gvalue);
-	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(out);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Output
-	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
-	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
-}
-
-JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jp2kSave(JNIEnv *env, jobject in, jstring filename, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jp2ksave");
-
-	// in
-	if (in != NULL) {
-		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
-		g_object_set_property(G_OBJECT(op), "in", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// filename
-	if (filename != NULL) {
-		const char *filenameChars = (*env)->GetStringUTFChars(env, filename, NULL);
-		g_value_init(&gvalue, G_TYPE_STRING);
-		g_value_set_string(&gvalue, filenameChars);
-		(*env)->ReleaseStringUTFChars(env, filename, filenameChars);
-		g_object_set_property(G_OBJECT(op), "filename", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// tile-width
-		jfieldID tileWidthFid = (*env)->GetFieldID(env, optionsCls, "tileWidth", "Ljava/lang/Integer;");
-		jobject tileWidthObjectValue = (*env)->GetObjectField(env, options, tileWidthFid);
-		if (tileWidthObjectValue != NULL) {
-			jint tileWidth = (*env)->CallIntMethod(env, tileWidthObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileWidth);
-			g_object_set_property(G_OBJECT(op), "tile-width", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// tile-height
-		jfieldID tileHeightFid = (*env)->GetFieldID(env, optionsCls, "tileHeight", "Ljava/lang/Integer;");
-		jobject tileHeightObjectValue = (*env)->GetObjectField(env, options, tileHeightFid);
-		if (tileHeightObjectValue != NULL) {
-			jint tileHeight = (*env)->CallIntMethod(env, tileHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileHeight);
-			g_object_set_property(G_OBJECT(op), "tile-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// lossless
-		jfieldID losslessFid = (*env)->GetFieldID(env, optionsCls, "lossless", "Ljava/lang/Boolean;");
-		jobject losslessObjectValue = (*env)->GetObjectField(env, options, losslessFid);
-		if (losslessObjectValue != NULL) {
-			jboolean lossless = (*env)->CallBooleanMethod(env, losslessObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, lossless);
-			g_object_set_property(G_OBJECT(op), "lossless", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// Q
-		jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "Ljava/lang/Integer;");
-		jobject qObjectValue = (*env)->GetObjectField(env, options, qFid);
-		if (qObjectValue != NULL) {
-			jint q = (*env)->CallIntMethod(env, qObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, q);
-			g_object_set_property(G_OBJECT(op), "Q", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// subsample-mode
-		jfieldID subsampleModeFid = (*env)->GetFieldID(env, optionsCls, "subsampleMode", "Lcom/criteo/vips/enums/VipsForeignSubsample;");
-		jobject subsampleMode = (*env)->GetObjectField(env, options, subsampleModeFid);
-		if (subsampleMode != NULL) {
-			jclass subsampleModeCls = (*env)->GetObjectClass(env, subsampleMode);
-			jfieldID subsampleModeValueFid = (*env)->GetFieldID(env, subsampleModeCls, "value", "I");
-			jint subsampleModeValue = (*env)->GetIntField(env, subsampleMode, subsampleModeValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, subsampleModeValue);
-			g_object_set_property(G_OBJECT(op), "subsample-mode", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// keep
-		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
-		jobject keep = (*env)->GetObjectField(env, options, keepFid);
-		if (keep != NULL) {
-			jclass keepCls = (*env)->GetObjectClass(env, keep);
-			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
-			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, keepValue);
-			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
-		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
-		jboolean backgroundIsPixelPacket = JNI_FALSE;
-		if (background == NULL) {
-			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
-			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
-			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
-				backgroundIsPixelPacket = JNI_TRUE;
-			}
-		}
-		if (background != NULL) {
-			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
-			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
-			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
-			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
-			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
-			g_object_set_property(G_OBJECT(op), "background", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// page-height
-		jfieldID pageHeightFid = (*env)->GetFieldID(env, optionsCls, "pageHeight", "Ljava/lang/Integer;");
-		jobject pageHeightObjectValue = (*env)->GetObjectField(env, options, pageHeightFid);
-		if (pageHeightObjectValue != NULL) {
-			jint pageHeight = (*env)->CallIntMethod(env, pageHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, pageHeight);
-			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jp2ksave failed");
-		return;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-}
-
-JNIEXPORT jbyteArray JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jp2kSaveBuffer(JNIEnv *env, jobject in, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jp2ksave_buffer");
-
-	// in
-	if (in != NULL) {
-		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
-		g_object_set_property(G_OBJECT(op), "in", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// tile-width
-		jfieldID tileWidthFid = (*env)->GetFieldID(env, optionsCls, "tileWidth", "Ljava/lang/Integer;");
-		jobject tileWidthObjectValue = (*env)->GetObjectField(env, options, tileWidthFid);
-		if (tileWidthObjectValue != NULL) {
-			jint tileWidth = (*env)->CallIntMethod(env, tileWidthObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileWidth);
-			g_object_set_property(G_OBJECT(op), "tile-width", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// tile-height
-		jfieldID tileHeightFid = (*env)->GetFieldID(env, optionsCls, "tileHeight", "Ljava/lang/Integer;");
-		jobject tileHeightObjectValue = (*env)->GetObjectField(env, options, tileHeightFid);
-		if (tileHeightObjectValue != NULL) {
-			jint tileHeight = (*env)->CallIntMethod(env, tileHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tileHeight);
-			g_object_set_property(G_OBJECT(op), "tile-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// lossless
-		jfieldID losslessFid = (*env)->GetFieldID(env, optionsCls, "lossless", "Ljava/lang/Boolean;");
-		jobject losslessObjectValue = (*env)->GetObjectField(env, options, losslessFid);
-		if (losslessObjectValue != NULL) {
-			jboolean lossless = (*env)->CallBooleanMethod(env, losslessObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, lossless);
-			g_object_set_property(G_OBJECT(op), "lossless", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// Q
-		jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "Ljava/lang/Integer;");
-		jobject qObjectValue = (*env)->GetObjectField(env, options, qFid);
-		if (qObjectValue != NULL) {
-			jint q = (*env)->CallIntMethod(env, qObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, q);
-			g_object_set_property(G_OBJECT(op), "Q", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// subsample-mode
-		jfieldID subsampleModeFid = (*env)->GetFieldID(env, optionsCls, "subsampleMode", "Lcom/criteo/vips/enums/VipsForeignSubsample;");
-		jobject subsampleMode = (*env)->GetObjectField(env, options, subsampleModeFid);
-		if (subsampleMode != NULL) {
-			jclass subsampleModeCls = (*env)->GetObjectClass(env, subsampleMode);
-			jfieldID subsampleModeValueFid = (*env)->GetFieldID(env, subsampleModeCls, "value", "I");
-			jint subsampleModeValue = (*env)->GetIntField(env, subsampleMode, subsampleModeValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, subsampleModeValue);
-			g_object_set_property(G_OBJECT(op), "subsample-mode", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// keep
-		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
-		jobject keep = (*env)->GetObjectField(env, options, keepFid);
-		if (keep != NULL) {
-			jclass keepCls = (*env)->GetObjectClass(env, keep);
-			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
-			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, keepValue);
-			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
-		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
-		jboolean backgroundIsPixelPacket = JNI_FALSE;
-		if (background == NULL) {
-			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
-			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
-			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
-				backgroundIsPixelPacket = JNI_TRUE;
-			}
-		}
-		if (background != NULL) {
-			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
-			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
-			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
-			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
-			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
-			g_object_set_property(G_OBJECT(op), "background", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// page-height
-		jfieldID pageHeightFid = (*env)->GetFieldID(env, optionsCls, "pageHeight", "Ljava/lang/Integer;");
-		jobject pageHeightObjectValue = (*env)->GetObjectField(env, options, pageHeightFid);
-		if (pageHeightObjectValue != NULL) {
-			jint pageHeight = (*env)->CallIntMethod(env, pageHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, pageHeight);
-			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jp2ksave_buffer failed");
-		return NULL;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// buffer	
-	g_value_init(&gvalue, VIPS_TYPE_BLOB);
-	g_object_get_property(G_OBJECT(op), "buffer", &gvalue);
-	size_t bufferSize = 0;
-	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
-	jint bufferLength = bufferSize / sizeof(jbyte);
-	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
-	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Output
-	return buffer;
 }
 
 JNIEXPORT jobject JNICALL
@@ -14746,19 +14232,18 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSave(JNIEnv *env, jobject in, jstring
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -14948,19 +14433,18 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveBuffer(JNIEnv *env, jobject in, j
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -15162,19 +14646,18 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveMime(JNIEnv *env, jobject in, job
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -15221,540 +14704,6 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveMime(JNIEnv *env, jobject in, job
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
 	g_object_unref(op);
 
-}
-
-JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jxlLoad(JNIEnv *env, jclass cls, jstring filename, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jxlload");
-
-	// filename
-	if (filename != NULL) {
-		const char *filenameChars = (*env)->GetStringUTFChars(env, filename, NULL);
-		g_value_init(&gvalue, G_TYPE_STRING);
-		g_value_set_string(&gvalue, filenameChars);
-		(*env)->ReleaseStringUTFChars(env, filename, filenameChars);
-		g_object_set_property(G_OBJECT(op), "filename", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// memory
-		jfieldID memoryFid = (*env)->GetFieldID(env, optionsCls, "memory", "Ljava/lang/Boolean;");
-		jobject memoryObjectValue = (*env)->GetObjectField(env, options, memoryFid);
-		if (memoryObjectValue != NULL) {
-			jboolean memory = (*env)->CallBooleanMethod(env, memoryObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, memory);
-			g_object_set_property(G_OBJECT(op), "memory", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// access
-		jfieldID accessFid = (*env)->GetFieldID(env, optionsCls, "access", "Lcom/criteo/vips/enums/VipsAccess;");
-		jobject access = (*env)->GetObjectField(env, options, accessFid);
-		if (access != NULL) {
-			jclass accessCls = (*env)->GetObjectClass(env, access);
-			jfieldID accessValueFid = (*env)->GetFieldID(env, accessCls, "value", "I");
-			jint accessValue = (*env)->GetIntField(env, access, accessValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, accessValue);
-			g_object_set_property(G_OBJECT(op), "access", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// fail-on
-		jfieldID failOnFid = (*env)->GetFieldID(env, optionsCls, "failOn", "Lcom/criteo/vips/enums/VipsFailOn;");
-		jobject failOn = (*env)->GetObjectField(env, options, failOnFid);
-		if (failOn != NULL) {
-			jclass failOnCls = (*env)->GetObjectClass(env, failOn);
-			jfieldID failOnValueFid = (*env)->GetFieldID(env, failOnCls, "value", "I");
-			jint failOnValue = (*env)->GetIntField(env, failOn, failOnValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, failOnValue);
-			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// revalidate
-		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
-		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
-		if (revalidateObjectValue != NULL) {
-			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, revalidate);
-			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jxlload failed");
-		return NULL;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// out	
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "out", &gvalue);
-	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(out);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Output
-	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
-	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
-}
-
-JNIEXPORT jobject JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jxlLoadBuffer(JNIEnv *env, jclass cls, jbyteArray buffer, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jxlload_buffer");
-
-	// buffer
-	if (buffer != NULL) {
-		jint bufferLength = (*env)->GetArrayLength(env, buffer);
-		size_t bufferSize = bufferLength * sizeof(jbyte);
-		void *bufferData = vips_tracked_malloc(bufferSize);
-		if (bufferData == NULL) {
-			throwVipsException(env, "Failed to allocate memory for buffer");
-		}
-		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
-		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
-		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
-		g_value_unset(&gvalue);
-	
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// memory
-		jfieldID memoryFid = (*env)->GetFieldID(env, optionsCls, "memory", "Ljava/lang/Boolean;");
-		jobject memoryObjectValue = (*env)->GetObjectField(env, options, memoryFid);
-		if (memoryObjectValue != NULL) {
-			jboolean memory = (*env)->CallBooleanMethod(env, memoryObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, memory);
-			g_object_set_property(G_OBJECT(op), "memory", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// access
-		jfieldID accessFid = (*env)->GetFieldID(env, optionsCls, "access", "Lcom/criteo/vips/enums/VipsAccess;");
-		jobject access = (*env)->GetObjectField(env, options, accessFid);
-		if (access != NULL) {
-			jclass accessCls = (*env)->GetObjectClass(env, access);
-			jfieldID accessValueFid = (*env)->GetFieldID(env, accessCls, "value", "I");
-			jint accessValue = (*env)->GetIntField(env, access, accessValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, accessValue);
-			g_object_set_property(G_OBJECT(op), "access", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// fail-on
-		jfieldID failOnFid = (*env)->GetFieldID(env, optionsCls, "failOn", "Lcom/criteo/vips/enums/VipsFailOn;");
-		jobject failOn = (*env)->GetObjectField(env, options, failOnFid);
-		if (failOn != NULL) {
-			jclass failOnCls = (*env)->GetObjectClass(env, failOn);
-			jfieldID failOnValueFid = (*env)->GetFieldID(env, failOnCls, "value", "I");
-			jint failOnValue = (*env)->GetIntField(env, failOn, failOnValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, failOnValue);
-			g_object_set_property(G_OBJECT(op), "fail-on", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// revalidate
-		jfieldID revalidateFid = (*env)->GetFieldID(env, optionsCls, "revalidate", "Ljava/lang/Boolean;");
-		jobject revalidateObjectValue = (*env)->GetObjectField(env, options, revalidateFid);
-		if (revalidateObjectValue != NULL) {
-			jboolean revalidate = (*env)->CallBooleanMethod(env, revalidateObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, revalidate);
-			g_object_set_property(G_OBJECT(op), "revalidate", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jxlload_buffer failed");
-		return NULL;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// out	
-	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-	g_object_get_property(G_OBJECT(op), "out", &gvalue);
-	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
-	g_object_ref(out);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Output
-	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
-	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
-}
-
-JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jxlSave(JNIEnv *env, jobject in, jstring filename, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jxlsave");
-
-	// in
-	if (in != NULL) {
-		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
-		g_object_set_property(G_OBJECT(op), "in", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// filename
-	if (filename != NULL) {
-		const char *filenameChars = (*env)->GetStringUTFChars(env, filename, NULL);
-		g_value_init(&gvalue, G_TYPE_STRING);
-		g_value_set_string(&gvalue, filenameChars);
-		(*env)->ReleaseStringUTFChars(env, filename, filenameChars);
-		g_object_set_property(G_OBJECT(op), "filename", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// tier
-		jfieldID tierFid = (*env)->GetFieldID(env, optionsCls, "tier", "Ljava/lang/Integer;");
-		jobject tierObjectValue = (*env)->GetObjectField(env, options, tierFid);
-		if (tierObjectValue != NULL) {
-			jint tier = (*env)->CallIntMethod(env, tierObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tier);
-			g_object_set_property(G_OBJECT(op), "tier", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// distance
-		jfieldID distanceFid = (*env)->GetFieldID(env, optionsCls, "distance", "Ljava/lang/Double;");
-		jobject distanceObjectValue = (*env)->GetObjectField(env, options, distanceFid);
-		if (distanceObjectValue != NULL) {
-			jdouble distance = (*env)->CallDoubleMethod(env, distanceObjectValue, doubleValue_mid);
-			g_value_init(&gvalue, G_TYPE_DOUBLE);
-			g_value_set_double(&gvalue, distance);
-			g_object_set_property(G_OBJECT(op), "distance", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// effort
-		jfieldID effortFid = (*env)->GetFieldID(env, optionsCls, "effort", "Ljava/lang/Integer;");
-		jobject effortObjectValue = (*env)->GetObjectField(env, options, effortFid);
-		if (effortObjectValue != NULL) {
-			jint effort = (*env)->CallIntMethod(env, effortObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, effort);
-			g_object_set_property(G_OBJECT(op), "effort", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// lossless
-		jfieldID losslessFid = (*env)->GetFieldID(env, optionsCls, "lossless", "Ljava/lang/Boolean;");
-		jobject losslessObjectValue = (*env)->GetObjectField(env, options, losslessFid);
-		if (losslessObjectValue != NULL) {
-			jboolean lossless = (*env)->CallBooleanMethod(env, losslessObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, lossless);
-			g_object_set_property(G_OBJECT(op), "lossless", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// Q
-		jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "Ljava/lang/Integer;");
-		jobject qObjectValue = (*env)->GetObjectField(env, options, qFid);
-		if (qObjectValue != NULL) {
-			jint q = (*env)->CallIntMethod(env, qObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, q);
-			g_object_set_property(G_OBJECT(op), "Q", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// keep
-		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
-		jobject keep = (*env)->GetObjectField(env, options, keepFid);
-		if (keep != NULL) {
-			jclass keepCls = (*env)->GetObjectClass(env, keep);
-			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
-			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, keepValue);
-			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
-		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
-		jboolean backgroundIsPixelPacket = JNI_FALSE;
-		if (background == NULL) {
-			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
-			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
-			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
-				backgroundIsPixelPacket = JNI_TRUE;
-			}
-		}
-		if (background != NULL) {
-			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
-			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
-			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
-			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
-			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
-			g_object_set_property(G_OBJECT(op), "background", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// page-height
-		jfieldID pageHeightFid = (*env)->GetFieldID(env, optionsCls, "pageHeight", "Ljava/lang/Integer;");
-		jobject pageHeightObjectValue = (*env)->GetObjectField(env, options, pageHeightFid);
-		if (pageHeightObjectValue != NULL) {
-			jint pageHeight = (*env)->CallIntMethod(env, pageHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, pageHeight);
-			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jxlsave failed");
-		return;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-}
-
-JNIEXPORT jbyteArray JNICALL
-Java_com_criteo_vips_AbstractVipsImage_jxlSaveBuffer(JNIEnv *env, jobject in, jobject options)
-{
-	GValue gvalue = { 0 };
-
-	VipsOperation *op = vips_operation_new("jxlsave_buffer");
-
-	// in
-	if (in != NULL) {
-		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
-		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, in, handle_fid));
-		g_object_set_property(G_OBJECT(op), "in", &gvalue);
-		g_value_unset(&gvalue);
-	}
-
-	// Optionals
-	if (options != NULL) {
-		jclass optionsCls = (*env)->GetObjectClass(env, options);
-
-		// tier
-		jfieldID tierFid = (*env)->GetFieldID(env, optionsCls, "tier", "Ljava/lang/Integer;");
-		jobject tierObjectValue = (*env)->GetObjectField(env, options, tierFid);
-		if (tierObjectValue != NULL) {
-			jint tier = (*env)->CallIntMethod(env, tierObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, tier);
-			g_object_set_property(G_OBJECT(op), "tier", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// distance
-		jfieldID distanceFid = (*env)->GetFieldID(env, optionsCls, "distance", "Ljava/lang/Double;");
-		jobject distanceObjectValue = (*env)->GetObjectField(env, options, distanceFid);
-		if (distanceObjectValue != NULL) {
-			jdouble distance = (*env)->CallDoubleMethod(env, distanceObjectValue, doubleValue_mid);
-			g_value_init(&gvalue, G_TYPE_DOUBLE);
-			g_value_set_double(&gvalue, distance);
-			g_object_set_property(G_OBJECT(op), "distance", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// effort
-		jfieldID effortFid = (*env)->GetFieldID(env, optionsCls, "effort", "Ljava/lang/Integer;");
-		jobject effortObjectValue = (*env)->GetObjectField(env, options, effortFid);
-		if (effortObjectValue != NULL) {
-			jint effort = (*env)->CallIntMethod(env, effortObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, effort);
-			g_object_set_property(G_OBJECT(op), "effort", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// lossless
-		jfieldID losslessFid = (*env)->GetFieldID(env, optionsCls, "lossless", "Ljava/lang/Boolean;");
-		jobject losslessObjectValue = (*env)->GetObjectField(env, options, losslessFid);
-		if (losslessObjectValue != NULL) {
-			jboolean lossless = (*env)->CallBooleanMethod(env, losslessObjectValue, booleanValue_mid);
-			g_value_init(&gvalue, G_TYPE_BOOLEAN);
-			g_value_set_boolean(&gvalue, lossless);
-			g_object_set_property(G_OBJECT(op), "lossless", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// Q
-		jfieldID qFid = (*env)->GetFieldID(env, optionsCls, "q", "Ljava/lang/Integer;");
-		jobject qObjectValue = (*env)->GetObjectField(env, options, qFid);
-		if (qObjectValue != NULL) {
-			jint q = (*env)->CallIntMethod(env, qObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, q);
-			g_object_set_property(G_OBJECT(op), "Q", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// keep
-		jfieldID keepFid = (*env)->GetFieldID(env, optionsCls, "keep", "Lcom/criteo/vips/enums/VipsForeignKeep;");
-		jobject keep = (*env)->GetObjectField(env, options, keepFid);
-		if (keep != NULL) {
-			jclass keepCls = (*env)->GetObjectClass(env, keep);
-			jfieldID keepValueFid = (*env)->GetFieldID(env, keepCls, "value", "I");
-			jint keepValue = (*env)->GetIntField(env, keep, keepValueFid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, keepValue);
-			g_object_set_property(G_OBJECT(op), "keep", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// background
-		jfieldID backgroundFid = (*env)->GetFieldID(env, optionsCls, "background", "[D");
-		jdoubleArray background = (jdoubleArray) (*env)->GetObjectField(env, options, backgroundFid);
-		jboolean backgroundIsPixelPacket = JNI_FALSE;
-		if (background == NULL) {
-			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
-			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
-			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
-				backgroundIsPixelPacket = JNI_TRUE;
-			}
-		}
-		if (background != NULL) {
-			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
-			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
-			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
-			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
-			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
-			g_object_set_property(G_OBJECT(op), "background", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// page-height
-		jfieldID pageHeightFid = (*env)->GetFieldID(env, optionsCls, "pageHeight", "Ljava/lang/Integer;");
-		jobject pageHeightObjectValue = (*env)->GetObjectField(env, options, pageHeightFid);
-		if (pageHeightObjectValue != NULL) {
-			jint pageHeight = (*env)->CallIntMethod(env, pageHeightObjectValue, intValue_mid);
-			g_value_init(&gvalue, G_TYPE_INT);
-			g_value_set_int(&gvalue, pageHeight);
-			g_object_set_property(G_OBJECT(op), "page-height", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-		// profile
-		jfieldID profileFid = (*env)->GetFieldID(env, optionsCls, "profile", "Ljava/lang/String;");
-		jstring profile = (jstring) (*env)->GetObjectField(env, options, profileFid);
-		if (profile != NULL) {
-			const char *profileChars = (*env)->GetStringUTFChars(env, profile, NULL);
-			g_value_init(&gvalue, G_TYPE_STRING);
-			g_value_set_string(&gvalue, profileChars);
-			(*env)->ReleaseStringUTFChars(env, profile, profileChars);
-			g_object_set_property(G_OBJECT(op), "profile", &gvalue);
-			g_value_unset(&gvalue);
-		}
-
-	}
-
-	// Operation
-	VipsOperation *new_op;
-	if (!(new_op = vips_cache_operation_build(op))) {
-		g_object_unref(op);
-		throwVipsException(env, "jxlsave_buffer failed");
-		return NULL;
-	}
-	g_object_unref(op);
-	op = new_op;
-
-	// buffer	
-	g_value_init(&gvalue, VIPS_TYPE_BLOB);
-	g_object_get_property(G_OBJECT(op), "buffer", &gvalue);
-	size_t bufferSize = 0;
-	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
-	jint bufferLength = bufferSize / sizeof(jbyte);
-	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
-	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
-	g_value_unset(&gvalue);
-
-	// Free the operation
-	vips_object_unref_outputs(VIPS_OBJECT(op)); 
-	g_object_unref(op);
-
-	// Output
-	return buffer;
 }
 
 JNIEXPORT void JNICALL
@@ -16033,19 +14982,18 @@ Java_com_criteo_vips_AbstractVipsImage_applyLab2XYZ(JNIEnv *env, jobject in, job
 			jfieldID tempPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "tempPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject tempPixelPacket = (*env)->GetObjectField(env, options, tempPixelPacketFid);
 			if (tempPixelPacket != NULL) {
-				temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				tempIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (temp != NULL) {
 			jdouble *tempElements = (*env)->GetDoubleArrayElements(env, temp, NULL);
 			jint tempLength = (*env)->GetArrayLength(env, temp);
-			if (tempIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && tempLength == 4) {
-					tempLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, tempElements, tempLength);
 			(*env)->ReleaseDoubleArrayElements(env, temp, tempElements, 0);
@@ -16109,19 +15057,18 @@ Java_com_criteo_vips_AbstractVipsImage_lab2XYZ(JNIEnv *env, jobject in, jobject 
 			jfieldID tempPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "tempPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject tempPixelPacket = (*env)->GetObjectField(env, options, tempPixelPacketFid);
 			if (tempPixelPacket != NULL) {
-				temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				tempIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (temp != NULL) {
 			jdouble *tempElements = (*env)->GetDoubleArrayElements(env, temp, NULL);
 			jint tempLength = (*env)->GetArrayLength(env, temp);
-			if (tempIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && tempLength == 4) {
-					tempLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, tempElements, tempLength);
 			(*env)->ReleaseDoubleArrayElements(env, temp, tempElements, 0);
@@ -17618,19 +16565,18 @@ Java_com_criteo_vips_AbstractVipsImage_magickSave(JNIEnv *env, jobject in, jstri
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -17775,19 +16721,18 @@ Java_com_criteo_vips_AbstractVipsImage_magickSaveBuffer(JNIEnv *env, jobject in,
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -19769,19 +18714,18 @@ Java_com_criteo_vips_AbstractVipsImage_matrixprint(JNIEnv *env, jobject in, jobj
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -19880,19 +18824,18 @@ Java_com_criteo_vips_AbstractVipsImage_matrixSave(JNIEnv *env, jobject in, jstri
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -19995,6 +18938,105 @@ Java_com_criteo_vips_AbstractVipsImage_max(JNIEnv *env, jobject in, jobject opti
 
 	// Output
 	return out;
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_applyMaxpair(JNIEnv *env, jobject left, jobject right)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("maxpair");
+
+	// left
+	if (left != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, left, handle_fid));
+		g_object_set_property(G_OBJECT(op), "left", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// right
+	if (right != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, right, handle_fid));
+		g_object_set_property(G_OBJECT(op), "right", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "maxpair failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Mutating image result
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, left, handle_fid));
+	(*env)->SetLongField(env, left, handle_fid, (jlong) out);
+}
+
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_MaxPair(JNIEnv *env, jobject left, jobject right)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("maxpair");
+
+	// left
+	if (left != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, left, handle_fid));
+		g_object_set_property(G_OBJECT(op), "left", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// right
+	if (right != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, right, handle_fid));
+		g_object_set_property(G_OBJECT(op), "right", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "maxpair failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -20437,6 +19479,105 @@ Java_com_criteo_vips_AbstractVipsImage_min(JNIEnv *env, jobject in, jobject opti
 
 	// Output
 	return out;
+}
+
+JNIEXPORT void JNICALL
+Java_com_criteo_vips_AbstractVipsImage_applyMinpair(JNIEnv *env, jobject left, jobject right)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("minpair");
+
+	// left
+	if (left != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, left, handle_fid));
+		g_object_set_property(G_OBJECT(op), "left", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// right
+	if (right != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, right, handle_fid));
+		g_object_set_property(G_OBJECT(op), "right", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "minpair failed");
+		return;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Mutating image result
+	g_object_unref((VipsImage *) (*env)->GetLongField(env, left, handle_fid));
+	(*env)->SetLongField(env, left, handle_fid, (jlong) out);
+}
+
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_MinPair(JNIEnv *env, jobject left, jobject right)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("minpair");
+
+	// left
+	if (left != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, left, handle_fid));
+		g_object_set_property(G_OBJECT(op), "left", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// right
+	if (right != NULL) {
+		g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+		g_value_set_object(&gvalue, (VipsImage *) (*env)->GetLongField(env, right, handle_fid));
+		g_object_set_property(G_OBJECT(op), "right", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "minpair failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
 }
 
 JNIEXPORT void JNICALL
@@ -21375,8 +20516,6 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoad(JNIEnv *env, jclass cls, jstring 
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -21558,8 +20697,6 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoadBuffer(JNIEnv *env, jclass cls, jb
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -22245,19 +21382,18 @@ Java_com_criteo_vips_AbstractVipsImage_pngSave(JNIEnv *env, jobject in, jstring 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -22436,19 +21572,18 @@ Java_com_criteo_vips_AbstractVipsImage_pngSaveBuffer(JNIEnv *env, jobject in, jo
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -22691,19 +21826,18 @@ Java_com_criteo_vips_AbstractVipsImage_ppmSave(JNIEnv *env, jobject in, jstring 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -23330,19 +22464,18 @@ Java_com_criteo_vips_AbstractVipsImage_radSave(JNIEnv *env, jobject in, jstring 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -23431,19 +22564,18 @@ Java_com_criteo_vips_AbstractVipsImage_radSaveBuffer(JNIEnv *env, jobject in, jo
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -23825,19 +22957,18 @@ Java_com_criteo_vips_AbstractVipsImage_rawSave(JNIEnv *env, jobject in, jstring 
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -23886,12 +23017,12 @@ Java_com_criteo_vips_AbstractVipsImage_rawSave(JNIEnv *env, jobject in, jstring 
 
 }
 
-JNIEXPORT void JNICALL
-Java_com_criteo_vips_AbstractVipsImage_rawSaveFd(JNIEnv *env, jobject in, jint fd, jobject options)
+JNIEXPORT jbyteArray JNICALL
+Java_com_criteo_vips_AbstractVipsImage_rawSaveBuffer(JNIEnv *env, jobject in, jobject options)
 {
 	GValue gvalue = { 0 };
 
-	VipsOperation *op = vips_operation_new("rawsave_fd");
+	VipsOperation *op = vips_operation_new("rawsave_buffer");
 
 	// in
 	if (in != NULL) {
@@ -23900,12 +23031,6 @@ Java_com_criteo_vips_AbstractVipsImage_rawSaveFd(JNIEnv *env, jobject in, jint f
 		g_object_set_property(G_OBJECT(op), "in", &gvalue);
 		g_value_unset(&gvalue);
 	}
-
-	// fd
-	g_value_init(&gvalue, G_TYPE_INT);
-	g_value_set_int(&gvalue, fd);
-	g_object_set_property(G_OBJECT(op), "fd", &gvalue);
-	g_value_unset(&gvalue);
 
 	// Optionals
 	if (options != NULL) {
@@ -23932,19 +23057,18 @@ Java_com_criteo_vips_AbstractVipsImage_rawSaveFd(JNIEnv *env, jobject in, jint f
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -23981,16 +23105,28 @@ Java_com_criteo_vips_AbstractVipsImage_rawSaveFd(JNIEnv *env, jobject in, jint f
 	VipsOperation *new_op;
 	if (!(new_op = vips_cache_operation_build(op))) {
 		g_object_unref(op);
-		throwVipsException(env, "rawsave_fd failed");
-		return;
+		throwVipsException(env, "rawsave_buffer failed");
+		return NULL;
 	}
 	g_object_unref(op);
 	op = new_op;
+
+	// buffer	
+	g_value_init(&gvalue, VIPS_TYPE_BLOB);
+	g_object_get_property(G_OBJECT(op), "buffer", &gvalue);
+	size_t bufferSize = 0;
+	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
+	jint bufferLength = bufferSize / sizeof(jbyte);
+	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
+	g_value_unset(&gvalue);
 
 	// Free the operation
 	vips_object_unref_outputs(VIPS_OBJECT(op)); 
 	g_object_unref(op);
 
+	// Output
+	return buffer;
 }
 
 JNIEXPORT void JNICALL
@@ -26154,6 +25290,145 @@ Java_com_criteo_vips_AbstractVipsImage_scRGB2XYZ(JNIEnv *env, jobject in)
 	if (!(new_op = vips_cache_operation_build(op))) {
 		g_object_unref(op);
 		throwVipsException(env, "scRGB2XYZ failed");
+		return NULL;
+	}
+	g_object_unref(op);
+	op = new_op;
+
+	// out	
+	g_value_init(&gvalue, VIPS_TYPE_IMAGE);
+	g_object_get_property(G_OBJECT(op), "out", &gvalue);
+	VipsImage *out = VIPS_IMAGE(g_value_get_object(&gvalue));
+	g_object_ref(out);
+	g_value_unset(&gvalue);
+
+	// Free the operation
+	vips_object_unref_outputs(VIPS_OBJECT(op)); 
+	g_object_unref(op);
+
+	// Output
+	jclass imageClass = (*env)->FindClass(env, "com/criteo/vips/VipsImage");
+	return (*env)->NewObject(env, imageClass, ctor_mid, (jlong) out);
+}
+
+JNIEXPORT jobject JNICALL
+Java_com_criteo_vips_AbstractVipsImage_sdf(JNIEnv *env, jclass cls, jint width, jint height, jobject shape, jobject options)
+{
+	GValue gvalue = { 0 };
+
+	VipsOperation *op = vips_operation_new("sdf");
+
+	// width
+	g_value_init(&gvalue, G_TYPE_INT);
+	g_value_set_int(&gvalue, width);
+	g_object_set_property(G_OBJECT(op), "width", &gvalue);
+	g_value_unset(&gvalue);
+
+	// height
+	g_value_init(&gvalue, G_TYPE_INT);
+	g_value_set_int(&gvalue, height);
+	g_object_set_property(G_OBJECT(op), "height", &gvalue);
+	g_value_unset(&gvalue);
+
+	// shape
+	if (shape != NULL) {
+		jclass shapeCls = (*env)->GetObjectClass(env, shape);
+		jfieldID shapeValueFid = (*env)->GetFieldID(env, shapeCls, "value", "I");
+		jint shapeValue = (*env)->GetIntField(env, shape, shapeValueFid);
+		g_value_init(&gvalue, G_TYPE_INT);
+		g_value_set_int(&gvalue, shapeValue);
+		g_object_set_property(G_OBJECT(op), "shape", &gvalue);
+		g_value_unset(&gvalue);
+	}
+
+	// Optionals
+	if (options != NULL) {
+		jclass optionsCls = (*env)->GetObjectClass(env, options);
+
+		// r
+		jfieldID rFid = (*env)->GetFieldID(env, optionsCls, "r", "Ljava/lang/Double;");
+		jobject rObjectValue = (*env)->GetObjectField(env, options, rFid);
+		if (rObjectValue != NULL) {
+			jdouble r = (*env)->CallDoubleMethod(env, rObjectValue, doubleValue_mid);
+			g_value_init(&gvalue, G_TYPE_DOUBLE);
+			g_value_set_double(&gvalue, r);
+			g_object_set_property(G_OBJECT(op), "r", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// a
+		jfieldID aFid = (*env)->GetFieldID(env, optionsCls, "a", "[D");
+		jdoubleArray a = (jdoubleArray) (*env)->GetObjectField(env, options, aFid);
+		jboolean aIsPixelPacket = JNI_FALSE;
+		if (a == NULL) {
+			jfieldID aPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "aPixelPacket", "Lcom/criteo/vips/PixelPacket;");
+			jobject aPixelPacket = (*env)->GetObjectField(env, options, aPixelPacketFid);
+			if (aPixelPacket != NULL) {
+				a = (jdoubleArray) (*env)->CallObjectMethod(env, aPixelPacket, pixelPacket_getComponents_mid);
+				aIsPixelPacket = JNI_TRUE;
+			}
+		}
+		if (a != NULL) {
+			jdouble *aElements = (*env)->GetDoubleArrayElements(env, a, NULL);
+			jint aLength = (*env)->GetArrayLength(env, a);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+			vips_value_set_array_double(&gvalue, aElements, aLength);
+			(*env)->ReleaseDoubleArrayElements(env, a, aElements, 0);
+			g_object_set_property(G_OBJECT(op), "a", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// b
+		jfieldID bFid = (*env)->GetFieldID(env, optionsCls, "b", "[D");
+		jdoubleArray b = (jdoubleArray) (*env)->GetObjectField(env, options, bFid);
+		jboolean bIsPixelPacket = JNI_FALSE;
+		if (b == NULL) {
+			jfieldID bPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "bPixelPacket", "Lcom/criteo/vips/PixelPacket;");
+			jobject bPixelPacket = (*env)->GetObjectField(env, options, bPixelPacketFid);
+			if (bPixelPacket != NULL) {
+				b = (jdoubleArray) (*env)->CallObjectMethod(env, bPixelPacket, pixelPacket_getComponents_mid);
+				bIsPixelPacket = JNI_TRUE;
+			}
+		}
+		if (b != NULL) {
+			jdouble *bElements = (*env)->GetDoubleArrayElements(env, b, NULL);
+			jint bLength = (*env)->GetArrayLength(env, b);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+			vips_value_set_array_double(&gvalue, bElements, bLength);
+			(*env)->ReleaseDoubleArrayElements(env, b, bElements, 0);
+			g_object_set_property(G_OBJECT(op), "b", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// corners
+		jfieldID cornersFid = (*env)->GetFieldID(env, optionsCls, "corners", "[D");
+		jdoubleArray corners = (jdoubleArray) (*env)->GetObjectField(env, options, cornersFid);
+		jboolean cornersIsPixelPacket = JNI_FALSE;
+		if (corners == NULL) {
+			jfieldID cornersPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "cornersPixelPacket", "Lcom/criteo/vips/PixelPacket;");
+			jobject cornersPixelPacket = (*env)->GetObjectField(env, options, cornersPixelPacketFid);
+			if (cornersPixelPacket != NULL) {
+				corners = (jdoubleArray) (*env)->CallObjectMethod(env, cornersPixelPacket, pixelPacket_getComponents_mid);
+				cornersIsPixelPacket = JNI_TRUE;
+			}
+		}
+		if (corners != NULL) {
+			jdouble *cornersElements = (*env)->GetDoubleArrayElements(env, corners, NULL);
+			jint cornersLength = (*env)->GetArrayLength(env, corners);
+			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
+			vips_value_set_array_double(&gvalue, cornersElements, cornersLength);
+			(*env)->ReleaseDoubleArrayElements(env, corners, cornersElements, 0);
+			g_object_set_property(G_OBJECT(op), "corners", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+	}
+
+	// Operation
+	VipsOperation *new_op;
+	if (!(new_op = vips_cache_operation_build(op))) {
+		g_object_unref(op);
+		throwVipsException(env, "sdf failed");
 		return NULL;
 	}
 	g_object_unref(op);
@@ -30053,19 +29328,18 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSave(JNIEnv *env, jobject in, jstring
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -30384,19 +29658,18 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSaveBuffer(JNIEnv *env, jobject in, j
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -31240,19 +30513,18 @@ Java_com_criteo_vips_AbstractVipsImage_vipsSave(JNIEnv *env, jobject in, jstring
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -31708,6 +30980,17 @@ Java_com_criteo_vips_AbstractVipsImage_webpSave(JNIEnv *env, jobject in, jstring
 			g_value_unset(&gvalue);
 		}
 
+		// target-size
+		jfieldID targetSizeFid = (*env)->GetFieldID(env, optionsCls, "targetSize", "Ljava/lang/Integer;");
+		jobject targetSizeObjectValue = (*env)->GetObjectField(env, options, targetSizeFid);
+		if (targetSizeObjectValue != NULL) {
+			jint targetSize = (*env)->CallIntMethod(env, targetSizeObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, targetSize);
+			g_object_set_property(G_OBJECT(op), "target-size", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 		// mixed
 		jfieldID mixedFid = (*env)->GetFieldID(env, optionsCls, "mixed", "Ljava/lang/Boolean;");
 		jobject mixedObjectValue = (*env)->GetObjectField(env, options, mixedFid);
@@ -31716,6 +30999,28 @@ Java_com_criteo_vips_AbstractVipsImage_webpSave(JNIEnv *env, jobject in, jstring
 			g_value_init(&gvalue, G_TYPE_BOOLEAN);
 			g_value_set_boolean(&gvalue, mixed);
 			g_object_set_property(G_OBJECT(op), "mixed", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// smart-deblock
+		jfieldID smartDeblockFid = (*env)->GetFieldID(env, optionsCls, "smartDeblock", "Ljava/lang/Boolean;");
+		jobject smartDeblockObjectValue = (*env)->GetObjectField(env, options, smartDeblockFid);
+		if (smartDeblockObjectValue != NULL) {
+			jboolean smartDeblock = (*env)->CallBooleanMethod(env, smartDeblockObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, smartDeblock);
+			g_object_set_property(G_OBJECT(op), "smart-deblock", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// passes
+		jfieldID passesFid = (*env)->GetFieldID(env, optionsCls, "passes", "Ljava/lang/Integer;");
+		jobject passesObjectValue = (*env)->GetObjectField(env, options, passesFid);
+		if (passesObjectValue != NULL) {
+			jint passes = (*env)->CallIntMethod(env, passesObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, passes);
+			g_object_set_property(G_OBJECT(op), "passes", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -31740,19 +31045,18 @@ Java_com_criteo_vips_AbstractVipsImage_webpSave(JNIEnv *env, jobject in, jstring
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -31932,6 +31236,17 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_unset(&gvalue);
 		}
 
+		// target-size
+		jfieldID targetSizeFid = (*env)->GetFieldID(env, optionsCls, "targetSize", "Ljava/lang/Integer;");
+		jobject targetSizeObjectValue = (*env)->GetObjectField(env, options, targetSizeFid);
+		if (targetSizeObjectValue != NULL) {
+			jint targetSize = (*env)->CallIntMethod(env, targetSizeObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, targetSize);
+			g_object_set_property(G_OBJECT(op), "target-size", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 		// mixed
 		jfieldID mixedFid = (*env)->GetFieldID(env, optionsCls, "mixed", "Ljava/lang/Boolean;");
 		jobject mixedObjectValue = (*env)->GetObjectField(env, options, mixedFid);
@@ -31940,6 +31255,28 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 			g_value_init(&gvalue, G_TYPE_BOOLEAN);
 			g_value_set_boolean(&gvalue, mixed);
 			g_object_set_property(G_OBJECT(op), "mixed", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// smart-deblock
+		jfieldID smartDeblockFid = (*env)->GetFieldID(env, optionsCls, "smartDeblock", "Ljava/lang/Boolean;");
+		jobject smartDeblockObjectValue = (*env)->GetObjectField(env, options, smartDeblockFid);
+		if (smartDeblockObjectValue != NULL) {
+			jboolean smartDeblock = (*env)->CallBooleanMethod(env, smartDeblockObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, smartDeblock);
+			g_object_set_property(G_OBJECT(op), "smart-deblock", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// passes
+		jfieldID passesFid = (*env)->GetFieldID(env, optionsCls, "passes", "Ljava/lang/Integer;");
+		jobject passesObjectValue = (*env)->GetObjectField(env, options, passesFid);
+		if (passesObjectValue != NULL) {
+			jint passes = (*env)->CallIntMethod(env, passesObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, passes);
+			g_object_set_property(G_OBJECT(op), "passes", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -31964,19 +31301,18 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -32168,6 +31504,17 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveMime(JNIEnv *env, jobject in, job
 			g_value_unset(&gvalue);
 		}
 
+		// target-size
+		jfieldID targetSizeFid = (*env)->GetFieldID(env, optionsCls, "targetSize", "Ljava/lang/Integer;");
+		jobject targetSizeObjectValue = (*env)->GetObjectField(env, options, targetSizeFid);
+		if (targetSizeObjectValue != NULL) {
+			jint targetSize = (*env)->CallIntMethod(env, targetSizeObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, targetSize);
+			g_object_set_property(G_OBJECT(op), "target-size", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
 		// mixed
 		jfieldID mixedFid = (*env)->GetFieldID(env, optionsCls, "mixed", "Ljava/lang/Boolean;");
 		jobject mixedObjectValue = (*env)->GetObjectField(env, options, mixedFid);
@@ -32176,6 +31523,28 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveMime(JNIEnv *env, jobject in, job
 			g_value_init(&gvalue, G_TYPE_BOOLEAN);
 			g_value_set_boolean(&gvalue, mixed);
 			g_object_set_property(G_OBJECT(op), "mixed", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// smart-deblock
+		jfieldID smartDeblockFid = (*env)->GetFieldID(env, optionsCls, "smartDeblock", "Ljava/lang/Boolean;");
+		jobject smartDeblockObjectValue = (*env)->GetObjectField(env, options, smartDeblockFid);
+		if (smartDeblockObjectValue != NULL) {
+			jboolean smartDeblock = (*env)->CallBooleanMethod(env, smartDeblockObjectValue, booleanValue_mid);
+			g_value_init(&gvalue, G_TYPE_BOOLEAN);
+			g_value_set_boolean(&gvalue, smartDeblock);
+			g_object_set_property(G_OBJECT(op), "smart-deblock", &gvalue);
+			g_value_unset(&gvalue);
+		}
+
+		// passes
+		jfieldID passesFid = (*env)->GetFieldID(env, optionsCls, "passes", "Ljava/lang/Integer;");
+		jobject passesObjectValue = (*env)->GetObjectField(env, options, passesFid);
+		if (passesObjectValue != NULL) {
+			jint passes = (*env)->CallIntMethod(env, passesObjectValue, intValue_mid);
+			g_value_init(&gvalue, G_TYPE_INT);
+			g_value_set_int(&gvalue, passes);
+			g_object_set_property(G_OBJECT(op), "passes", &gvalue);
 			g_value_unset(&gvalue);
 		}
 
@@ -32200,19 +31569,18 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveMime(JNIEnv *env, jobject in, job
 			jfieldID backgroundPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "backgroundPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject backgroundPixelPacket = (*env)->GetObjectField(env, options, backgroundPixelPacketFid);
 			if (backgroundPixelPacket != NULL) {
-				background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					background = (jdoubleArray) (*env)->CallObjectMethod(env, backgroundPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				backgroundIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (background != NULL) {
 			jdouble *backgroundElements = (*env)->GetDoubleArrayElements(env, background, NULL);
 			jint backgroundLength = (*env)->GetArrayLength(env, background);
-			if (backgroundIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && backgroundLength == 4) {
-					backgroundLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, backgroundElements, backgroundLength);
 			(*env)->ReleaseDoubleArrayElements(env, background, backgroundElements, 0);
@@ -32667,19 +32035,18 @@ Java_com_criteo_vips_AbstractVipsImage_applyXYZ2Lab(JNIEnv *env, jobject in, job
 			jfieldID tempPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "tempPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject tempPixelPacket = (*env)->GetObjectField(env, options, tempPixelPacketFid);
 			if (tempPixelPacket != NULL) {
-				temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				tempIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (temp != NULL) {
 			jdouble *tempElements = (*env)->GetDoubleArrayElements(env, temp, NULL);
 			jint tempLength = (*env)->GetArrayLength(env, temp);
-			if (tempIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && tempLength == 4) {
-					tempLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, tempElements, tempLength);
 			(*env)->ReleaseDoubleArrayElements(env, temp, tempElements, 0);
@@ -32743,19 +32110,18 @@ Java_com_criteo_vips_AbstractVipsImage_xYZ2Lab(JNIEnv *env, jobject in, jobject 
 			jfieldID tempPixelPacketFid = (*env)->GetFieldID(env, optionsCls, "tempPixelPacket", "Lcom/criteo/vips/PixelPacket;");
 			jobject tempPixelPacket = (*env)->GetObjectField(env, options, tempPixelPacketFid);
 			if (tempPixelPacket != NULL) {
-				temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponents_mid);
+				/* Choose the appropriate PixelPacket components for the source image */
+				if (vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid))) {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsWithAlpha_mid);
+				} else {
+					temp = (jdoubleArray) (*env)->CallObjectMethod(env, tempPixelPacket, pixelPacket_getComponentsNoAlpha_mid);
+				}
 				tempIsPixelPacket = JNI_TRUE;
 			}
 		}
 		if (temp != NULL) {
 			jdouble *tempElements = (*env)->GetDoubleArrayElements(env, temp, NULL);
 			jint tempLength = (*env)->GetArrayLength(env, temp);
-			if (tempIsPixelPacket) {
-				/* Strip alpha component if the image doesn't have alpha */
-				if (!vips_image_hasalpha((VipsImage *) (*env)->GetLongField(env, in, handle_fid)) && tempLength == 4) {
-					tempLength = 3;
-				}
-			}
 			g_value_init(&gvalue, VIPS_TYPE_ARRAY_DOUBLE);
 			vips_value_set_array_double(&gvalue, tempElements, tempLength);
 			(*env)->ReleaseDoubleArrayElements(env, temp, tempElements, 0);

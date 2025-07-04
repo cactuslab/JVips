@@ -366,7 +366,7 @@ public class HEIFSaveOptions {
 	 */
 	public void setBackground(java.awt.Color background) {
 		if (background != null) {
-			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(background);
 			setBackgroundPixelPacket(pixelPacket);
 		} else {
 			setBackgroundPixelPacket(null);

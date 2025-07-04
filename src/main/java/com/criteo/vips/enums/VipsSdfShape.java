@@ -19,28 +19,29 @@ package com.criteo.vips.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum VipsForeignJpegSubsample {
+public enum VipsSdfShape {
 
-	Auto(0),
-	On(1),
-	Off(2),
-	Last(3),
+	Circle(0),
+	Box(1),
+	RoundedBox(2),
+	Line(3),
+	Last(4),
 	;
 
 	private int value;
-	private static Map<Integer, VipsForeignJpegSubsample> map = new HashMap<>();
+	private static Map<Integer, VipsSdfShape> map = new HashMap<>();
 
-	private VipsForeignJpegSubsample(int i) {
+	private VipsSdfShape(int i) {
 		value = i;
 	}
 
 	static {
-		for (VipsForeignJpegSubsample e : VipsForeignJpegSubsample.values()) {
+		for (VipsSdfShape e : VipsSdfShape.values()) {
 			map.put(e.value, e);
 		}
 	}
 
-	public static VipsForeignJpegSubsample valueOf(int i) {
+	public static VipsSdfShape valueOf(int i) {
 		return map.get(i);
 	}
 
