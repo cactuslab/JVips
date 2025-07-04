@@ -45,9 +45,6 @@ docker build --platform linux/arm64 --build-arg UID=$(id -u) --build-arg GID=$(i
 docker run --platform linux/arm64 --rm -v $(pwd):/app -it jvips-builder-linux-arm
 ```
 
-Note that Java on Linux on ARM in Docker doesn't work well and will fail.
-See https://github.com/moby/buildkit/issues/2612
-
 Then we build for macOS on an Intel machine, and then again on an Apple Silicon:
 
 ```shell
