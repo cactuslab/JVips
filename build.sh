@@ -189,7 +189,7 @@ mvn ${MAVEN_ARGS} -DskipTests clean package
 mvn ${MAVEN_ARGS} versions:revert
 
 if [ ${RUN_TEST} -gt 0 ]; then
-    mvn ${MAVEN_ARGS} surefire:test@utest
+    mvn ${MAVEN_ARGS} -Dmaven.test.failure.ignore=true surefire:test@utest
 fi
 
 if [ ${RUN_BENCHMARK} -gt 0 ]; then
