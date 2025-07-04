@@ -54,7 +54,7 @@ export function javaOperationIdentifier(op: VipsOperation, options?: VipsOperati
 		result = `apply_${result}`
 	}
 	result = camelCase(result)
-	for (const opName of OPERATION_NAMES) {
+	for (const opName of OPERATION_NAMES_TO_FORCE_CASE) {
 		result = result.replace(opName.toLowerCase(), opName)
 	}
 	if (RESERVED_WORDS.indexOf(result) !== -1) {
@@ -65,7 +65,9 @@ export function javaOperationIdentifier(op: VipsOperation, options?: VipsOperati
 }
 
 const FILE_TYPES = ['PNG', 'JPEG', 'TIFF', 'PDF', 'JXL', 'JP2K', 'ICC', 'HEIF', 'GIF', 'CSV', 'DZ', 'XYZ', 'FFT', 'LUT', 'PPM', 'FITS', 'LAB']
-const OPERATION_NAMES = ['Load', 'Save']
+
+/** Any part of an operation name that matches one of these strings (ignoring case) gets replaced with this string, case included. */
+const OPERATION_NAMES_TO_FORCE_CASE = ['Load', 'Save', 'Alpha', 'MaxPair', 'MinPair']
 
 /**
  * Create a Java class name for a Vips operation.
@@ -82,7 +84,7 @@ export function javaOperationClassName(op: VipsOperation): string {
 		result = result.substring(0, result.length - 1)
 	}
 	result = pascalCase(result)
-	for (const opName of OPERATION_NAMES) {
+	for (const opName of OPERATION_NAMES_TO_FORCE_CASE) {
 		result = result.replace(opName.toLowerCase(), opName)
 	}
 	return result
