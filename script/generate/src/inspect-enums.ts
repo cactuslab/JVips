@@ -101,6 +101,12 @@ async function findIncludePath(): Promise<string> {
 		
 	}
 	try {
+		await fs.stat('/usr/include/vips')
+		return '/usr/include/vips'
+	} catch {
+		
+	}
+	try {
 		await fs.stat('/opt/homebrew/include/vips')
 		return '/opt/homebrew/include/vips'
 	} catch {
