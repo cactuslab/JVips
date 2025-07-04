@@ -16,6 +16,8 @@
 
 package com.criteo.vips;
 
+import java.awt.Color;
+
 public class PixelPacket extends Vips {
     double r;
     double g;
@@ -44,6 +46,10 @@ public class PixelPacket extends Vips {
     public PixelPacket(double r, double a) {
         this(r, r, r, a);
         this.components = 2;
+    }
+
+    public PixelPacket(Color color) {
+        this(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
 
     public PixelPacket(double[] pixel) {

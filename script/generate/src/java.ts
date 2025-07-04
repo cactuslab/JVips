@@ -291,7 +291,7 @@ export function optionsClass(op: VipsOperation): string | undefined {
 	 */
 	public void set${capitalize(identifier)}(java.awt.Color ${identifier}) {
 		if (${identifier} != null) {
-			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(${identifier}.getRed(), ${identifier}.getGreen(), ${identifier}.getBlue(), ${identifier}.getAlpha());
+			com.criteo.vips.PixelPacket pixelPacket = new com.criteo.vips.PixelPacket(${identifier});
 			set${capitalize(identifier)}PixelPacket(pixelPacket);
 		} else {
 			set${capitalize(identifier)}PixelPacket(null);
