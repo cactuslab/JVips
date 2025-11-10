@@ -19,30 +19,29 @@ package com.criteo.vips.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum VipsIntent {
+public enum VipsForeignSaveable {
 
-	Perceptual(0),
-	Relative(1),
-	Saturation(2),
-	Absolute(3),
-	Auto(32),
-	Last(33),
+	Any(0),
+	Mono(1),
+	Rgb(2),
+	Cmyk(4),
+	Alpha(8),
 	;
 
 	private int value;
-	private static Map<Integer, VipsIntent> map = new HashMap<>();
+	private static Map<Integer, VipsForeignSaveable> map = new HashMap<>();
 
-	private VipsIntent(int i) {
+	private VipsForeignSaveable(int i) {
 		value = i;
 	}
 
 	static {
-		for (VipsIntent e : VipsIntent.values()) {
+		for (VipsForeignSaveable e : VipsForeignSaveable.values()) {
 			map.put(e.value, e);
 		}
 	}
 
-	public static VipsIntent valueOf(int i) {
+	public static VipsForeignSaveable valueOf(int i) {
 		return map.get(i);
 	}
 

@@ -102,7 +102,7 @@ public class PNGSaveOptions {
 	/**
 	 * Optional argument: filter
 	 * <p>
-	 * libpng row filter flag(s)
+	 * libspng row filter flag(s)
 	 * @return the value of {@code filter}
 	 */
 	public com.criteo.vips.enums.VipsForeignPngFilter getFilter() {
@@ -112,7 +112,7 @@ public class PNGSaveOptions {
 	/**
 	 * Set the optional "filter" argument.
 	 * <p>
-	 * libpng row filter flag(s)
+	 * libspng row filter flag(s)
 	 * @param filter the new value of {@code filter}
 	 */
 	public void setFilter(com.criteo.vips.enums.VipsForeignPngFilter filter) {
@@ -122,7 +122,7 @@ public class PNGSaveOptions {
 	/**
 	 * Set the optional "filter" argument.
 	 * <p>
-	 * libpng row filter flag(s)
+	 * libspng row filter flag(s)
 	 * @param filter the new value of {@code filter}
 	 * @return this object for chaining
 	 */

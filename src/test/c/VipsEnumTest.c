@@ -117,6 +117,7 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_INTENT_RELATIVE, "com/criteo/vips/enums/VipsIntent", "Relative");
 	assertEqualsNativeEnumValue(env, VIPS_INTENT_SATURATION, "com/criteo/vips/enums/VipsIntent", "Saturation");
 	assertEqualsNativeEnumValue(env, VIPS_INTENT_ABSOLUTE, "com/criteo/vips/enums/VipsIntent", "Absolute");
+	assertEqualsNativeEnumValue(env, VIPS_INTENT_AUTO, "com/criteo/vips/enums/VipsIntent", "Auto");
 
 	// VipsPCS
 	assertEqualsNativeEnumValue(env, VIPS_PCS_LAB, "com/criteo/vips/enums/VipsPCS", "Lab");
@@ -235,6 +236,18 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_FAIL_ON_TRUNCATED, "com/criteo/vips/enums/VipsFailOn", "Truncated");
 	assertEqualsNativeEnumValue(env, VIPS_FAIL_ON_ERROR, "com/criteo/vips/enums/VipsFailOn", "Error");
 	assertEqualsNativeEnumValue(env, VIPS_FAIL_ON_WARNING, "com/criteo/vips/enums/VipsFailOn", "Warning");
+
+	// VipsForeignSaveable
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SAVEABLE_ANY, "com/criteo/vips/enums/VipsForeignSaveable", "Any");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SAVEABLE_MONO, "com/criteo/vips/enums/VipsForeignSaveable", "Mono");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SAVEABLE_RGB, "com/criteo/vips/enums/VipsForeignSaveable", "Rgb");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SAVEABLE_CMYK, "com/criteo/vips/enums/VipsForeignSaveable", "Cmyk");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_SAVEABLE_ALPHA, "com/criteo/vips/enums/VipsForeignSaveable", "Alpha");
+
+	// VipsForeignCoding
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_CODING_NONE, "com/criteo/vips/enums/VipsForeignCoding", "None");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_CODING_LABQ, "com/criteo/vips/enums/VipsForeignCoding", "Labq");
+	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_CODING_RAD, "com/criteo/vips/enums/VipsForeignCoding", "Rad");
 
 	// VipsForeignKeep
 	assertEqualsNativeEnumValue(env, VIPS_FOREIGN_KEEP_NONE, "com/criteo/vips/enums/VipsForeignKeep", "None");
@@ -432,6 +445,8 @@ Java_com_criteo_vips_VipsEnumTest_TestNativeEnums(JNIEnv *env, jclass c)
 	assertEqualsNativeEnumValue(env, VIPS_KERNEL_MITCHELL, "com/criteo/vips/enums/VipsKernel", "Mitchell");
 	assertEqualsNativeEnumValue(env, VIPS_KERNEL_LANCZOS2, "com/criteo/vips/enums/VipsKernel", "Lanczos2");
 	assertEqualsNativeEnumValue(env, VIPS_KERNEL_LANCZOS3, "com/criteo/vips/enums/VipsKernel", "Lanczos3");
+	assertEqualsNativeEnumValue(env, VIPS_KERNEL_MKS2013, "com/criteo/vips/enums/VipsKernel", "Mks2013");
+	assertEqualsNativeEnumValue(env, VIPS_KERNEL_MKS2021, "com/criteo/vips/enums/VipsKernel", "Mks2021");
 
 	// VipsSize
 	assertEqualsNativeEnumValue(env, VIPS_SIZE_BOTH, "com/criteo/vips/enums/VipsSize", "Both");

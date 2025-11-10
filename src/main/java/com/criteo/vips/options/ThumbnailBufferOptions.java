@@ -27,8 +27,8 @@ public class ThumbnailBufferOptions {
 	private Boolean noRotate;
 	private com.criteo.vips.enums.VipsInteresting crop;
 	private Boolean linear;
-	private String importProfile;
-	private String exportProfile;
+	private String inputProfile;
+	private String outputProfile;
 	private com.criteo.vips.enums.VipsIntent intent;
 	private com.criteo.vips.enums.VipsFailOn failOn;
 
@@ -225,66 +225,66 @@ public class ThumbnailBufferOptions {
 	}
 
 	/**
-	 * Optional argument: import-profile
+	 * Optional argument: input-profile
 	 * <p>
-	 * Fallback import profile
-	 * @return the value of {@code importProfile}
+	 * Fallback input profile
+	 * @return the value of {@code inputProfile}
 	 */
-	public String getImportProfile() {
-		return this.importProfile;
+	public String getInputProfile() {
+		return this.inputProfile;
 	}
 
 	/**
-	 * Set the optional "import-profile" argument.
+	 * Set the optional "input-profile" argument.
 	 * <p>
-	 * Fallback import profile
-	 * @param importProfile the new value of {@code importProfile}
+	 * Fallback input profile
+	 * @param inputProfile the new value of {@code inputProfile}
 	 */
-	public void setImportProfile(String importProfile) {
-		this.importProfile = importProfile;
+	public void setInputProfile(String inputProfile) {
+		this.inputProfile = inputProfile;
 	}
 
 	/**
-	 * Set the optional "import-profile" argument.
+	 * Set the optional "input-profile" argument.
 	 * <p>
-	 * Fallback import profile
-	 * @param importProfile the new value of {@code importProfile}
+	 * Fallback input profile
+	 * @param inputProfile the new value of {@code inputProfile}
 	 * @return this object for chaining
 	 */
-	public ThumbnailBufferOptions importProfile(String importProfile) {
-		setImportProfile(importProfile);
+	public ThumbnailBufferOptions inputProfile(String inputProfile) {
+		setInputProfile(inputProfile);
 		return this;
 	}
 
 	/**
-	 * Optional argument: export-profile
+	 * Optional argument: output-profile
 	 * <p>
-	 * Fallback export profile
-	 * @return the value of {@code exportProfile}
+	 * Fallback output profile
+	 * @return the value of {@code outputProfile}
 	 */
-	public String getExportProfile() {
-		return this.exportProfile;
+	public String getOutputProfile() {
+		return this.outputProfile;
 	}
 
 	/**
-	 * Set the optional "export-profile" argument.
+	 * Set the optional "output-profile" argument.
 	 * <p>
-	 * Fallback export profile
-	 * @param exportProfile the new value of {@code exportProfile}
+	 * Fallback output profile
+	 * @param outputProfile the new value of {@code outputProfile}
 	 */
-	public void setExportProfile(String exportProfile) {
-		this.exportProfile = exportProfile;
+	public void setOutputProfile(String outputProfile) {
+		this.outputProfile = outputProfile;
 	}
 
 	/**
-	 * Set the optional "export-profile" argument.
+	 * Set the optional "output-profile" argument.
 	 * <p>
-	 * Fallback export profile
-	 * @param exportProfile the new value of {@code exportProfile}
+	 * Fallback output profile
+	 * @param outputProfile the new value of {@code outputProfile}
 	 * @return this object for chaining
 	 */
-	public ThumbnailBufferOptions exportProfile(String exportProfile) {
-		setExportProfile(exportProfile);
+	public ThumbnailBufferOptions outputProfile(String outputProfile) {
+		setOutputProfile(outputProfile);
 		return this;
 	}
 

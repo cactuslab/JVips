@@ -28,6 +28,7 @@ public class GIFSaveBufferOptions {
 	private Boolean reuse;
 	private Double interpaletteMaxerror;
 	private Boolean interlace;
+	private Boolean keepDuplicateFrames;
 	private com.criteo.vips.enums.VipsForeignKeep keep;
 	private double[] background;
 	private com.criteo.vips.PixelPacket backgroundPixelPacket;
@@ -255,6 +256,38 @@ public class GIFSaveBufferOptions {
 	 */
 	public GIFSaveBufferOptions interlace(Boolean interlace) {
 		setInterlace(interlace);
+		return this;
+	}
+
+	/**
+	 * Optional argument: keep-duplicate-frames
+	 * <p>
+	 * Keep duplicate frames in the output instead of combining them
+	 * @return the value of {@code keepDuplicateFrames}
+	 */
+	public Boolean getKeepDuplicateFrames() {
+		return this.keepDuplicateFrames;
+	}
+
+	/**
+	 * Set the optional "keep-duplicate-frames" argument.
+	 * <p>
+	 * Keep duplicate frames in the output instead of combining them
+	 * @param keepDuplicateFrames the new value of {@code keepDuplicateFrames}
+	 */
+	public void setKeepDuplicateFrames(Boolean keepDuplicateFrames) {
+		this.keepDuplicateFrames = keepDuplicateFrames;
+	}
+
+	/**
+	 * Set the optional "keep-duplicate-frames" argument.
+	 * <p>
+	 * Keep duplicate frames in the output instead of combining them
+	 * @param keepDuplicateFrames the new value of {@code keepDuplicateFrames}
+	 * @return this object for chaining
+	 */
+	public GIFSaveBufferOptions keepDuplicateFrames(Boolean keepDuplicateFrames) {
+		setKeepDuplicateFrames(keepDuplicateFrames);
 		return this;
 	}
 

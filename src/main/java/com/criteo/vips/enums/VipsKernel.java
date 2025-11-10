@@ -27,7 +27,9 @@ public enum VipsKernel {
 	Mitchell(3),
 	Lanczos2(4),
 	Lanczos3(5),
-	Last(6),
+	Mks2013(6),
+	Mks2021(7),
+	Last(8),
 	;
 
 	private int value;

@@ -63,7 +63,7 @@ vips -v
 It's probably best to use the version from `jvips-builder-linux vips` as that's the one we use to generate our code.
 
 ```shell
-VIPS_VERSION=8.17.2
+VIPS_VERSION=8.17.3
 ```
 
 The output files are `pom.xml` and `JVips.jar`.

@@ -2350,6 +2350,64 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
+	 * VipsForeignLoadJp2kFile (jp2kload): load JPEG2000 image
+	 * @param filename Filename to load from
+	 * @param options optional arguments
+	 */
+	public static native VipsImage jp2kLoad(String filename, com.criteo.vips.options.JP2KLoadOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignLoadJp2kFile (jp2kload): load JPEG2000 image
+	 * @param filename Filename to load from
+	 */
+	public static VipsImage jp2kLoad(String filename) throws VipsException {
+		return jp2kLoad(filename, null);
+	}
+	
+	/**
+	 * VipsForeignLoadJp2kBuffer (jp2kload_buffer): load JPEG2000 image
+	 * @param buffer Buffer to load from
+	 * @param options optional arguments
+	 */
+	public static native VipsImage jp2kLoadBuffer(byte[] buffer, com.criteo.vips.options.JP2KLoadBufferOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignLoadJp2kBuffer (jp2kload_buffer): load JPEG2000 image
+	 * @param buffer Buffer to load from
+	 */
+	public static VipsImage jp2kLoadBuffer(byte[] buffer) throws VipsException {
+		return jp2kLoadBuffer(buffer, null);
+	}
+	
+	/**
+	 * VipsForeignSaveJp2kFile (jp2ksave): save image in JPEG2000 format
+	 * @param filename Filename to save to
+	 * @param options optional arguments
+	 */
+	public native void jp2kSave(String filename, com.criteo.vips.options.JP2KSaveOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignSaveJp2kFile (jp2ksave): save image in JPEG2000 format
+	 * @param filename Filename to save to
+	 */
+	public void jp2kSave(String filename) throws VipsException {
+		jp2kSave(filename, null);
+	}
+	
+	/**
+	 * VipsForeignSaveJp2kBuffer (jp2ksave_buffer): save image in JPEG2000 format
+	 * @param options optional arguments
+	 */
+	public native byte[] jp2kSaveBuffer(com.criteo.vips.options.JP2KSaveBufferOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignSaveJp2kBuffer (jp2ksave_buffer): save image in JPEG2000 format
+	 */
+	public byte[] jp2kSaveBuffer() throws VipsException {
+		return jp2kSaveBuffer(null);
+	}
+	
+	/**
 	 * VipsForeignLoadJpegFile (jpegload): load jpeg from file
 	 * @param filename Filename to load from
 	 * @param options optional arguments
@@ -2418,6 +2476,64 @@ abstract class AbstractVipsImage extends Vips {
 	 */
 	public void jpegSaveMime() throws VipsException {
 		jpegSaveMime(null);
+	}
+	
+	/**
+	 * VipsForeignLoadJxlFile (jxlload): load JPEG-XL image
+	 * @param filename Filename to load from
+	 * @param options optional arguments
+	 */
+	public static native VipsImage jxlLoad(String filename, com.criteo.vips.options.JXLLoadOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignLoadJxlFile (jxlload): load JPEG-XL image
+	 * @param filename Filename to load from
+	 */
+	public static VipsImage jxlLoad(String filename) throws VipsException {
+		return jxlLoad(filename, null);
+	}
+	
+	/**
+	 * VipsForeignLoadJxlBuffer (jxlload_buffer): load JPEG-XL image
+	 * @param buffer Buffer to load from
+	 * @param options optional arguments
+	 */
+	public static native VipsImage jxlLoadBuffer(byte[] buffer, com.criteo.vips.options.JXLLoadBufferOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignLoadJxlBuffer (jxlload_buffer): load JPEG-XL image
+	 * @param buffer Buffer to load from
+	 */
+	public static VipsImage jxlLoadBuffer(byte[] buffer) throws VipsException {
+		return jxlLoadBuffer(buffer, null);
+	}
+	
+	/**
+	 * VipsForeignSaveJxlFile (jxlsave): save image in JPEG-XL format
+	 * @param filename Filename to save to
+	 * @param options optional arguments
+	 */
+	public native void jxlSave(String filename, com.criteo.vips.options.JXLSaveOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignSaveJxlFile (jxlsave): save image in JPEG-XL format
+	 * @param filename Filename to save to
+	 */
+	public void jxlSave(String filename) throws VipsException {
+		jxlSave(filename, null);
+	}
+	
+	/**
+	 * VipsForeignSaveJxlBuffer (jxlsave_buffer): save image in JPEG-XL format
+	 * @param options optional arguments
+	 */
+	public native byte[] jxlSaveBuffer(com.criteo.vips.options.JXLSaveBufferOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignSaveJxlBuffer (jxlsave_buffer): save image in JPEG-XL format
+	 */
+	public byte[] jxlSaveBuffer() throws VipsException {
+		return jxlSaveBuffer(null);
 	}
 	
 	/**
@@ -3065,14 +3181,14 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsMatrixinvert (matrixinvert): invert an matrix
+	 * VipsMatrixinvert (matrixinvert): invert a matrix
 	 * Mutates the image inplace.
 	 */
 	public native void applyMatrixinvert() throws VipsException;
 	
 	
 	/**
-	 * VipsMatrixinvert (matrixinvert): invert an matrix
+	 * VipsMatrixinvert (matrixinvert): invert a matrix
 	 * Returns a new image.
 	 */
 	public native VipsImage matrixinvert() throws VipsException;
@@ -3091,6 +3207,21 @@ abstract class AbstractVipsImage extends Vips {
 	public static VipsImage matrixLoad(String filename) throws VipsException {
 		return matrixLoad(filename, null);
 	}
+	
+	/**
+	 * VipsMatrixmultiply (matrixmultiply): multiply two matrices
+	 * Mutates the image inplace.
+	 * @param right Second matrix to multiply
+	 */
+	public native void applyMatrixmultiply(com.criteo.vips.Image right) throws VipsException;
+	
+	
+	/**
+	 * VipsMatrixmultiply (matrixmultiply): multiply two matrices
+	 * Returns a new image.
+	 * @param right Second matrix to multiply
+	 */
+	public native VipsImage matrixmultiply(com.criteo.vips.Image right) throws VipsException;
 	
 	/**
 	 * VipsForeignPrintMatrix (matrixprint): print matrix
@@ -3509,14 +3640,14 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsForeignSavePngFile (pngsave): save image to png file
+	 * VipsForeignSaveSpngFile (pngsave): save image to file as PNG
 	 * @param filename Filename to save to
 	 * @param options optional arguments
 	 */
 	public native void pngSave(String filename, com.criteo.vips.options.PNGSaveOptions options) throws VipsException;
 	
 	/**
-	 * VipsForeignSavePngFile (pngsave): save image to png file
+	 * VipsForeignSaveSpngFile (pngsave): save image to file as PNG
 	 * @param filename Filename to save to
 	 */
 	public void pngSave(String filename) throws VipsException {
@@ -3524,13 +3655,13 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsForeignSavePngBuffer (pngsave_buffer): save image to png buffer
+	 * VipsForeignSaveSpngBuffer (pngsave_buffer): save image to buffer as PNG
 	 * @param options optional arguments
 	 */
 	public native byte[] pngSaveBuffer(com.criteo.vips.options.PNGSaveBufferOptions options) throws VipsException;
 	
 	/**
-	 * VipsForeignSavePngBuffer (pngsave_buffer): save image to png buffer
+	 * VipsForeignSaveSpngBuffer (pngsave_buffer): save image to buffer as PNG
 	 */
 	public byte[] pngSaveBuffer() throws VipsException {
 		return pngSaveBuffer(null);
@@ -3549,6 +3680,21 @@ abstract class AbstractVipsImage extends Vips {
 	 */
 	public static VipsImage ppmLoad(String filename) throws VipsException {
 		return ppmLoad(filename, null);
+	}
+	
+	/**
+	 * VipsForeignLoadPpmBuffer (ppmload_buffer): load ppm from buffer
+	 * @param buffer Buffer to load from
+	 * @param options optional arguments
+	 */
+	public static native VipsImage ppmLoadBuffer(byte[] buffer, com.criteo.vips.options.PPMLoadBufferOptions options) throws VipsException;
+	
+	/**
+	 * VipsForeignLoadPpmBuffer (ppmload_buffer): load ppm from buffer
+	 * @param buffer Buffer to load from
+	 */
+	public static VipsImage ppmLoadBuffer(byte[] buffer) throws VipsException {
+		return ppmLoadBuffer(buffer, null);
 	}
 	
 	/**
@@ -3944,6 +4090,23 @@ abstract class AbstractVipsImage extends Vips {
 	public native VipsImage remainderConst(double[] c) throws VipsException;
 	
 	/**
+	 * VipsRemosaic (remosaic): rebuild an mosaiced image
+	 * Mutates the image inplace.
+	 * @param oldStr Search for this string
+	 * @param newStr And swap for this string
+	 */
+	public native void applyRemosaic(String oldStr, String newStr) throws VipsException;
+	
+	
+	/**
+	 * VipsRemosaic (remosaic): rebuild an mosaiced image
+	 * Returns a new image.
+	 * @param oldStr Search for this string
+	 * @param newStr And swap for this string
+	 */
+	public native VipsImage remosaic(String oldStr, String newStr) throws VipsException;
+	
+	/**
 	 * VipsReplicate (replicate): replicate an image
 	 * Mutates the image inplace.
 	 * @param across Repeat this many times horizontally
@@ -4132,14 +4295,14 @@ abstract class AbstractVipsImage extends Vips {
 	}
 	
 	/**
-	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * VipsscRGB2sRGB (scRGB2sRGB): convert scRGB to sRGB
 	 * Mutates the image inplace.
 	 * @param options optional arguments
 	 */
 	public native void applyScRGB2sRGB(com.criteo.vips.options.ScRGB2sRGBOptions options) throws VipsException;
 	
 	/**
-	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * VipsscRGB2sRGB (scRGB2sRGB): convert scRGB to sRGB
 	 * Mutates the image inplace.
 	 */
 	public void applyScRGB2sRGB() throws VipsException {
@@ -4148,14 +4311,14 @@ abstract class AbstractVipsImage extends Vips {
 	
 	
 	/**
-	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * VipsscRGB2sRGB (scRGB2sRGB): convert scRGB to sRGB
 	 * Returns a new image.
 	 * @param options optional arguments
 	 */
 	public native VipsImage scRGB2sRGB(com.criteo.vips.options.ScRGB2sRGBOptions options) throws VipsException;
 	
 	/**
-	 * VipsscRGB2sRGB (scRGB2sRGB): convert an scRGB image to sRGB
+	 * VipsscRGB2sRGB (scRGB2sRGB): convert scRGB to sRGB
 	 * Returns a new image.
 	 */
 	public VipsImage scRGB2sRGB() throws VipsException {

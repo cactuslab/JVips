@@ -24,6 +24,8 @@ public class SvgLoadBufferOptions {
 	private Double dpi;
 	private Double scale;
 	private Boolean unlimited;
+	private String stylesheet;
+	private Boolean highBitdepth;
 	private Boolean memory;
 	private com.criteo.vips.enums.VipsAccess access;
 	private com.criteo.vips.enums.VipsFailOn failOn;
@@ -122,6 +124,70 @@ public class SvgLoadBufferOptions {
 	 */
 	public SvgLoadBufferOptions unlimited(Boolean unlimited) {
 		setUnlimited(unlimited);
+		return this;
+	}
+
+	/**
+	 * Optional argument: stylesheet
+	 * <p>
+	 * Custom CSS
+	 * @return the value of {@code stylesheet}
+	 */
+	public String getStylesheet() {
+		return this.stylesheet;
+	}
+
+	/**
+	 * Set the optional "stylesheet" argument.
+	 * <p>
+	 * Custom CSS
+	 * @param stylesheet the new value of {@code stylesheet}
+	 */
+	public void setStylesheet(String stylesheet) {
+		this.stylesheet = stylesheet;
+	}
+
+	/**
+	 * Set the optional "stylesheet" argument.
+	 * <p>
+	 * Custom CSS
+	 * @param stylesheet the new value of {@code stylesheet}
+	 * @return this object for chaining
+	 */
+	public SvgLoadBufferOptions stylesheet(String stylesheet) {
+		setStylesheet(stylesheet);
+		return this;
+	}
+
+	/**
+	 * Optional argument: high-bitdepth
+	 * <p>
+	 * Enable scRGB 128-bit output (32-bit per channel)
+	 * @return the value of {@code highBitdepth}
+	 */
+	public Boolean getHighBitdepth() {
+		return this.highBitdepth;
+	}
+
+	/**
+	 * Set the optional "high-bitdepth" argument.
+	 * <p>
+	 * Enable scRGB 128-bit output (32-bit per channel)
+	 * @param highBitdepth the new value of {@code highBitdepth}
+	 */
+	public void setHighBitdepth(Boolean highBitdepth) {
+		this.highBitdepth = highBitdepth;
+	}
+
+	/**
+	 * Set the optional "high-bitdepth" argument.
+	 * <p>
+	 * Enable scRGB 128-bit output (32-bit per channel)
+	 * @param highBitdepth the new value of {@code highBitdepth}
+	 * @return this object for chaining
+	 */
+	public SvgLoadBufferOptions highBitdepth(Boolean highBitdepth) {
+		setHighBitdepth(highBitdepth);
 		return this;
 	}
 

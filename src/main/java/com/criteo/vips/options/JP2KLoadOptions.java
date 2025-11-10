@@ -17,177 +17,78 @@ limitations under the License.
 package com.criteo.vips.options;
 
 /**
- * Optional arguments for the "svgload" operation.
+ * Optional arguments for the "jp2kload" operation.
  */
-public class SvgLoadOptions {
+public class JP2KLoadOptions {
 
-	private Double dpi;
-	private Double scale;
-	private Boolean unlimited;
-	private String stylesheet;
-	private Boolean highBitdepth;
+	private Integer page;
+	private Boolean oneshot;
 	private Boolean memory;
 	private com.criteo.vips.enums.VipsAccess access;
 	private com.criteo.vips.enums.VipsFailOn failOn;
 	private Boolean revalidate;
 
 	/**
-	 * Optional argument: dpi
+	 * Optional argument: page
 	 * <p>
-	 * Render at this DPI
-	 * @return the value of {@code dpi}
+	 * Load this page from the image
+	 * @return the value of {@code page}
 	 */
-	public Double getDpi() {
-		return this.dpi;
+	public Integer getPage() {
+		return this.page;
 	}
 
 	/**
-	 * Set the optional "dpi" argument.
+	 * Set the optional "page" argument.
 	 * <p>
-	 * Render at this DPI
-	 * @param dpi the new value of {@code dpi}
+	 * Load this page from the image
+	 * @param page the new value of {@code page}
 	 */
-	public void setDpi(Double dpi) {
-		this.dpi = dpi;
+	public void setPage(Integer page) {
+		this.page = page;
 	}
 
 	/**
-	 * Set the optional "dpi" argument.
+	 * Set the optional "page" argument.
 	 * <p>
-	 * Render at this DPI
-	 * @param dpi the new value of {@code dpi}
+	 * Load this page from the image
+	 * @param page the new value of {@code page}
 	 * @return this object for chaining
 	 */
-	public SvgLoadOptions dpi(Double dpi) {
-		setDpi(dpi);
+	public JP2KLoadOptions page(Integer page) {
+		setPage(page);
 		return this;
 	}
 
 	/**
-	 * Optional argument: scale
+	 * Optional argument: oneshot
 	 * <p>
-	 * Scale output by this factor
-	 * @return the value of {@code scale}
+	 * Load images a frame at a time
+	 * @return the value of {@code oneshot}
 	 */
-	public Double getScale() {
-		return this.scale;
+	public Boolean getOneshot() {
+		return this.oneshot;
 	}
 
 	/**
-	 * Set the optional "scale" argument.
+	 * Set the optional "oneshot" argument.
 	 * <p>
-	 * Scale output by this factor
-	 * @param scale the new value of {@code scale}
+	 * Load images a frame at a time
+	 * @param oneshot the new value of {@code oneshot}
 	 */
-	public void setScale(Double scale) {
-		this.scale = scale;
+	public void setOneshot(Boolean oneshot) {
+		this.oneshot = oneshot;
 	}
 
 	/**
-	 * Set the optional "scale" argument.
+	 * Set the optional "oneshot" argument.
 	 * <p>
-	 * Scale output by this factor
-	 * @param scale the new value of {@code scale}
+	 * Load images a frame at a time
+	 * @param oneshot the new value of {@code oneshot}
 	 * @return this object for chaining
 	 */
-	public SvgLoadOptions scale(Double scale) {
-		setScale(scale);
-		return this;
-	}
-
-	/**
-	 * Optional argument: unlimited
-	 * <p>
-	 * Allow SVG of any size
-	 * @return the value of {@code unlimited}
-	 */
-	public Boolean getUnlimited() {
-		return this.unlimited;
-	}
-
-	/**
-	 * Set the optional "unlimited" argument.
-	 * <p>
-	 * Allow SVG of any size
-	 * @param unlimited the new value of {@code unlimited}
-	 */
-	public void setUnlimited(Boolean unlimited) {
-		this.unlimited = unlimited;
-	}
-
-	/**
-	 * Set the optional "unlimited" argument.
-	 * <p>
-	 * Allow SVG of any size
-	 * @param unlimited the new value of {@code unlimited}
-	 * @return this object for chaining
-	 */
-	public SvgLoadOptions unlimited(Boolean unlimited) {
-		setUnlimited(unlimited);
-		return this;
-	}
-
-	/**
-	 * Optional argument: stylesheet
-	 * <p>
-	 * Custom CSS
-	 * @return the value of {@code stylesheet}
-	 */
-	public String getStylesheet() {
-		return this.stylesheet;
-	}
-
-	/**
-	 * Set the optional "stylesheet" argument.
-	 * <p>
-	 * Custom CSS
-	 * @param stylesheet the new value of {@code stylesheet}
-	 */
-	public void setStylesheet(String stylesheet) {
-		this.stylesheet = stylesheet;
-	}
-
-	/**
-	 * Set the optional "stylesheet" argument.
-	 * <p>
-	 * Custom CSS
-	 * @param stylesheet the new value of {@code stylesheet}
-	 * @return this object for chaining
-	 */
-	public SvgLoadOptions stylesheet(String stylesheet) {
-		setStylesheet(stylesheet);
-		return this;
-	}
-
-	/**
-	 * Optional argument: high-bitdepth
-	 * <p>
-	 * Enable scRGB 128-bit output (32-bit per channel)
-	 * @return the value of {@code highBitdepth}
-	 */
-	public Boolean getHighBitdepth() {
-		return this.highBitdepth;
-	}
-
-	/**
-	 * Set the optional "high-bitdepth" argument.
-	 * <p>
-	 * Enable scRGB 128-bit output (32-bit per channel)
-	 * @param highBitdepth the new value of {@code highBitdepth}
-	 */
-	public void setHighBitdepth(Boolean highBitdepth) {
-		this.highBitdepth = highBitdepth;
-	}
-
-	/**
-	 * Set the optional "high-bitdepth" argument.
-	 * <p>
-	 * Enable scRGB 128-bit output (32-bit per channel)
-	 * @param highBitdepth the new value of {@code highBitdepth}
-	 * @return this object for chaining
-	 */
-	public SvgLoadOptions highBitdepth(Boolean highBitdepth) {
-		setHighBitdepth(highBitdepth);
+	public JP2KLoadOptions oneshot(Boolean oneshot) {
+		setOneshot(oneshot);
 		return this;
 	}
 
@@ -218,7 +119,7 @@ public class SvgLoadOptions {
 	 * @param memory the new value of {@code memory}
 	 * @return this object for chaining
 	 */
-	public SvgLoadOptions memory(Boolean memory) {
+	public JP2KLoadOptions memory(Boolean memory) {
 		setMemory(memory);
 		return this;
 	}
@@ -250,7 +151,7 @@ public class SvgLoadOptions {
 	 * @param access the new value of {@code access}
 	 * @return this object for chaining
 	 */
-	public SvgLoadOptions access(com.criteo.vips.enums.VipsAccess access) {
+	public JP2KLoadOptions access(com.criteo.vips.enums.VipsAccess access) {
 		setAccess(access);
 		return this;
 	}
@@ -282,7 +183,7 @@ public class SvgLoadOptions {
 	 * @param failOn the new value of {@code failOn}
 	 * @return this object for chaining
 	 */
-	public SvgLoadOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
+	public JP2KLoadOptions failOn(com.criteo.vips.enums.VipsFailOn failOn) {
 		setFailOn(failOn);
 		return this;
 	}
@@ -314,7 +215,7 @@ public class SvgLoadOptions {
 	 * @param revalidate the new value of {@code revalidate}
 	 * @return this object for chaining
 	 */
-	public SvgLoadOptions revalidate(Boolean revalidate) {
+	public JP2KLoadOptions revalidate(Boolean revalidate) {
 		setRevalidate(revalidate);
 		return this;
 	}

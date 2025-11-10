@@ -22,9 +22,10 @@ package com.criteo.vips.options;
 public class TIFFLoadBufferOptions {
 
 	private Integer page;
-	private Integer subifd;
 	private Integer n;
 	private Boolean autorotate;
+	private Integer subifd;
+	private Boolean unlimited;
 	private Boolean memory;
 	private com.criteo.vips.enums.VipsAccess access;
 	private com.criteo.vips.enums.VipsFailOn failOn;
@@ -59,38 +60,6 @@ public class TIFFLoadBufferOptions {
 	 */
 	public TIFFLoadBufferOptions page(Integer page) {
 		setPage(page);
-		return this;
-	}
-
-	/**
-	 * Optional argument: subifd
-	 * <p>
-	 * Subifd index
-	 * @return the value of {@code subifd}
-	 */
-	public Integer getSubifd() {
-		return this.subifd;
-	}
-
-	/**
-	 * Set the optional "subifd" argument.
-	 * <p>
-	 * Subifd index
-	 * @param subifd the new value of {@code subifd}
-	 */
-	public void setSubifd(Integer subifd) {
-		this.subifd = subifd;
-	}
-
-	/**
-	 * Set the optional "subifd" argument.
-	 * <p>
-	 * Subifd index
-	 * @param subifd the new value of {@code subifd}
-	 * @return this object for chaining
-	 */
-	public TIFFLoadBufferOptions subifd(Integer subifd) {
-		setSubifd(subifd);
 		return this;
 	}
 
@@ -155,6 +124,70 @@ public class TIFFLoadBufferOptions {
 	 */
 	public TIFFLoadBufferOptions autorotate(Boolean autorotate) {
 		setAutorotate(autorotate);
+		return this;
+	}
+
+	/**
+	 * Optional argument: subifd
+	 * <p>
+	 * Subifd index
+	 * @return the value of {@code subifd}
+	 */
+	public Integer getSubifd() {
+		return this.subifd;
+	}
+
+	/**
+	 * Set the optional "subifd" argument.
+	 * <p>
+	 * Subifd index
+	 * @param subifd the new value of {@code subifd}
+	 */
+	public void setSubifd(Integer subifd) {
+		this.subifd = subifd;
+	}
+
+	/**
+	 * Set the optional "subifd" argument.
+	 * <p>
+	 * Subifd index
+	 * @param subifd the new value of {@code subifd}
+	 * @return this object for chaining
+	 */
+	public TIFFLoadBufferOptions subifd(Integer subifd) {
+		setSubifd(subifd);
+		return this;
+	}
+
+	/**
+	 * Optional argument: unlimited
+	 * <p>
+	 * Remove all denial of service limits
+	 * @return the value of {@code unlimited}
+	 */
+	public Boolean getUnlimited() {
+		return this.unlimited;
+	}
+
+	/**
+	 * Set the optional "unlimited" argument.
+	 * <p>
+	 * Remove all denial of service limits
+	 * @param unlimited the new value of {@code unlimited}
+	 */
+	public void setUnlimited(Boolean unlimited) {
+		this.unlimited = unlimited;
+	}
+
+	/**
+	 * Set the optional "unlimited" argument.
+	 * <p>
+	 * Remove all denial of service limits
+	 * @param unlimited the new value of {@code unlimited}
+	 * @return this object for chaining
+	 */
+	public TIFFLoadBufferOptions unlimited(Boolean unlimited) {
+		setUnlimited(unlimited);
 		return this;
 	}
 

@@ -17,18 +17,15 @@ limitations under the License.
 package com.criteo.vips.options;
 
 /**
- * Optional arguments for the "pngsave_buffer" operation.
+ * Optional arguments for the "jxlsave_buffer" operation.
  */
-public class PNGSaveBufferOptions {
+public class JXLSaveBufferOptions {
 
-	private Integer compression;
-	private Boolean interlace;
-	private com.criteo.vips.enums.VipsForeignPngFilter filter;
-	private Boolean palette;
-	private Integer q;
-	private Double dither;
-	private Integer bitdepth;
+	private Integer tier;
+	private Double distance;
 	private Integer effort;
+	private Boolean lossless;
+	private Integer q;
 	private com.criteo.vips.enums.VipsForeignKeep keep;
 	private double[] background;
 	private com.criteo.vips.PixelPacket backgroundPixelPacket;
@@ -36,233 +33,73 @@ public class PNGSaveBufferOptions {
 	private String profile;
 
 	/**
-	 * Optional argument: compression
+	 * Optional argument: tier
 	 * <p>
-	 * Compression factor
-	 * @return the value of {@code compression}
+	 * Decode speed tier
+	 * @return the value of {@code tier}
 	 */
-	public Integer getCompression() {
-		return this.compression;
+	public Integer getTier() {
+		return this.tier;
 	}
 
 	/**
-	 * Set the optional "compression" argument.
+	 * Set the optional "tier" argument.
 	 * <p>
-	 * Compression factor
-	 * @param compression the new value of {@code compression}
+	 * Decode speed tier
+	 * @param tier the new value of {@code tier}
 	 */
-	public void setCompression(Integer compression) {
-		this.compression = compression;
+	public void setTier(Integer tier) {
+		this.tier = tier;
 	}
 
 	/**
-	 * Set the optional "compression" argument.
+	 * Set the optional "tier" argument.
 	 * <p>
-	 * Compression factor
-	 * @param compression the new value of {@code compression}
+	 * Decode speed tier
+	 * @param tier the new value of {@code tier}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions compression(Integer compression) {
-		setCompression(compression);
+	public JXLSaveBufferOptions tier(Integer tier) {
+		setTier(tier);
 		return this;
 	}
 
 	/**
-	 * Optional argument: interlace
+	 * Optional argument: distance
 	 * <p>
-	 * Interlace image
-	 * @return the value of {@code interlace}
+	 * Target butteraugli distance
+	 * @return the value of {@code distance}
 	 */
-	public Boolean getInterlace() {
-		return this.interlace;
+	public Double getDistance() {
+		return this.distance;
 	}
 
 	/**
-	 * Set the optional "interlace" argument.
+	 * Set the optional "distance" argument.
 	 * <p>
-	 * Interlace image
-	 * @param interlace the new value of {@code interlace}
+	 * Target butteraugli distance
+	 * @param distance the new value of {@code distance}
 	 */
-	public void setInterlace(Boolean interlace) {
-		this.interlace = interlace;
+	public void setDistance(Double distance) {
+		this.distance = distance;
 	}
 
 	/**
-	 * Set the optional "interlace" argument.
+	 * Set the optional "distance" argument.
 	 * <p>
-	 * Interlace image
-	 * @param interlace the new value of {@code interlace}
+	 * Target butteraugli distance
+	 * @param distance the new value of {@code distance}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions interlace(Boolean interlace) {
-		setInterlace(interlace);
-		return this;
-	}
-
-	/**
-	 * Optional argument: filter
-	 * <p>
-	 * libspng row filter flag(s)
-	 * @return the value of {@code filter}
-	 */
-	public com.criteo.vips.enums.VipsForeignPngFilter getFilter() {
-		return this.filter;
-	}
-
-	/**
-	 * Set the optional "filter" argument.
-	 * <p>
-	 * libspng row filter flag(s)
-	 * @param filter the new value of {@code filter}
-	 */
-	public void setFilter(com.criteo.vips.enums.VipsForeignPngFilter filter) {
-		this.filter = filter;
-	}
-
-	/**
-	 * Set the optional "filter" argument.
-	 * <p>
-	 * libspng row filter flag(s)
-	 * @param filter the new value of {@code filter}
-	 * @return this object for chaining
-	 */
-	public PNGSaveBufferOptions filter(com.criteo.vips.enums.VipsForeignPngFilter filter) {
-		setFilter(filter);
-		return this;
-	}
-
-	/**
-	 * Optional argument: palette
-	 * <p>
-	 * Quantise to 8bpp palette
-	 * @return the value of {@code palette}
-	 */
-	public Boolean getPalette() {
-		return this.palette;
-	}
-
-	/**
-	 * Set the optional "palette" argument.
-	 * <p>
-	 * Quantise to 8bpp palette
-	 * @param palette the new value of {@code palette}
-	 */
-	public void setPalette(Boolean palette) {
-		this.palette = palette;
-	}
-
-	/**
-	 * Set the optional "palette" argument.
-	 * <p>
-	 * Quantise to 8bpp palette
-	 * @param palette the new value of {@code palette}
-	 * @return this object for chaining
-	 */
-	public PNGSaveBufferOptions palette(Boolean palette) {
-		setPalette(palette);
-		return this;
-	}
-
-	/**
-	 * Optional argument: Q
-	 * <p>
-	 * Quantisation quality
-	 * @return the value of {@code q}
-	 */
-	public Integer getQ() {
-		return this.q;
-	}
-
-	/**
-	 * Set the optional "Q" argument.
-	 * <p>
-	 * Quantisation quality
-	 * @param q the new value of {@code q}
-	 */
-	public void setQ(Integer q) {
-		this.q = q;
-	}
-
-	/**
-	 * Set the optional "Q" argument.
-	 * <p>
-	 * Quantisation quality
-	 * @param q the new value of {@code q}
-	 * @return this object for chaining
-	 */
-	public PNGSaveBufferOptions q(Integer q) {
-		setQ(q);
-		return this;
-	}
-
-	/**
-	 * Optional argument: dither
-	 * <p>
-	 * Amount of dithering
-	 * @return the value of {@code dither}
-	 */
-	public Double getDither() {
-		return this.dither;
-	}
-
-	/**
-	 * Set the optional "dither" argument.
-	 * <p>
-	 * Amount of dithering
-	 * @param dither the new value of {@code dither}
-	 */
-	public void setDither(Double dither) {
-		this.dither = dither;
-	}
-
-	/**
-	 * Set the optional "dither" argument.
-	 * <p>
-	 * Amount of dithering
-	 * @param dither the new value of {@code dither}
-	 * @return this object for chaining
-	 */
-	public PNGSaveBufferOptions dither(Double dither) {
-		setDither(dither);
-		return this;
-	}
-
-	/**
-	 * Optional argument: bitdepth
-	 * <p>
-	 * Write as a 1, 2, 4, 8 or 16 bit image
-	 * @return the value of {@code bitdepth}
-	 */
-	public Integer getBitdepth() {
-		return this.bitdepth;
-	}
-
-	/**
-	 * Set the optional "bitdepth" argument.
-	 * <p>
-	 * Write as a 1, 2, 4, 8 or 16 bit image
-	 * @param bitdepth the new value of {@code bitdepth}
-	 */
-	public void setBitdepth(Integer bitdepth) {
-		this.bitdepth = bitdepth;
-	}
-
-	/**
-	 * Set the optional "bitdepth" argument.
-	 * <p>
-	 * Write as a 1, 2, 4, 8 or 16 bit image
-	 * @param bitdepth the new value of {@code bitdepth}
-	 * @return this object for chaining
-	 */
-	public PNGSaveBufferOptions bitdepth(Integer bitdepth) {
-		setBitdepth(bitdepth);
+	public JXLSaveBufferOptions distance(Double distance) {
+		setDistance(distance);
 		return this;
 	}
 
 	/**
 	 * Optional argument: effort
 	 * <p>
-	 * Quantisation CPU effort
+	 * Encoding effort
 	 * @return the value of {@code effort}
 	 */
 	public Integer getEffort() {
@@ -272,7 +109,7 @@ public class PNGSaveBufferOptions {
 	/**
 	 * Set the optional "effort" argument.
 	 * <p>
-	 * Quantisation CPU effort
+	 * Encoding effort
 	 * @param effort the new value of {@code effort}
 	 */
 	public void setEffort(Integer effort) {
@@ -282,12 +119,76 @@ public class PNGSaveBufferOptions {
 	/**
 	 * Set the optional "effort" argument.
 	 * <p>
-	 * Quantisation CPU effort
+	 * Encoding effort
 	 * @param effort the new value of {@code effort}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions effort(Integer effort) {
+	public JXLSaveBufferOptions effort(Integer effort) {
 		setEffort(effort);
+		return this;
+	}
+
+	/**
+	 * Optional argument: lossless
+	 * <p>
+	 * Enable lossless compression
+	 * @return the value of {@code lossless}
+	 */
+	public Boolean getLossless() {
+		return this.lossless;
+	}
+
+	/**
+	 * Set the optional "lossless" argument.
+	 * <p>
+	 * Enable lossless compression
+	 * @param lossless the new value of {@code lossless}
+	 */
+	public void setLossless(Boolean lossless) {
+		this.lossless = lossless;
+	}
+
+	/**
+	 * Set the optional "lossless" argument.
+	 * <p>
+	 * Enable lossless compression
+	 * @param lossless the new value of {@code lossless}
+	 * @return this object for chaining
+	 */
+	public JXLSaveBufferOptions lossless(Boolean lossless) {
+		setLossless(lossless);
+		return this;
+	}
+
+	/**
+	 * Optional argument: Q
+	 * <p>
+	 * Quality factor
+	 * @return the value of {@code q}
+	 */
+	public Integer getQ() {
+		return this.q;
+	}
+
+	/**
+	 * Set the optional "Q" argument.
+	 * <p>
+	 * Quality factor
+	 * @param q the new value of {@code q}
+	 */
+	public void setQ(Integer q) {
+		this.q = q;
+	}
+
+	/**
+	 * Set the optional "Q" argument.
+	 * <p>
+	 * Quality factor
+	 * @param q the new value of {@code q}
+	 * @return this object for chaining
+	 */
+	public JXLSaveBufferOptions q(Integer q) {
+		setQ(q);
 		return this;
 	}
 
@@ -318,7 +219,7 @@ public class PNGSaveBufferOptions {
 	 * @param keep the new value of {@code keep}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions keep(com.criteo.vips.enums.VipsForeignKeep keep) {
+	public JXLSaveBufferOptions keep(com.criteo.vips.enums.VipsForeignKeep keep) {
 		setKeep(keep);
 		return this;
 	}
@@ -350,7 +251,7 @@ public class PNGSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions background(double[] background) {
+	public JXLSaveBufferOptions background(double[] background) {
 		setBackground(background);
 		return this;
 	}
@@ -386,7 +287,7 @@ public class PNGSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
+	public JXLSaveBufferOptions backgroundPixelPacket(com.criteo.vips.PixelPacket background) {
 		setBackgroundPixelPacket(background);
 		return this;
 	}
@@ -413,7 +314,7 @@ public class PNGSaveBufferOptions {
 	 * @param background the new value of {@code background}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions background(java.awt.Color background) {
+	public JXLSaveBufferOptions background(java.awt.Color background) {
 		setBackground(background);
 		return this;
 	}
@@ -445,7 +346,7 @@ public class PNGSaveBufferOptions {
 	 * @param pageHeight the new value of {@code pageHeight}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions pageHeight(Integer pageHeight) {
+	public JXLSaveBufferOptions pageHeight(Integer pageHeight) {
 		setPageHeight(pageHeight);
 		return this;
 	}
@@ -477,7 +378,7 @@ public class PNGSaveBufferOptions {
 	 * @param profile the new value of {@code profile}
 	 * @return this object for chaining
 	 */
-	public PNGSaveBufferOptions profile(String profile) {
+	public JXLSaveBufferOptions profile(String profile) {
 		setProfile(profile);
 		return this;
 	}

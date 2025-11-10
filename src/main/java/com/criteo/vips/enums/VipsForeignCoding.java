@@ -19,31 +19,27 @@ package com.criteo.vips.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum VipsSaveable {
+public enum VipsForeignCoding {
 
-	Mono(0),
-	Rgb(1),
-	Rgba(2),
-	RgbaOnly(3),
-	RgbCmyk(4),
-	Any(5),
-	Last(6),
+	None(1),
+	Labq(2),
+	Rad(4),
 	;
 
 	private int value;
-	private static Map<Integer, VipsSaveable> map = new HashMap<>();
+	private static Map<Integer, VipsForeignCoding> map = new HashMap<>();
 
-	private VipsSaveable(int i) {
+	private VipsForeignCoding(int i) {
 		value = i;
 	}
 
 	static {
-		for (VipsSaveable e : VipsSaveable.values()) {
+		for (VipsForeignCoding e : VipsForeignCoding.values()) {
 			map.put(e.value, e);
 		}
 	}
 
-	public static VipsSaveable valueOf(int i) {
+	public static VipsForeignCoding valueOf(int i) {
 		return map.get(i);
 	}
 
