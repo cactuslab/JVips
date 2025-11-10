@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 # Set default build arguments.
 ARG NODE_VERSION=22.x
@@ -9,9 +9,8 @@ ARG UID=1000
 ARG GID=1000
 
 # Set default environment variables.
-ENV PATH="${OSX_CROSS_HOME}/bin:${PATH}"
 ENV APT_OPTIONS="-y --no-install-recommends"
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies.
 RUN apt-get update && \
@@ -26,9 +25,9 @@ RUN apt-get update && \
     git
 
 RUN cd /opt && \
-    curl -OL https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz && \
-    tar -zxf apache-maven-3.9.10-bin.tar.gz
-ENV PATH="/opt/apache-maven-3.9.10/bin:${PATH}"
+    curl -OL https://dlcdn.apache.org/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz && \
+    tar -zxf apache-maven-3.9.11-bin.tar.gz
+ENV PATH="/opt/apache-maven-3.9.11/bin:${PATH}"
 
 RUN ln -s /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk
 ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk"

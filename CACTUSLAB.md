@@ -24,8 +24,7 @@ First we build for Linux on x86:
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
 # Build the Docker image
-docker pull --platform linux/amd64 ubuntu:20.04
-docker build --platform linux/amd64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
+docker buildx build --platform linux/amd64 --pull --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux .
 
 # Generate source files
 docker run --platform linux/amd64 --rm -v $(pwd):/app -it jvips-builder-linux ./generate.sh
@@ -40,23 +39,31 @@ just those tests failing we can move on.
 Then we build for Linux on ARM:
 
 ```shell
-docker pull --platform linux/arm64 ubuntu:20.04
-docker build --platform linux/arm64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux-arm .
+docker buildx build --platform linux/arm64 --pull --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f .github/docker/linux/Dockerfile -t jvips-builder-linux-arm .
 docker run --platform linux/arm64 --rm -v $(pwd):/app -it jvips-builder-linux-arm
 ```
 
 Then we build for macOS on an Intel machine, and then again on an Apple Silicon:
 
 ```shell
+brew install cmake
 ./build.sh --with-macos --without-linux
 ```
 
 Now combine the `build/all` folder from the two macOS machines with the ones from the Linux builds.
 
-Decide the version number of the JVips library to publish, based on the minimum libvips you've built with:
+Decide the version number of the JVips library to publish. Ideally we've used the same version:
 
 ```shell
-VIPS_VERSION=8.16.1
+docker run --rm --platform linux/amd64 jvips-builder-linux vips -v
+docker run --rm --platform linux/arm64 jvips-builder-linux-arm vips -v
+vips -v
+```
+
+It's probably best to use the version from `jvips-builder-linux vips` as that's the one we use to generate our code.
+
+```shell
+VIPS_VERSION=8.17.2
 ```
 
 The output files are `pom.xml` and `JVips.jar`.
