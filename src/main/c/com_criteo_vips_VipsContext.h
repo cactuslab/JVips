@@ -50,17 +50,33 @@ JNIEXPORT jint JNICALL Java_com_criteo_vips_VipsContext_getMaxCache
 /*
  * Class:     com_criteo_vips_VipsContext
  * Method:    setMaxCacheMem
- * Signature: (I)V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_criteo_vips_VipsContext_setMaxCacheMem
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     com_criteo_vips_VipsContext
  * Method:    getMaxCacheMem
- * Signature: ()I
+ * Signature: ()J
  */
-JNIEXPORT jint JNICALL Java_com_criteo_vips_VipsContext_getMaxCacheMem
+JNIEXPORT jlong JNICALL Java_com_criteo_vips_VipsContext_getMaxCacheMem
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_criteo_vips_VipsContext
+ * Method:    getTrackedMem
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_criteo_vips_VipsContext_getTrackedMem
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_criteo_vips_VipsContext
+ * Method:    getTrackedMemHighwater
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_criteo_vips_VipsContext_getTrackedMemHighwater
   (JNIEnv *, jclass);
 
 /*

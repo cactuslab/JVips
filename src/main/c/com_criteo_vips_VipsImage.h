@@ -17,6 +17,14 @@ JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_initFieldIDs
 
 /*
  * Class:     com_criteo_vips_VipsImage
+ * Method:    blackNative
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_com_criteo_vips_VipsImage_blackNative
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     com_criteo_vips_VipsImage
  * Method:    newFromByteBuffer
  * Signature: (Ljava/nio/ByteBuffer;I)V
  */

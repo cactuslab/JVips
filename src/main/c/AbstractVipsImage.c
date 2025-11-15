@@ -62,6 +62,14 @@ Java_com_criteo_vips_AbstractVipsImage_initFieldIDs(JNIEnv *env, jobject cls)
 	pixelPacket_getComponentsWithAlpha_mid = (*env)->GetMethodID(env, pixelPacketClass, "getComponentsWithAlpha", "()[D");
 }
 
+static int
+vips_tracked_blob_free(void *data, void *user)
+{
+	(void) user; // unused
+	vips_tracked_free(data);
+	return 0;
+}
+
 JNIEXPORT void JNICALL
 Java_com_criteo_vips_AbstractVipsImage_applyAbs(JNIEnv *env, jobject in)
 {
@@ -6628,6 +6636,9 @@ Java_com_criteo_vips_AbstractVipsImage_dzSaveBuffer(JNIEnv *env, jobject in, job
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -8836,6 +8847,9 @@ Java_com_criteo_vips_AbstractVipsImage_getPoint(JNIEnv *env, jobject in, jint x,
 	jint outArrayLength = 0;
 	jdouble *outArrayElements = vips_value_get_array_double(&gvalue, &outArrayLength);
 	jdoubleArray outArray = (*env)->NewDoubleArray(env, outArrayLength);
+	if (outArray == NULL) {
+			return NULL; // OOME pending
+	}
 	(*env)->SetDoubleArrayRegion(env, outArray, 0, outArrayLength, outArrayElements);
 	g_value_unset(&gvalue);
 
@@ -8980,10 +8994,11 @@ Java_com_criteo_vips_AbstractVipsImage_gifLoadBuffer(JNIEnv *env, jclass cls, jb
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -9478,6 +9493,9 @@ Java_com_criteo_vips_AbstractVipsImage_gifSaveBuffer(JNIEnv *env, jobject in, jo
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -10185,10 +10203,11 @@ Java_com_criteo_vips_AbstractVipsImage_heifLoadBuffer(JNIEnv *env, jclass cls, j
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -10695,6 +10714,9 @@ Java_com_criteo_vips_AbstractVipsImage_heifSaveBuffer(JNIEnv *env, jobject in, j
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -13970,10 +13992,11 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kLoadBuffer(JNIEnv *env, jclass cls, j
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -14406,6 +14429,9 @@ Java_com_criteo_vips_AbstractVipsImage_jp2kSaveBuffer(JNIEnv *env, jobject in, j
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -14561,10 +14587,11 @@ Java_com_criteo_vips_AbstractVipsImage_jpegLoadBuffer(JNIEnv *env, jclass cls, j
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -15096,6 +15123,9 @@ Java_com_criteo_vips_AbstractVipsImage_jpegSaveBuffer(JNIEnv *env, jobject in, j
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -15441,10 +15471,11 @@ Java_com_criteo_vips_AbstractVipsImage_jxlLoadBuffer(JNIEnv *env, jclass cls, jb
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -15873,6 +15904,9 @@ Java_com_criteo_vips_AbstractVipsImage_jxlSaveBuffer(JNIEnv *env, jobject in, jo
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -17514,10 +17548,11 @@ Java_com_criteo_vips_AbstractVipsImage_magickLoadBuffer(JNIEnv *env, jclass cls,
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -17960,6 +17995,9 @@ Java_com_criteo_vips_AbstractVipsImage_magickSaveBuffer(JNIEnv *env, jobject in,
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -21902,10 +21940,11 @@ Java_com_criteo_vips_AbstractVipsImage_pdfLoadBuffer(JNIEnv *env, jclass cls, jb
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -22419,10 +22458,11 @@ Java_com_criteo_vips_AbstractVipsImage_pngLoadBuffer(JNIEnv *env, jclass cls, jb
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -22910,6 +22950,9 @@ Java_com_criteo_vips_AbstractVipsImage_pngSaveBuffer(JNIEnv *env, jobject in, jo
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -23032,10 +23075,11 @@ Java_com_criteo_vips_AbstractVipsImage_ppmLoadBuffer(JNIEnv *env, jclass cls, jb
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -23500,6 +23544,9 @@ Java_com_criteo_vips_AbstractVipsImage_profileLoad(JNIEnv *env, jclass cls, jstr
 	void *profileData = vips_value_get_blob(&gvalue, &profileSize);
 	jint profileLength = profileSize / sizeof(jbyte);
 	jbyteArray profile = (*env)->NewByteArray(env, profileLength);
+	if (profile == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, profile, 0, profileLength, profileData);
 	g_value_unset(&gvalue);
 
@@ -23705,10 +23752,11 @@ Java_com_criteo_vips_AbstractVipsImage_radLoadBuffer(JNIEnv *env, jclass cls, jb
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -24005,6 +24053,9 @@ Java_com_criteo_vips_AbstractVipsImage_radSaveBuffer(JNIEnv *env, jobject in, jo
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -24498,6 +24549,9 @@ Java_com_criteo_vips_AbstractVipsImage_rawSaveBuffer(JNIEnv *env, jobject in, jo
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -29204,10 +29258,11 @@ Java_com_criteo_vips_AbstractVipsImage_svgLoadBuffer(JNIEnv *env, jclass cls, jb
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -29816,10 +29871,11 @@ Java_com_criteo_vips_AbstractVipsImage_thumbnailBuffer(JNIEnv *env, jclass cls, 
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -30475,10 +30531,11 @@ Java_com_criteo_vips_AbstractVipsImage_tiffLoadBuffer(JNIEnv *env, jclass cls, j
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -31290,6 +31347,9 @@ Java_com_criteo_vips_AbstractVipsImage_tiffSaveBuffer(JNIEnv *env, jobject in, j
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
@@ -32288,10 +32348,11 @@ Java_com_criteo_vips_AbstractVipsImage_webpLoadBuffer(JNIEnv *env, jclass cls, j
 		void *bufferData = vips_tracked_malloc(bufferSize);
 		if (bufferData == NULL) {
 			throwVipsException(env, "Failed to allocate memory for buffer");
+			return NULL;
 		}
 		(*env)->GetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 		g_value_init(&gvalue, VIPS_TYPE_BLOB);
-		vips_value_set_blob_free(&gvalue, bufferData, bufferSize);
+		vips_value_set_blob(&gvalue, vips_tracked_blob_free, bufferData, bufferSize);
 		g_object_set_property(G_OBJECT(op), "buffer", &gvalue);
 		g_value_unset(&gvalue);
 	
@@ -32933,6 +32994,9 @@ Java_com_criteo_vips_AbstractVipsImage_webpSaveBuffer(JNIEnv *env, jobject in, j
 	void *bufferData = vips_value_get_blob(&gvalue, &bufferSize);
 	jint bufferLength = bufferSize / sizeof(jbyte);
 	jbyteArray buffer = (*env)->NewByteArray(env, bufferLength);
+	if (buffer == NULL) {
+		return NULL; // OOME pending
+	}
 	(*env)->SetByteArrayRegion(env, buffer, 0, bufferLength, bufferData);
 	g_value_unset(&gvalue);
 
