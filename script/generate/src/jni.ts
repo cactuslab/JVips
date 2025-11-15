@@ -127,7 +127,7 @@ if (${camelCase(p.name)}Data == NULL) {
 }
 (*env)->GetByteArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Data);
 g_value_init(&gvalue, VIPS_TYPE_BLOB);
-vips_value_set_blob_free(&gvalue, ${camelCase(p.name)}Data, ${camelCase(p.name)}Size);
+vips_value_set_blob(&gvalue, vips_tracked_blob_free, ${camelCase(p.name)}Data, ${camelCase(p.name)}Size);
 g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);
 `
@@ -490,6 +490,14 @@ JNIEXPORT void JNICALL
 Java_com_criteo_vips_AbstractVipsImage_initFieldIDs(JNIEnv *env, jobject cls)
 {
 ${indent(initFields(), '\t')}
+}
+
+static int
+vips_tracked_blob_free(void *data, void *user)
+{
+	(void) user; // unused
+	vips_tracked_free(data);
+	return 0;
 }
 
 `
