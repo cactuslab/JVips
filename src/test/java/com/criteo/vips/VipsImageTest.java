@@ -1146,4 +1146,14 @@ public class VipsImageTest {
             assertEquals(4, img.getBands());
         }
     }
+
+    @Test
+    public void black() throws IOException {
+        try (VipsImage img = VipsImage.black(50, 57)) {
+            assertEquals(50, img.getWidth());
+            assertEquals(57, img.getHeight());
+
+            assertEquals(new PixelPacket(0), img.getPointPixelPacket(30, 30));
+        }
+    }
 }

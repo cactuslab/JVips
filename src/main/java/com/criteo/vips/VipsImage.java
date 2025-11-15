@@ -34,6 +34,8 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     private static native void initFieldIDs();
 
+    private native void blackNative(int width, int height);
+
     private native void newFromByteBuffer(ByteBuffer buffer, int length) throws VipsException;
 
     private native void newFromByteBuffer(ByteBuffer buffer, int length, String options) throws VipsException;
@@ -72,6 +74,18 @@ public class VipsImage extends AbstractVipsImage implements Image {
 
     public VipsImage(String filename, VipsAccess access) throws VipsException {
         newFromFile(filename, access);
+    }
+
+    /**
+     * Make a new black image of the given dimensions.
+     * @param width
+     * @param height
+     * @return
+     */
+    public static VipsImage black(int width, int height) {
+        VipsImage result = new VipsImage();
+        result.blackNative(width, height);
+        return result;
     }
 
     private VipsImage() {

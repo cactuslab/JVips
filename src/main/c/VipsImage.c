@@ -70,7 +70,12 @@ Java_com_criteo_vips_VipsImage_blackNative(JNIEnv *env, jobject obj, jint width,
         return;
     }
     (*env)->SetLongField(env, obj, handle_fid, (jlong) out);
-    (*env)->SetLongField(env, obj, buffer_fid, (jlong) NULL);
+
+    void *buffer = (void *)(*env)->GetLongField(env, obj, buffer_fid);
+    if (buffer != NULL) {
+        vips_tracked_free(buffer);
+        (*env)->SetLongField(env, obj, buffer_fid, (jlong) NULL);
+    }
     g_object_unref(im);
 }
 
