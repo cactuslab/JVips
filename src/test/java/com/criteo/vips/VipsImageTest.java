@@ -1106,7 +1106,6 @@ public class VipsImageTest {
         }
     }
 
-    @Ignore // TODO this has started failing on macOS with 8.14.2
     @Test
     public void TestShouldThrowErrorOnOperationIfTruncatedImage() throws IOException, VipsException {
         byte[] bufferArray = VipsTestUtils.getByteArray("truncated_image_missing_20_bytes.jpg");
