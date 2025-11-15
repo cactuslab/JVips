@@ -67,6 +67,18 @@ public class VipsContext extends Vips {
     public static native long getMaxCacheMem();
 
     /**
+     * Get the number of bytes currently allocated via by vips. Vips uses this figure to decide when to start dropping cache.
+     * @return
+     */
+    public static native long getTrackedMem();
+
+    /**
+     * Get the largest number of bytes simultaneously allocated via vips tracked memory. Handy for estimating max memory requirements for a program.
+     * @return
+     */
+    public static native long getTrackedMemHighwater();
+
+    /**
      * Shutdown vips context
      */
     public static native void shutdown();

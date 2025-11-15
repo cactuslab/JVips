@@ -61,6 +61,18 @@ Java_com_criteo_vips_VipsContext_getMaxCacheMem(__attribute__((unused))JNIEnv *e
     return vips_cache_get_max_mem();
 }
 
+JNIEXPORT jlong JNICALL
+Java_com_criteo_vips_VipsContext_getTrackedMem(__attribute__((unused))JNIEnv *env, __attribute__((unused)) jclass obj)
+{
+    return vips_tracked_get_mem();
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_criteo_vips_VipsContext_getTrackedMemHighwater(__attribute__((unused))JNIEnv *env, __attribute__((unused)) jclass obj)
+{
+    return vips_tracked_get_mem_highwater();
+}
+
 JNIEXPORT void JNICALL
 Java_com_criteo_vips_VipsContext_shutdown(__attribute__((unused)) JNIEnv *env, __attribute__((unused)) jobject obj)
 {
