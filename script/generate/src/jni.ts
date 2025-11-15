@@ -252,7 +252,7 @@ g_object_set_property(G_OBJECT(op), "${p.name}", &gvalue);
 g_value_unset(&gvalue);`
 }
 
-function applyOutParameter(p: VipsOperationParameter): string {
+function applyOutParameter(p: VipsOperationParameter, options: ParameterOptions): string {
 	switch (p.type) {
 		case 'VipsImage':
 			return `
@@ -290,6 +290,9 @@ g_object_get_property(G_OBJECT(op), "${p.name}", &gvalue);
 jint ${camelCase(p.name)}Length = 0;
 jdouble *${camelCase(p.name)}Elements = vips_value_get_array_double(&gvalue, &${camelCase(p.name)}Length);
 jdoubleArray ${camelCase(p.name)} = (*env)->NewDoubleArray(env, ${camelCase(p.name)}Length);
+if (${camelCase(p.name)} == NULL) {
+		${options.returnEarlyStatement} // OOME pending
+}
 (*env)->SetDoubleArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Elements);
 g_value_unset(&gvalue);
 `
@@ -301,6 +304,9 @@ size_t ${camelCase(p.name)}Size = 0;
 void *${camelCase(p.name)}Data = vips_value_get_blob(&gvalue, &${camelCase(p.name)}Size);
 jint ${camelCase(p.name)}Length = ${camelCase(p.name)}Size / sizeof(jbyte);
 jbyteArray ${camelCase(p.name)} = (*env)->NewByteArray(env, ${camelCase(p.name)}Length);
+if (${camelCase(p.name)} == NULL) {
+	${options.returnEarlyStatement} // OOME pending
+}
 (*env)->SetByteArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Data);
 g_value_unset(&gvalue);
 `
@@ -432,12 +438,12 @@ function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, option
 
 	if (mutatingInstanceMethod) {
 		result += `\t// ${mutatingInstanceMethod.name}`
-		result += indent(applyOutParameter(mutatingInstanceMethod), '\t') + '\n'
+		result += indent(applyOutParameter(mutatingInstanceMethod, parameterOptions), '\t') + '\n'
 	}
 
 	for (const p of outs) {
 		result += `\t// ${p.name}`
-		result += indent(applyOutParameter(p), '\t') + '\n'
+		result += indent(applyOutParameter(p, parameterOptions), '\t') + '\n'
 	}
 
 	result += `\t// Free the operation

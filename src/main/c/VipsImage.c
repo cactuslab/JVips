@@ -254,8 +254,14 @@ Java_com_criteo_vips_VipsImage_writeToArrayNative(JNIEnv *env, jobject obj, jstr
         throwVipsException(env, "Unable to write image buffer");
         return NULL;
     }
-    ret = (*env)->NewByteArray(env, result_length);
-    (*env)->SetByteArrayRegion(env, ret, 0, result_length * sizeof (jbyte), buffer);
+
+    const jsize n = (jsize) result_length;
+    ret = (*env)->NewByteArray(env, n);
+    if (ret == NULL) {
+        g_free(buffer);
+        return NULL; // OOME pending
+    }
+    (*env)->SetByteArrayRegion(env, ret, 0, n, buffer);
     (*env)->ReleaseStringUTFChars(env, extension, ext);
     g_free(buffer);
     return ret;
@@ -344,6 +350,11 @@ Java_com_criteo_vips_VipsImage_getPointPixelPacketNative(JNIEnv *env, jobject ob
         // Left shift of image channel bits - target channel bits (8 bits)
         pixel[i] = ((int)pixel[i]) >> ((VIPS_IMAGE_SIZEOF_ELEMENT(im) * 8) - 8);
     ret = (*env)->NewDoubleArray(env, result_length);
+    if (ret == NULL) {
+        g_free(pixel);
+        return NULL; // OOME pending
+    }
+
     (*env)->SetDoubleArrayRegion(env, ret, 0, result_length, pixel);
     (*env)->ReleaseDoubleArrayElements(env, ret, pixel, JNI_COMMIT);
     g_free(pixel);
