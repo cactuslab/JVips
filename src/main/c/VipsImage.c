@@ -356,7 +356,6 @@ Java_com_criteo_vips_VipsImage_getPointPixelPacketNative(JNIEnv *env, jobject ob
     }
 
     (*env)->SetDoubleArrayRegion(env, ret, 0, result_length, pixel);
-    (*env)->ReleaseDoubleArrayElements(env, ret, pixel, JNI_COMMIT);
     g_free(pixel);
     return ret;
 }
