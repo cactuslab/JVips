@@ -21,6 +21,7 @@ import com.criteo.vips.options.JPEGSaveOptions;
 import com.criteo.vips.options.PNGSaveOptions;
 import com.criteo.vips.options.ThumbnailImageOptions;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;		
@@ -1155,5 +1156,11 @@ public class VipsImageTest {
 
             assertEquals(new PixelPacket(0), img.getPointPixelPacket(30, 30));
         }
+    }
+
+    @AfterClass
+    public static void trackMemory() {
+        System.out.println("Tracked memory = " + VipsContext.getTrackedMem());
+        System.out.println("Tracked memory highwater = " + VipsContext.getTrackedMemHighwater());
     }
 }
