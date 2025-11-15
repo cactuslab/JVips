@@ -141,8 +141,15 @@ Java_com_criteo_vips_VipsImage_newFromBuffer___3BI(JNIEnv *env, jobject obj, jby
     }
     (*env)->GetByteArrayRegion(env, buffer, 0, len, internal_buffer);
     im = new_from_buffer(env, internal_buffer, length);
-    (*env)->SetLongField(env, obj, handle_fid, (jlong) im);
-    (*env)->SetLongField(env, obj, buffer_fid, (jlong) internal_buffer);
+    if (im != NULL) {
+        (*env)->SetLongField(env, obj, handle_fid, (jlong) im);
+        (*env)->SetLongField(env, obj, buffer_fid, (jlong) internal_buffer);
+    } else {
+        vips_tracked_free(internal_buffer);
+        (*env)->SetLongField(env, obj, handle_fid, (jlong) NULL);
+        (*env)->SetLongField(env, obj, buffer_fid, (jlong) NULL);
+        return; // exception already pending
+    }
 }
 
 JNIEXPORT void JNICALL
@@ -161,8 +168,15 @@ Java_com_criteo_vips_VipsImage_newFromBuffer___3BILjava_lang_String_2(JNIEnv *en
     }
     (*env)->GetByteArrayRegion(env, buffer, 0, len, internal_buffer);
     im = new_from_buffer_with_options(env, internal_buffer, length, options);
-    (*env)->SetLongField(env, obj, handle_fid, (jlong) im);
-    (*env)->SetLongField(env, obj, buffer_fid, (jlong) internal_buffer);
+    if (im != NULL) {
+        (*env)->SetLongField(env, obj, handle_fid, (jlong) im);
+        (*env)->SetLongField(env, obj, buffer_fid, (jlong) internal_buffer);
+    } else {
+        vips_tracked_free(internal_buffer);
+        (*env)->SetLongField(env, obj, handle_fid, (jlong) NULL);
+        (*env)->SetLongField(env, obj, buffer_fid, (jlong) NULL);
+        return; // exception already pending
+    }
 }
 
 JNIEXPORT void JNICALL
