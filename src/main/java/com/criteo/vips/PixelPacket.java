@@ -150,7 +150,22 @@ public class PixelPacket extends Vips {
         if (o instanceof PixelPacket) {
             PixelPacket pixelPacket = (PixelPacket) o;
 
-            return r == pixelPacket.r && g == pixelPacket.g && b == pixelPacket.b && a == pixelPacket.a && components == pixelPacket.components;
+            if (components != pixelPacket.components) {
+                return false;
+            }
+            if (components >= 1 && r != pixelPacket.r) {
+                return false;
+            }
+            if (components >= 2 && g != pixelPacket.g) {
+                return false;
+            }
+            if (components >= 3 && b != pixelPacket.b) {
+                return false;
+            }
+            if (components >= 4 && a != pixelPacket.a) {
+                return false;
+            }
+            return true;
         }
         return false;
     }
@@ -164,7 +179,7 @@ public class PixelPacket extends Vips {
         } else if (components == 2) {
             return "[r = " + r + ", a = " + a + "]";
         } else if (components == 1) {
-            return "[r = " + r + ", g = " + g + ", b = " + b + "]";
+            return "[r = " + r + "]";
         } else {
             return super.toString();
         }
