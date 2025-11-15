@@ -52,6 +52,7 @@ function isObjectType(p: VipsOperationParameter) {
 interface ParameterOptions {
 	imageProperty?: VipsOperationParameter
 	operationRequiresNoAlpha?: boolean
+	returnEarlyStatement: string
 }
 
 function applyParameter(p: VipsOperationParameter, options: ParameterOptions): string {
@@ -122,6 +123,7 @@ size_t ${camelCase(p.name)}Size = ${camelCase(p.name)}Length * sizeof(jbyte);
 void *${camelCase(p.name)}Data = vips_tracked_malloc(${camelCase(p.name)}Size);
 if (${camelCase(p.name)}Data == NULL) {
 	throwVipsException(env, "Failed to allocate memory for buffer");
+	${options.returnEarlyStatement}
 }
 (*env)->GetByteArrayRegion(env, ${camelCase(p.name)}, 0, ${camelCase(p.name)}Length, ${camelCase(p.name)}Data);
 g_value_init(&gvalue, VIPS_TYPE_BLOB);
@@ -336,6 +338,28 @@ export function nativeMethod(op: VipsOperation): string {
 	return result
 }
 
+/**
+ * @returns a C statement that can be used to return early from an operation in the case of an error
+ */
+function returnEarlyStatement(info: VipsOperationInfo) {
+	const { outs } = info
+
+	if (outs.length) {
+		const out = outs[0]
+		switch (out.type) {
+			case 'gint':
+			case 'gdouble':
+			case 'guint64':
+			case 'gboolean':
+				return 'return 0;'
+			default:
+				return 'return NULL;'
+		}
+	} else {
+		return 'return;'
+	}
+}
+
 function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, options?: VipsOperationOptions): string {
 	let result = ''
 	const { ins, optionals, outs, instanceMethod, mutatingInstanceMethod } = info
@@ -372,7 +396,8 @@ function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, option
 
 	const parameterOptions: ParameterOptions = {
 		imageProperty: instanceMethod,
-		operationRequiresNoAlpha: info.requiresNoAlpha
+		operationRequiresNoAlpha: info.requiresNoAlpha,
+		returnEarlyStatement: returnEarlyStatement(info),
 	}
 	for (const p of ins) {
 		result += `\t// ${p.name}\n`
@@ -398,24 +423,7 @@ function internalNativeMethod(op: VipsOperation, info: VipsOperationInfo, option
 	if (!(new_op = vips_cache_operation_build(op))) {
 		g_object_unref(op);
 		throwVipsException(env, "${op.alias} failed");
-		`
-	if (outs.length) {
-		const out = outs[0]
-		switch (out.type) {
-			case 'gint':
-			case 'gdouble':
-			case 'guint64':
-			case 'gboolean':
-				result += 'return 0;'
-				break
-			default:
-				result += 'return NULL;'
-				break
-		}
-	} else {
-		result += 'return;'
-	}
-	result += `
+		${returnEarlyStatement(info)}
 	}
 	g_object_unref(op);
 	op = new_op;
