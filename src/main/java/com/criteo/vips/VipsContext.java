@@ -57,14 +57,14 @@ public class VipsContext extends Vips {
      *
      * @param max_mem maximum amound of tracked memory we use
      */
-    public static native void setMaxCacheMem(int max_mem);
+    public static native void setMaxCacheMem(long max_mem);
 
     /**
      * Get the maximum amount of tracked memory we allow before we start dropping cached operations
      *
      * @return maximum amound of tracked memory we use
      */
-    public static native int getMaxCacheMem();
+    public static native long getMaxCacheMem();
 
     /**
      * Shutdown vips context
